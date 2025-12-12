@@ -3,222 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GENNOZ | Coleção</title>
+    <title>GENNOZ | Archive</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Manrope:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- A BASE DA SOMBRA --- */
         :root {
-            --bg-color: #050505; /* Preto profundo, não absoluto */
-            --text-main: #E0E0E0; /* Branco gelo para leitura */
-            --text-muted: #888888; /* Cinza para detalhes */
-            --accent: #FFFFFF;
-            --gap-size: 4rem; /* Respiro amplo */
+            --bg-color: #050505;
+            --text-main: #F0F0F0;
+            --text-muted: #666666;
+            --accent-gold: #D4AF37; /* Um toque sutil, opcional */
+            --transition-slow: all 1.2s cubic-bezier(0.19, 1, 0.22, 1); /* Curva Bézier para suavidade extrema */
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Manrope', sans-serif;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            opacity: 0;
+            animation: genesis 2s forwards; /* O site nasce do escuro */
         }
 
-        /* --- O GUARDIÃO (HEADER) --- */
+        @keyframes genesis { to { opacity: 1; } }
+
+        /* --- TIPOGRAFIA --- */
+        h1, h2, .art-title {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        /* --- HEADER --- */
         header {
-            height: 100vh;
+            height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 2s ease-out forwards;
+            z-index: 10;
         }
 
         .brand-logo {
-            max-width: 180px; /* Tamanho controlado */
-            margin-bottom: 2rem;
-            filter: invert(1); /* Inverte seu logo preto para branco */
-            transition: transform 0.7s ease;
-        }
-
-        .brand-logo:hover {
-            transform: scale(1.05); /* Sutil respiração ao passar o mouse */
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            letter-spacing: 0.5em;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-top: 1rem;
-        }
-
-        /* --- NAVEGAÇÃO MINIMALISTA --- */
-        nav {
-            position: absolute;
-            bottom: 3rem;
-            width: 100%;
-            text-align: center;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin: 0 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-        }
-
-        nav a::after {
-            content: '';
-            display: block;
-            width: 0;
-            height: 1px;
-            background: var(--accent);
-            transition: width .3s;
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        /* --- ESTRUTURA DAS SEÇÕES --- */
-        section {
-            padding: var(--gap-size) 10%;
-            min-height: 50vh;
-        }
-
-        .section-title {
-            font-family: 'Cinzel', serif;
-            text-align: center;
-            font-size: 2rem;
-            letter-spacing: 0.1em;
-            margin-bottom: var(--gap-size);
-            color: var(--text-main);
+            max-width: 160px;
+            filter: invert(1);
             opacity: 0.8;
+            transition: var(--transition-slow);
+        }
+        
+        .brand-logo:hover { opacity: 1; transform: scale(1.02); }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 5%;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            animation: float 3s infinite ease-in-out;
         }
 
-        /* --- GRID DE MÍDIA --- */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+        /* --- SEÇÃO 1: A GALERIA VIVA (EXPANSIVA) --- */
+        .gallery-section {
+            padding: 5vh 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
         .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .media-container {
+            flex: 1 1 300px; /* Tamanho base */
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-slow);
+            filter: grayscale(100%) brightness(0.4); /* O estado "Sombra" */
+        }
+
+        /* O Surgimento ao passar o mouse */
+        .media-container:hover {
+            filter: grayscale(0%) brightness(1);
+            flex-basis: 350px; /* Ligeira expansão no hover */
+        }
+
+        /* O Estado Expandido (Clicado) */
+        .media-container.active {
+            flex: 1 1 100%; /* Ocupa a linha inteira */
+            height: 85vh; /* Altura de tela cheia */
+            filter: grayscale(0%) brightness(1);
+            z-index: 20;
+            order: -1; /* Opcional: Traz para o topo ou mantém fluxo */
         }
 
         .media-item {
             width: 100%;
-            height: auto;
-            display: block;
-            filter: grayscale(100%) contrast(110%); /* Estética sombria padrão */
-            transition: all 0.5s ease;
-            cursor: pointer;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-slow);
         }
 
-        .media-item:hover {
-            filter: grayscale(0%) contrast(100%); /* Revela a cor ao interagir */
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .media-container.active .media-item {
+            object-fit: contain; /* Mostra a imagem inteira sem cortes quando expandida */
+            background: #0a0a0a;
         }
 
-        /* Ajuste específico para vídeo */
-        video.media-item {
-            outline: none;
+        /* --- SEÇÃO 2: O SPOTLIGHT (OBRAS ESPECÍFICAS) --- */
+        .spotlight-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 5%;
+            border-top: 1px solid #1a1a1a;
         }
 
-        /* --- RODAPÉ --- */
-        footer {
+        .spotlight-stage {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 3rem;
             text-align: center;
-            padding: 4rem 0;
-            font-size: 0.8rem;
-            color: #333;
-            letter-spacing: 0.1em;
         }
 
-        /* --- ANIMAÇÕES --- */
-        @keyframes fadeIn {
-            to { opacity: 1; }
+        .spotlight-image {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border: 1px solid #111;
         }
 
-        /* Responsividade Mobile */
-        @media (max-width: 768px) {
-            .section-title { font-size: 1.5rem; }
-            .brand-logo { max-width: 140px; }
-            section { padding: 2rem 5%; }
+        .spotlight-info {
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        .art-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .art-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .spotlight-controls {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 1rem;
+        }
+
+        .control-btn:hover { color: var(--text-main); transform: scale(1.1); }
+
+        /* Thumbnails laterais para seleção */
+        .thumbnails-row {
+            display: flex;
+            gap: 10px;
+            opacity: 0.5;
+            transition: 0.5s;
+        }
+        .thumbnails-row:hover { opacity: 1; }
+
+        .thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid transparent;
+            filter: grayscale(100%);
+        }
+        .thumb:hover, .thumb.selected {
+            border-color: var(--text-main);
+            filter: grayscale(0%);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Mobile adjustment */
+        @media(max-width: 768px) {
+            .media-container.active { height: 50vh; }
+            .art-title { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="logo.png" alt="Olho Logo" class="brand-logo">
-        <h1>Gennoz</h1>
-        
-        <nav>
-            <a href="#imagens">Imagens</a>
-            <a href="#videos">Vídeos</a>
-        </nav>
+        <img src="logo.png" alt="Gennoz" class="brand-logo">
+        <div class="scroll-indicator">EXPLORE O ARQUIVO</div>
     </header>
 
-    <section id="imagens">
-        <h2 class="section-title">Visual Archive</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra 1">
-            <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra 2">
-            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra 3">
+    <section class="gallery-section">
+        <div class="gallery-grid" id="mainGallery">
+            
+            <div class="media-container" onclick="expand(this)">
+                <img src="https://images.unsplash.com/photo-1515462277126-2dd0c162007a?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra I">
+            </div>
+
+            <div class="media-container" onclick="expand(this)">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra II">
+            </div>
+
+            <div class="media-container" onclick="expand(this)">
+                <video class="media-item" autoplay muted loop playsinline>
+                    <source src="seu-video-1.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="media-container" onclick="expand(this)">
+                <img src="https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra IV">
+            </div>
+
         </div>
     </section>
 
-    <section id="videos">
-        <h2 class="section-title">Motion</h2>
-        <div class="gallery-grid">
-            <video class="media-item" autoplay muted loop playsinline>
-                <source src="seu-video.mp4" type="video/mp4">
-            </video>
+    <section class="spotlight-section">
+        
+        <div class="spotlight-stage">
+            <img id="spotlight-img" src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=1200" class="spotlight-image" alt="Destaque">
             
-             <video class="media-item" controls>
-                <source src="seu-video-2.mp4" type="video/mp4">
-            </video>
+            <div class="spotlight-info">
+                <h2 id="spot-title" class="art-title">A Dualidade da Forma</h2>
+                <p id="spot-meta" class="art-meta">2024 • Gennoz • Digital Archive</p>
+            </div>
         </div>
+
+        <div class="thumbnails-row">
+            <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=200" class="thumb selected" 
+                 onclick="changeSpotlight(this, 'A Dualidade da Forma', '2024 • Gennoz • Digital Archive', 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=1200')">
+            
+            <img src="https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=200" class="thumb" 
+                 onclick="changeSpotlight(this, 'O Vazio Iluminado', '2023 • Colaboração X • Fotografia', 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=1200')">
+            
+            <img src="https://images.unsplash.com/photo-1499558231460-70f907c11f71?q=80&w=200" class="thumb" 
+                 onclick="changeSpotlight(this, 'Estrutura Óssea', '2024 • Gennoz • Render', 'https://images.unsplash.com/photo-1499558231460-70f907c11f71?q=80&w=1200')">
+        </div>
+
     </section>
 
     <footer>
-        <p>&copy; 2000 GENNOZ. TODOS DIREITOS RESERVADOS.</p>
+        <p style="color: #333; font-size: 0.7rem; letter-spacing: 0.3em; padding: 2rem;">GENNOZ © 2025</p>
     </footer>
 
     <script>
-        // Script sutil para rolagem suave
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+        // FUNÇÃO 1: EXPANDIR A GALERIA
+        // Ao clicar, a imagem ganha a classe 'active', empurrando as outras suavemente
+        function expand(element) {
+            // Se já estiver ativo, fecha
+            if (element.classList.contains('active')) {
+                element.classList.remove('active');
+            } else {
+                // Fecha qualquer outro aberto primeiro para manter o foco único
+                const openItems = document.querySelectorAll('.media-container.active');
+                openItems.forEach(item => item.classList.remove('active'));
+                
+                // Abre o clicado
+                element.classList.add('active');
+                
+                // Rola suavemente para centralizar a imagem expandida
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        }
+
+        // FUNÇÃO 2: O SPOTLIGHT (Troca de Obras)
+        function changeSpotlight(thumb, title, meta, highResUrl) {
+            // Atualiza visual dos thumbnails
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('selected'));
+            thumb.classList.add('selected');
+
+            // Elementos do palco
+            const mainImg = document.getElementById('spotlight-img');
+            const mainTitle = document.getElementById('spot-title');
+            const mainMeta = document.getElementById('spot-meta');
+            const infoBox = document.querySelector('.spotlight-info');
+
+            // Efeito de Fade Out
+            mainImg.style.opacity = 0;
+            infoBox.style.opacity = 0;
+
+            setTimeout(() => {
+                // Troca o conteúdo
+                mainImg.src = highResUrl;
+                mainTitle.innerText = title;
+                mainMeta.innerText = meta;
+
+                // Efeito de Fade In
+                mainImg.onload = () => {
+                    mainImg.style.opacity = 1;
+                    infoBox.style.animation = 'none';
+                    infoBox.offsetHeight; /* trigger reflow */
+                    infoBox.style.animation = 'fadeInUp 1s forwards';
+                };
+            }, 300);
+        }
     </script>
 </body>
 </html>
