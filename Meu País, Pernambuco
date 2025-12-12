@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENNOZ | Coleção</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Manrope:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- A BASE DA SOMBRA --- */
+        :root {
+            --bg-color: #050505; /* Preto profundo, não absoluto */
+            --text-main: #E0E0E0; /* Branco gelo para leitura */
+            --text-muted: #888888; /* Cinza para detalhes */
+            --accent: #FFFFFF;
+            --gap-size: 4rem; /* Respiro amplo */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Manrope', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- O GUARDIÃO (HEADER) --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        .brand-logo {
+            max-width: 180px; /* Tamanho controlado */
+            margin-bottom: 2rem;
+            filter: invert(1); /* Inverte seu logo preto para branco */
+            transition: transform 0.7s ease;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.05); /* Sutil respiração ao passar o mouse */
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            letter-spacing: 0.5em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        /* --- NAVEGAÇÃO MINIMALISTA --- */
+        nav {
+            position: absolute;
+            bottom: 3rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin: 0 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width .3s;
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* --- ESTRUTURA DAS SEÇÕES --- */
+        section {
+            padding: var(--gap-size) 10%;
+            min-height: 50vh;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 2rem;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--gap-size);
+            color: var(--text-main);
+            opacity: 0.8;
+        }
+
+        /* --- GRID DE MÍDIA --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .media-item {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(100%) contrast(110%); /* Estética sombria padrão */
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .media-item:hover {
+            filter: grayscale(0%) contrast(100%); /* Revela a cor ao interagir */
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Ajuste específico para vídeo */
+        video.media-item {
+            outline: none;
+        }
+
+        /* --- RODAPÉ --- */
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            font-size: 0.8rem;
+            color: #333;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- ANIMAÇÕES --- */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Responsividade Mobile */
+        @media (max-width: 768px) {
+            .section-title { font-size: 1.5rem; }
+            .brand-logo { max-width: 140px; }
+            section { padding: 2rem 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="logo.png" alt="Olho Logo" class="brand-logo">
+        <h1>Gennoz</h1>
+        
+        <nav>
+            <a href="#imagens">Imagens</a>
+            <a href="#videos">Vídeos</a>
+        </nav>
+    </header>
+
+    <section id="imagens">
+        <h2 class="section-title">Visual Archive</h2>
+        <div class="gallery-grid">
+            <img src="https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra 1">
+            <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra 2">
+            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra 3">
+        </div>
+    </section>
+
+    <section id="videos">
+        <h2 class="section-title">Motion</h2>
+        <div class="gallery-grid">
+            <video class="media-item" autoplay muted loop playsinline>
+                <source src="seu-video.mp4" type="video/mp4">
+            </video>
+            
+             <video class="media-item" controls>
+                <source src="seu-video-2.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2000 GENNOZ. TODOS DIREITOS RESERVADOS.</p>
+    </footer>
+
+    <script>
+        // Script sutil para rolagem suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
