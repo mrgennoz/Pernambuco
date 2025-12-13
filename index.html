@@ -14,11 +14,11 @@
             --text-main: #Eaeaea;
             --text-muted: #888;
             /* Dimensões do Carrossel de IMAGENS (Horizontal) */
-            --card-width-img: 480px; /* Aumento sutil para melhor visualização */
+            --card-width-img: 480px; 
             --card-height-img: 320px; 
             /* Dimensões do Carrossel de VÍDEOS (Vertical Otimizada) */
-            --card-width-vid: 280px; /* Mais estreito */
-            --card-height-vid: 470px; /* Mais alto */
+            --card-width-vid: 280px; 
+            --card-height-vid: 470px; 
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -106,6 +106,7 @@
         }
 
         .hero-title { 
+            /* Tamanho Ampliado */
             font-size: clamp(2.5rem, 6vw, 6rem); 
         }
 
@@ -159,23 +160,23 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Inicia P&B para Imagens, e mantém P&B nas laterais de Vídeos */
+            /* Inicia P&B */
             filter: grayscale(100%); 
             opacity: 0.6;
             transition: 0.5s;
         }
 
-        /* --- ESTÉTICA EXIGIDA: COR E P&B --- */
+        /* --- ESTÉTICA: COR E P&B --- */
         
-        /* 1. Imagem Central (Sempre Colorida) */
-        .slot.center img {
+        /* 1. Imagem Central (Sempre Colorida e Focada) */
+        .slot.center img, .slot.center video {
             filter: grayscale(0%) !important; 
             opacity: 1 !important;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         }
 
         /* 2. Laterais (Coloridas APENAS no Hover) */
-        .slot.side:hover img {
+        .slot.side:hover img, .slot.side:hover video {
              filter: grayscale(0%);
              opacity: 1;
         }
@@ -201,7 +202,6 @@
             object-fit: cover;
             opacity: 1;
             box-shadow: none;
-            /* Garantir que a imagem expandida mantenha a cor */
             filter: grayscale(0%); 
         }
         
@@ -211,36 +211,4 @@
             padding: 2rem 1rem;
             text-align: left;
             opacity: 0;
-            animation: fadeIn 0.5s ease forwards 0.3s;
-        }
-
-        /* --- RESPONSIVIDADE --- */
-        @media (max-width: 768px) {
-            /* Imagens (Horizontal no mobile) */
-            .carousel-section:nth-child(2) .slot { width: 70vw; height: 40vh; }
-            /* Vídeos (Vertical no mobile) */
-            .carousel-section:nth-child(3) .slot { width: 50vw; height: 70vh; }
-            
-            /* Ajuste da expansão para mobile */
-            .slot.expanded { width: 90vw; height: 50vh; }
-            .slot.expanded img {
-                 width: 100%; height: 60%; float: none;
-                 filter: grayscale(0%);
-            }
-            .expanded-info {
-                 float: none; width: 100%; height: 40%; padding: 0.5rem 1rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <img src="logo.png" alt="Sombraz" class="brand-logo">
-    </header>
-
-    <section class="hero-section">
-        <div class="hero-image-container">
-            <img id="hero-img" src="familia02.jpg" class="hero-img" alt="Destaque">
-        </div>
-        <div class="hero-info">
-            <h1 id="hero-title"
+            animation: fadeIn 0.5s ease forwards 0
