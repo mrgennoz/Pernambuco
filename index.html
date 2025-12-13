@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gennoz | Arquivo</title>
+    <title>Gennoz | Acervo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -44,20 +44,33 @@
         }
 
         /* --- HEADER & LOGO --- */
-        header {
-            width: 100%;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute; 
-            z-index: 100;
-        }
+header {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;
+    /* Remover 'position: absolute' para que o header ocupe seu próprio espaço
+       e empurre a Hero Section para baixo, evitando sobreposição. */
+    position: relative; /* Mudança crítica: Deixa o header no fluxo do documento */
+    z-index: 100;
+}
+
+.brand-logo { 
+    width: 140px; 
+    /* Manter o filtro de inversão para que a logo preta apareça branca no fundo escuro */
+    filter: invert(1); 
+    opacity: 0.9;
+    transition: opacity 0.5s;
+    /* Ajuste para garantir que a logo branca seja claramente visível */
+    /* Como a imagem é um PNG com fundo transparente, 'invert(1)' a torna branca. */
+}
+.brand-logo:hover { opacity: 1; }
 
         .brand-logo { 
             width: 140px; 
             filter: invert(1); 
-            opacity: 0.9;
+            opacity: 0.5;
             transition: opacity 0.5s;
         }
         .brand-logo:hover { opacity: 1; }
@@ -221,7 +234,7 @@
 <body>
 
     <header>
-        <img src="logo-v1-png (1).png" alt="Gennoz" class="brand-logo">
+        <img src="logo.png" alt="Sombraz" class="brand-logo">
     </header>
 
     <section class="hero-section">
