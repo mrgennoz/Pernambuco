@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GENNOZ | Archive</title>
+    <title>GENNOZ | Showcase</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg-color: #050505;
             --text-main: #Eaeaea;
-            --dim-opacity: 0.3;
-            --transition-speed: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --text-muted: #888;
+            --card-width: 300px; /* Tamanho controlado da roleta */
+            --card-height: 450px;
+            --transition-curve: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,287 +25,238 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            padding-bottom: 5rem;
         }
 
-        h1, h2, .caption {
+        /* --- TIPOGRAFIA --- */
+        h1, h2, .serif {
             font-family: 'Bodoni Moda', serif;
-            text-transform: uppercase;
             font-weight: 400;
+            letter-spacing: 0.05em;
         }
 
-        /* --- HEADER --- */
+        .meta-data {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 0.5rem;
+        }
+
+        /* --- HEADER & HERO (O DESTAQUE) --- */
         header {
+            width: 100%;
             padding: 2rem;
-            text-align: center;
-            opacity: 0.8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .brand-logo { 
-            width: 120px; 
-            filter: invert(1); 
-            transition: transform 0.5s;
-        }
-        .brand-logo:hover { transform: scale(1.05); }
 
-        /* --- ESTRUTURA DAS ROLETAS (CAROUSEL) --- */
-        section {
-            height: 90vh; /* Ocupa quase toda a tela */
+        .brand-logo { 
+            width: 140px; 
+            filter: invert(1); 
+            opacity: 0.9;
+        }
+
+        /* O Palco Principal */
+        .hero-section {
+            min-height: 90vh; /* Ocupa a tela inicial inteira */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5%;
+            margin-bottom: 5rem; /* Respiro para a próxima seção */
+        }
+
+        .hero-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px; /* Limite elegante */
+            height: auto;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: breatheIn 1.5s ease-out forwards;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain; /* Garante que a obra apareça inteira */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .hero-info {
+            opacity: 0;
+            animation: slideUp 1s ease-out forwards 0.5s;
+        }
+
+        .hero-title { font-size: clamp(2rem, 5vw, 4rem); /* Tamanho dinâmico */ }
+
+        /* --- CAROUSEL (ROLETA CONTIDA) --- */
+        .carousel-section {
+            min-height: 60vh; /* Menor que antes */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
+            margin: 5rem 0; /* Espaçamento vital */
         }
 
-        .carousel-title {
-            position: absolute;
-            top: 5%;
-            font-size: 1.5rem;
-            letter-spacing: 0.2em;
-            color: #444;
-            z-index: 10;
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+            opacity: 0.7;
         }
 
-        .carousel-container {
+        .carousel-track {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 40px; /* Espaço entre as obras */
-            width: 100%;
+            gap: 2rem;
             perspective: 1000px;
+            width: 100%;
         }
 
-        /* O SLOT DA OBRA */
         .slot {
+            width: var(--card-width);
+            height: var(--card-height);
             position: relative;
-            transition: var(--transition-speed);
+            transition: all 0.8s var(--transition-curve);
             cursor: pointer;
+            flex-shrink: 0;
         }
 
-        /* ESTADO: LATERAL (Menor e Escuro) */
-        .slot.side {
-            width: 250px;
-            height: 350px;
-            opacity: var(--dim-opacity);
-            transform: scale(0.85) rotateY(10deg); /* Leve rotação 3D */
-            filter: grayscale(100%);
-            z-index: 1;
-        }
-        
-        /* Ajuste da rotação para o lado esquerdo */
-        .slot.side.left { transform: scale(0.85) rotateY(15deg); }
-        .slot.side.right { transform: scale(0.85) rotateY(-15deg); }
-
-        /* ESTADO: CENTRAL (Maior e Vivo) */
-        .slot.center {
-            width: 450px; /* Largura enfática */
-            height: 600px;
-            opacity: 1;
-            transform: scale(1) translateZ(50px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-            z-index: 10;
-            filter: grayscale(0%);
-        }
-
-        /* MÍDIA INTERNA */
-        .media-content {
+        .slot img, .slot video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 4px;
-        }
-
-        /* CAPTION (Título da Obra) */
-        .meta-info {
-            position: absolute;
-            bottom: -3rem;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(-10px);
+            opacity: 0.6;
+            filter: grayscale(100%);
             transition: 0.5s;
         }
 
-        .slot.center .meta-info {
+        /* ESTADOS DA ROLETA */
+        .slot.center {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        .slot.center img, .slot.center video {
             opacity: 1;
-            transform: translateY(0);
+            filter: grayscale(0%);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         }
 
-        /* --- CONTROLES DE NAVEGAÇÃO --- */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 3rem;
-            font-family: 'Bodoni Moda', serif;
-            cursor: pointer;
-            z-index: 20;
-            padding: 2rem;
-            opacity: 0.5;
-            transition: 0.3s;
-        }
-        .nav-btn:hover { opacity: 1; scale: 1.1; }
-        .prev-btn { left: 5%; }
-        .next-btn { right: 5%; }
-
-        /* SEPARADOR */
-        .divider {
-            height: 1px;
-            width: 50px;
-            background: #333;
-            margin: 0 auto;
+        .slot.side {
+            transform: scale(0.85);
+            opacity: 0.3;
         }
 
-        /* RESPONSIVIDADE */
+        /* --- BOTÃO DE COLEÇÕES --- */
+        .collection-link {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.8rem;
+            transition: 0.4s;
+        }
+        .collection-link:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* --- ANIMAÇÕES --- */
+        @keyframes breatheIn { to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
-            .slot.side { display: none; } /* Esconde laterais no celular */
-            .slot.center { width: 90%; height: 60vh; }
-            .carousel-container { gap: 0; }
+            :root { --card-width: 70vw; --card-height: 50vh; }
+            .hero-section { min-height: 80vh; }
+            .slot.side { display: none; } /* Mobile foca apenas no centro */
+            .carousel-track { gap: 0; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="logo.png" alt="Gennoz Logo" class="brand-logo">
+        <img src="logo.png" alt="Gennoz" class="brand-logo">
     </header>
 
-    <section id="section-images">
-        <h2 class="carousel-title">VISUAL ARCHIVE</h2>
-        
-        <button class="nav-btn prev-btn" onclick="moveCarousel('images', -1)">‹</button>
-        
-        <div class="carousel-container" id="container-images">
-            </div>
-        
-        <button class="nav-btn next-btn" onclick="moveCarousel('images', 1)">›</button>
+    <section class="hero-section">
+        <div class="hero-image-container">
+            <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=1200" class="hero-img" alt="Destaque">
+        </div>
+        <div class="hero-info">
+            <h1 class="hero-title serif">A Dualidade</h1>
+            <p class="meta-data">2025 • Gennoz • Série Principal</p>
+        </div>
     </section>
 
-    <div class="divider"></div>
+    <section class="carousel-section">
+        <div class="section-header">
+            <h2 class="serif">Seleção Visual</h2>
+            <p class="meta-data">Deslize para navegar</p>
+        </div>
 
-    <section id="section-videos">
-        <h2 class="carousel-title">MOTION</h2>
-
-        <button class="nav-btn prev-btn" onclick="moveCarousel('videos', -1)">‹</button>
-        
-        <div class="carousel-container" id="container-videos">
+        <div class="carousel-track" id="track-images">
             </div>
-        
-        <button class="nav-btn next-btn" onclick="moveCarousel('videos', 1)">›</button>
+
+        <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
     </section>
 
-    <footer style="text-align:center; padding: 4rem; font-size: 0.7rem; color: #444; letter-spacing: 0.2em;">
+    <section class="carousel-section">
+        <div class="section-header">
+            <h2 class="serif">Motion</h2>
+        </div>
+
+        <div class="carousel-track" id="track-videos">
+            </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
         GENNOZ © 2025
     </footer>
 
     <script>
-        /* ================================================================
-           ÁREA DE CURADORIA (Edite aqui para adicionar/remover obras)
-           ================================================================
-           Para adicionar uma imagem, copie uma linha e mude o 'src'.
-           O 'id' é usado para abrir a página de detalhes.
-        */
+        // --- DADOS DINÂMICOS (FÁCIL EDIÇÃO) ---
         
-        const imageData = [
-            { src: "nome-da-imagem-1.jpg", title: "Obra I: Gênesis", id: "obra1" },
-            { src: "nome-da-imagem-2.jpg", title: "Obra II: Estrutura", id: "obra2" },
-            { src: "nome-da-imagem-3.jpg", title: "Obra III: Vazio", id: "obra3" },
-            { src: "nome-da-imagem-4.jpg", title: "Obra IV: Sombra", id: "obra4" }, 
-            // Adicione mais linhas aqui...
+        const images = [
+            { src: "https://images.unsplash.com/photo-1515462277126-2dd0c162007a?q=80&w=600", title: "Obra 1" },
+            { src: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600", title: "Obra 2" },
+            { src: "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=600", title: "Obra 3" },
+            { src: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600", title: "Obra 4" }
         ];
 
-        const videoData = [
-            { src: "nome-do-video-1.mp4", title: "Motion I", id: "vid1" },
-            { src: "nome-do-video-2.mp4", title: "Motion II", id: "vid2" },
-            { src: "nome-do-video-3.mp4", title: "Motion III", id: "vid3" },
-            // Adicione mais linhas aqui...
+        const videos = [
+            { src: "video1.mp4" }, // Substitua pelos seus arquivos
+            { src: "video2.mp4" },
+            { src: "video3.mp4" }
         ];
 
-        /* ================================================================ */
+        // --- LÓGICA DA ROLETA ---
+        let idxImg = 0;
+        let idxVid = 0;
 
-        // Índices atuais (qual obra está no centro)
-        let indexes = {
-            images: 0,
-            videos: 0
-        };
+        function renderCarousel(type, data, currentIndex) {
+            const track = document.getElementById(`track-${type}`);
+            track.innerHTML = ''; // Limpa
 
-        function initCarousel(type, data) {
-            const container = document.getElementById(`container-${type}`);
-            container.innerHTML = ''; // Limpa
+            // Lógica Circular
+            const prevIndex = (currentIndex - 1 + data.length) % data.length;
+            const nextIndex = (currentIndex + 1) % data.length;
 
-            // Define quem é o centro, esquerda e direita baseado no índice atual
-            const current = indexes[type];
-            const prev = (current - 1 + data.length) % data.length;
-            const next = (current + 1) % data.length;
-
-            // Renderiza Esquerda
-            createSlot(container, data[prev], 'side left', type);
-            // Renderiza Centro
-            createSlot(container, data[current], 'center', type);
-            // Renderiza Direita
-            createSlot(container, data[next], 'side right', type);
-        }
-
-        function createSlot(container, item, className, type) {
-            const div = document.createElement('div');
-            div.className = `slot ${className}`;
-            
-            // Se for vídeo
-            if (type === 'videos') {
-                const video = document.createElement('video');
-                video.src = item.src;
-                video.className = 'media-content';
-                video.muted = true;
-                video.loop = true;
-                video.playsInline = true;
-                
-                // Lógica Criativa: Toca apenas se for o centro
-                if (className.includes('center')) {
-                    video.play();
-                } else {
-                    video.pause();
-                }
-                div.appendChild(video);
-            } 
-            // Se for imagem
-            else {
-                const img = document.createElement('img');
-                img.src = item.src;
-                img.className = 'media-content';
-                div.appendChild(img);
-
-                // Clique na imagem central abre a página da obra
-                if (className.includes('center')) {
-                    div.onclick = () => window.location.href = `obra.html?img=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}`;
-                }
-            }
-
-            // Título abaixo da obra
-            const meta = document.createElement('div');
-            meta.className = 'meta-info';
-            meta.innerHTML = `<h3 class="caption">${item.title}</h3>`;
-            div.appendChild(meta);
-
-            container.appendChild(div);
-        }
-
-        function moveCarousel(type, direction) {
-            const data = type === 'images' ? imageData : videoData;
-            
-            // Atualiza índice circularmente
-            indexes[type] = (indexes[type] + direction + data.length) % data.length;
-            
-            // Re-renderiza com animação suave
-            initCarousel(type, data);
-        }
-
-        // Inicializa
-        initCarousel('images', imageData);
-        initCarousel('videos', videoData);
-
-    </script>
-</body>
-</html>
+            // Criar Esquerda
+            createSlot(track, data[prevIndex], 'side', type);
+            // Criar Centro
+            createSlot(track, data[currentIndex], 'center', type,
