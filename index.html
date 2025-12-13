@@ -9,42 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-    :root {
-        --bg-color: #050505;
-        --text-main: #Eaeaea;
-        --text-muted: #888;
-        --card-width: 450px; /* INVERSÃO: Era 300px, agora é a largura */
-        --card-height: 300px; /* INVERSÃO: Era 450px, agora é a altura */
-        --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* ESTADO EXPANDIDO (1º CLIQUE) - Novo formato horizontal */
-    .slot.expanded {
-        width: 700px; /* Largura maior para a ficha técnica */
-        height: 350px; /* Altura ligeiramente maior para o resumo */
-        transform: scale(1.1);
-        cursor: zoom-in;
-        box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
-    }
-    .slot.expanded img {
-        width: 55%; /* Imagem se retrai para dar espaço ao texto */
-        float: left;
-        height: 100%; /* Garantir que ocupe a altura total */
-        object-fit: cover;
-        opacity: 1;
-        box-shadow: none;
-    }
-    
-    .expanded-info {
-        float: right;
-        width: 45%;
-        padding: 2rem 1rem;
-        text-align: left;
-        opacity: 0;
-        animation: fadeIn 0.5s ease forwards 0.3s;
-    }
+        :root {
+            --bg-color: #050505;
+            --text-main: #Eaeaea;
+            --text-muted: #888;
+            /* Dimensões do Carrossel de IMAGENS (Horizontal) */
+            --card-width-img: 450px; 
+            --card-height-img: 300px; 
+            /* Dimensões do Carrossel de VÍDEOS (Vertical) */
+            --card-width-vid: 300px;
+            --card-height-vid: 450px;
+            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* --- NOVA ANIMAÇÃO DE SUAVIZAÇÃO DO CARROSSEL --- */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.fade-transition {
+    /* Esconde o carrossel no início da transição */
+    opacity: 0;
+    /* Garante que o CSS não bloqueie cliques */
+    pointer-events: none; 
+}
+
+.fade-transition-active {
+    /* Aplica a animação para reaparecer suavemente */
+    animation: fadeInOut 0.5s ease-in-out forwards;
+    pointer-events: all;
+}
         
         body {
             background-color: var(--bg-color);
@@ -70,38 +66,25 @@
         }
 
         /* --- HEADER & LOGO --- */
-header {
-    width: 100%;
-    padding: 2rem;
-    display: flex;
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center;
-    /* Remover 'position: absolute' para que o header ocupe seu próprio espaço
-       e empurre a Hero Section para baixo, evitando sobreposição. */
-    position: relative; /* Mudança crítica: Deixa o header no fluxo do documento */
-    z-index: 100;
-}
-
-.brand-logo { 
-    width: 140px; 
-    /* Manter o filtro de inversão para que a logo preta apareça branca no fundo escuro */
-    filter: invert(1); 
-    opacity: 0.9;
-    transition: opacity 0.5s;
-    /* Ajuste para garantir que a logo branca seja claramente visível */
-    /* Como a imagem é um PNG com fundo transparente, 'invert(1)' a torna branca. */
-}
-.brand-logo:hover { opacity: 1; }
+        header {
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* Ajuste para evitar sobreposição */
+            z-index: 100;
+        }
 
         .brand-logo { 
             width: 140px; 
             filter: invert(1); 
-            opacity: 0.5;
+            opacity: 0.9;
             transition: opacity 0.5s;
         }
         .brand-logo:hover { opacity: 1; }
 
-        /* HERO SECTION - Respiro e Foco */
+        /* HERO SECTION */
         .hero-section {
             min-height: 90vh;
             display: flex;
@@ -110,22 +93,28 @@ header {
             justify-content: center;
             text-align: center;
             padding: 0 5%;
-            /* Respiro Grande: Mantenha distância do carrossel */
             margin-bottom: 10rem; 
         }
 
         .hero-img {
-            /* Mantido o CSS anterior que funciona bem na captura de tela */
             width: 100%;
             height: auto;
             max-height: 70vh;
             object-fit: contain;
             box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            /* Transição para a rolagem sutil da Hero */
+            transition: opacity 1s ease-in-out; 
         }
 
-        /* --- CAROUSEL REESTRUTURADO (COM MAIS RESPIRO) --- */
+        .hero-info {
+            opacity: 1; /* Mantido visível para atualização */
+            transition: opacity 0.5s;
+        }
+
+        .hero-title { font-size: clamp(2.5rem, 6vw, 6rem); }
+
+        /* --- CAROUSEL BASE --- */
         .carousel-section {
-            /* Aumento do padding vertical para respiro */
             padding: 5rem 0; 
             display: flex;
             flex-direction: column;
@@ -135,7 +124,7 @@ header {
         }
 
         .section-header {
-            margin-bottom: 5rem; /* Aumento da margem para respiro do título */
+            margin-bottom: 5rem; 
             text-align: center;
             opacity: 0.7;
         }
@@ -144,22 +133,30 @@ header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4rem; /* Aumento do gap para respiro entre os cards */
+            gap: 4rem; 
             perspective: 1000px;
             width: 100%;
         }
 
-        /* CARD SLOT */
+        /* CARD SLOT GERAL */
         .slot {
-            width: var(--card-width);
-            height: var(--card-height);
             position: relative;
-            /* Acelera a transição para parecer mais responsivo ao clique */
             transition: all 0.5s var(--transition-curve);
             cursor: pointer;
             flex-shrink: 0;
-            /* Oculta o meta-info inicialmente */
             overflow: hidden; 
+        }
+
+        /* Aplica as dimensões HORIZONTAIS nas Imagens */
+        .carousel-section:nth-child(2) .slot {
+            width: var(--card-width-img);
+            height: var(--card-height-img);
+        }
+        
+        /* Aplica as dimensões VERTICAIS nos Vídeos */
+        .carousel-section:nth-child(3) .slot {
+            width: var(--card-width-vid);
+            height: var(--card-height-vid);
         }
 
         .slot img, .slot video {
@@ -171,7 +168,7 @@ header {
             transition: 0.5s;
         }
 
-        /* EFEITO HOVER DIVINO */
+        /* EFEITO HOVER */
         .slot:hover img, .slot:hover video {
              opacity: 1;
              filter: grayscale(0%);
@@ -179,120 +176,80 @@ header {
 
         /* ESTADOS DA ROLETA */
         .slot.center {
-            /* Diminuí a escala um pouco para que o expandir fique mais evidente */
             transform: scale(1.05); 
             z-index: 10;
-        }
-        .slot.center img, .slot.center video {
-            opacity: 1;
-            filter: grayscale(0%);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
-
-        .slot.side {
-            transform: scale(0.8); /* Lateral ficou ainda menor e discreta */
-            opacity: 0.3;
         }
 
         /* ESTADO EXPANDIDO (1º CLIQUE) */
         .slot.expanded {
-            width: 600px; /* Largura maior para a ficha técnica */
-            height: 450px;
+            width: 700px; 
+            height: 350px; 
             transform: scale(1.1);
             cursor: zoom-in;
             box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
         }
         .slot.expanded img {
-            width: 60%; /* Imagem se retrai para dar espaço ao texto */
+            width: 55%; 
             float: left;
+            height: 100%; 
+            object-fit: cover;
             opacity: 1;
             box-shadow: none;
         }
         
         .expanded-info {
             float: right;
-            width: 40%;
+            width: 45%;
             padding: 2rem 1rem;
             text-align: left;
             opacity: 0;
             animation: fadeIn 0.5s ease forwards 0.3s;
         }
-        
-        .expanded-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-        .expanded-info p {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
-        }
-        .expanded-info .cta {
-            display: block;
-            margin-top: 2rem;
-            color: #fff;
-            text-decoration: underline;
-            font-weight: bold;
-        }
-        
-        @keyframes fadeIn { to { opacity: 1; } }
 
-        /* --- BOTÃO DE COLEÇÕES --- (Sem alterações) */
-        .collection-link {
-            display: inline-block;
-            margin-top: 5rem; /* Mais respiro */
-            padding: 1rem 2rem;
-            border: 1px solid #333;
-            color: var(--text-muted);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-size: 0.8rem;
-            transition: 0.4s;
-        }
-        .collection-link:hover {
-            border-color: var(--text-main);
-            color: var(--text-main);
-            background: rgba(255,255,255,0.02);
-        }
+        /* --- RESPONSIVIDADE (Ajuste a distinção de formatos) --- */
         @media (max-width: 768px) {
-        /* Inverte as proporções para mobile, mantendo o formato horizontal */
-        :root { --card-width: 70vw; --card-height: 40vh; } 
-        .hero-section { min-height: 80vh; }
-        .slot.side { display: none; }
-        .carousel-track { gap: 0; }
-        
-        /* Ajuste da expansão para mobile */
-        .slot.expanded {
-             width: 90vw;
-             height: 50vh;
-        }
-        .slot.expanded img {
-             width: 100%;
-             height: 60%;
-             float: none;
-        }
-        .expanded-info {
-             float: none;
-             width: 100%;
-             height: 40%;
-             padding: 0.5rem 1rem;
+            /* Imagens (Horizontal) */
+            .carousel-section:nth-child(2) .slot {
+                width: 70vw; 
+                height: 40vh;
+            }
+            /* Vídeos (Vertical) */
+            .carousel-section:nth-child(3) .slot {
+                width: 50vw;
+                height: 70vh;
+            }
+            
+            /* Ajuste da expansão para mobile */
+            .slot.expanded {
+                 width: 90vw;
+                 height: 50vh;
+            }
+            .slot.expanded img {
+                 width: 100%;
+                 height: 60%;
+                 float: none;
+            }
+            .expanded-info {
+                 float: none;
+                 width: 100%;
+                 height: 40%;
+                 padding: 0.5rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
-
     <header>
-        <img src="logo.png" alt="Sombraz" class="brand-logo">
+        <img src="logo-v1-png (1).png" alt="Gennoz" class="brand-logo">
     </header>
 
     <section class="hero-section">
         <div class="hero-image-container">
-            <img src="familia02.jpg" class="hero-img" alt="Destaque">
+            <img id="hero-img" src="familia02.jpg" class="hero-img" alt="Destaque">
         </div>
         <div class="hero-info">
-            <h1 class="hero-title serif">Família</h1>
-            <p class="meta-data">2025 • Gennoz • Pernambuco</p>
+            <h1 id="hero-title" class="hero-title serif">Família</h1>
+            <p id="hero-meta" class="meta-data">2025 • Gennoz • Pernambuco</p>
         </div>
     </section>
 
@@ -323,9 +280,23 @@ header {
     </footer>
 
     <script>
-        // --- DADOS DINÂMICOS (FÁCIL EDIÇÃO) ---
-        
+        // === CONTROLE DA PÁGINA ===
+        const CONFIG = {
+            // MUDANÇA CRÍTICA: Troque 'false' por 'true' para ATIVAR a rolagem automática da Hero Section
+            heroSlideshowEnabled: false, 
+            heroInterval: 8000 // Intervalo de 8 segundos
+        };
+
+        // --- DADOS DA HERO SECTION ---
+        const heroSlides = [
+            { src: "familia02.jpg", title: "Família", year: "2025", location: "Pernambuco" },
+            { src: "familia01.jpg", title: "Em Casa", year: "2024", location: "Recife" },
+            { src: "familia03.jpg", title: "Viagem", year: "2023", location: "Rio de Janeiro" }
+        ];
+
+        // --- DADOS DO CARROSSEL ---
         const images = [
+            // (Mantenha o resto de suas imagens aqui)
             { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
             { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
             { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
@@ -340,7 +311,6 @@ header {
             { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
             { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
         ];
-        // Adicione as propriedades 'year' e 'location' em todas as suas imagens!
 
         const videos = [
             { src: "video01.mp4", title: "Estudo de Cor" },
@@ -351,30 +321,88 @@ header {
             { src: "video06.mp4", title: "Foco e Desfoco" },
         ];
 
-        // --- LÓGICA DA ROLETA COM EXPANSÃO DE 2 CLIQUES ---
+        // --- LÓGICA DA HERO SLIDESHOW (Opção OFF) ---
+        
+        let currentHeroIndex = 0;
+        const heroImg = document.getElementById('hero-img');
+        const heroTitle = document.getElementById('hero-title');
+        const heroMeta = document.getElementById('hero-meta');
+
+        function updateHeroContent() {
+            const slide = heroSlides[currentHeroIndex];
+            
+            // Animação de fade-out antes de mudar o conteúdo
+            heroImg.style.opacity = '0';
+            heroTitle.style.opacity = '0';
+            heroMeta.style.opacity = '0';
+
+            setTimeout(() => {
+                // Atualiza o conteúdo
+                heroImg.src = slide.src;
+                heroTitle.textContent = slide.title;
+                heroMeta.textContent = `${slide.year} • Gennoz • ${slide.location}`;
+
+                // Animação de fade-in
+                heroImg.style.opacity = '1';
+                heroTitle.style.opacity = '1';
+                heroMeta.style.opacity = '1';
+                
+                // Avança para o próximo slide
+                currentHeroIndex = (currentHeroIndex + 1) % heroSlides.length;
+            }, 1000); // Espera o fade-out (1s)
+        }
+
+        if (CONFIG.heroSlideshowEnabled) {
+            // Inicia o slideshow se o switch estiver em TRUE
+            setInterval(updateHeroContent, CONFIG.heroInterval);
+            // Garante que o conteúdo inicial seja o primeiro slide, mesmo que a página comece com familia02.jpg
+            updateHeroContent();
+        }
+
+        // --- LÓGICA DO CARROSSEL (Permanece igual) ---
         let idxImg = 0;
         let idxVid = 0;
 
-        function renderCarousel(type, data, currentIndex) {
-            if (data.length < 3) return; 
+        // --- LÓGICA DA ROLETA COM TRANSIÇÃO SUAVE (ATUALIZADA) ---
 
-            const track = document.getElementById(`track-${type}`);
-            track.innerHTML = ''; 
-            
-            // Lógica Circular para Esquerda, Centro e Direita
-            const prevIndex = (currentIndex - 1 + data.length) % data.length;
-            const nextIndex = (currentIndex + 1) % data.length;
+function renderCarousel(type, data, currentIndex) {
+    if (data.length < 3) return; 
 
-            createSlot(track, data[prevIndex], 'side', type, prevIndex);
-            createSlot(track, data[currentIndex], 'center', type, currentIndex); 
-            createSlot(track, data[nextIndex], 'side', type, nextIndex);
-        }
+    const track = document.getElementById(`track-${type}`);
+    
+    // PASSO 1: Inicia o Fade-out
+    track.classList.add('fade-transition');
+    
+    // Limpa o conteúdo (aqui a troca de imagem acontece)
+    track.innerHTML = ''; 
+    
+    // O Timeout permite que o browser registre a mudança de classe antes de prosseguir
+    setTimeout(() => {
+        // Lógica Circular para Esquerda, Centro e Direita (Continua a mesma)
+        const prevIndex = (currentIndex - 1 + data.length) % data.length;
+        const nextIndex = (currentIndex + 1) % data.length;
+
+        createSlot(track, data[prevIndex], 'side', type, prevIndex);
+        createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+        createSlot(track, data[nextIndex], 'side', type, nextIndex);
+
+        // PASSO 2: Inicia o Fade-in (animação)
+        track.classList.remove('fade-transition');
+        track.classList.add('fade-transition-active');
+        
+        // PASSO 3: Remove a classe de animação após o término (0.5s)
+        setTimeout(() => {
+             track.classList.remove('fade-transition-active');
+        }, 500); 
+
+    }, 50); // Delay curto para registrar o fade-out e dar a sensação de transição
+}
 
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
             div.className = `slot ${className}`;
-            div.setAttribute('data-index', dataIndex); // Salva o índice original
-            div.setAttribute('data-clicks', 0); // Contador de cliques
+            div.setAttribute('data-index', dataIndex);
+            div.setAttribute('data-clicks', 0);
 
             let mediaElement;
             if (type === 'videos') {
@@ -392,7 +420,6 @@ header {
             div.appendChild(mediaElement);
 
             if (type === 'images') {
-                 // Info de Expansão (escondida inicialmente)
                 const info = document.createElement('div');
                 info.className = 'expanded-info';
                 info.innerHTML = `
@@ -406,11 +433,10 @@ header {
             }
            
 
-            // Lógica do Clique
+            // Lógica do Clique (Permanece a mesma para expansão)
             div.onclick = function() {
-                // Se for Lateral: Apenas move o carrossel
+                // Lógica de movimento lateral
                 if (className === 'side' || div.classList.contains('side')) {
-                    // Decide o sentido do movimento baseado na posição do card clicado
                     let direction = dataIndex === (idxImg - 1 + images.length) % images.length ? -1 : 1;
                     if (type === 'images') {
                         idxImg = (idxImg + direction + images.length) % images.length;
@@ -419,29 +445,23 @@ header {
                         idxVid = (idxVid + direction + videos.length) % videos.length;
                         renderCarousel('videos', videos, idxVid);
                     }
-                    // Resetar cliques de todos
                     document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
                     return;
                 }
                 
-                // Se for Central (Lógica de 2 Cliques)
-                if (div.classList.contains('center')) {
+                // Lógica de 2 Cliques Central (Apenas para Imagens)
+                if (type === 'images' && div.classList.contains('center')) {
                     let clicks = parseInt(div.getAttribute('data-clicks'));
 
-                    // 1º CLIQUE CENTRAL: EXPANDIR
                     if (clicks === 0) {
-                        // Limpa qualquer outra expansão e move o foco
                         document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                         div.classList.add('expanded');
                         div.setAttribute('data-clicks', 1);
                         return;
                     }
 
-                    // 2º CLIQUE CENTRAL (JÁ EXPANDIDO): NAVEGAR
                     if (clicks === 1) {
-                        // Reseta cliques e navega
                         div.setAttribute('data-clicks', 0); 
-                        // Link da CTA na info é usado para navegação
                         window.location.href = div.querySelector('.cta').href;
                         return;
                     }
