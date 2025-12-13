@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gennoz | Arquivo</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #Eaeaea;
+            --text-muted: #888;
+            /* Dimensões do Carrossel de IMAGENS (Horizontal) */
+            --card-width-img: 450px; 
+            --card-height-img: 300px; 
+            /* Dimensões do Carrossel de VÍDEOS (Vertical REDIMENSIONADA) */
+            --card-width-vid: 250px; 
+            --card-height-vid: 350px; 
+            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: 5rem;
+        }
+
+        /* --- TIPOGRAFIA --- */
+        h1, h2, .serif {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-data {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 0.5rem;
+        }
+
+        /* --- HEADER & LOGO --- */
+        header {
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; 
+            z-index: 100;
+        }
+
+        .brand-logo { 
+            width: 140px; 
+            filter: invert(1); 
+            opacity: 0.9;
+            transition: opacity 0.5s;
+        }
+        .brand-logo:hover { opacity: 1; }
+
+        /* HERO SECTION */
+        .hero-section {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5%;
+            margin-bottom: 10rem; 
+        }
+
+        .hero-img {
+            width: 100%;
+            height: auto;
+            max-height: 60vh; 
+            object-fit: contain;
+            /* Sombra preta sutil */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 
+                        0 20px 60px rgba(0,0,0,0.8); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            transition: all 1s ease-in-out; 
+        }
+
+        .hero-title { 
+            /* Tamanho ligeiramente reduzido */
+            font-size: clamp(2.2rem, 5vw, 5rem); 
+        }
+
+        /* --- CAROUSEL BASE --- */
+        .carousel-section {
+            padding: 5rem 0; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 5rem; 
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        .carousel-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4rem; 
+            perspective: 1000px;
+            width: 100%;
+        }
+
+        /* CARD SLOT GERAL */
+        .slot {
+            position: relative;
+            /* Transição fluida de CSS para movimentos e escala (o foco do movimento fluido) */
+            transition: all 0.5s var(--transition-curve);
+            cursor: pointer;
+            flex-shrink: 0;
+            overflow: hidden; 
+        }
+
+        /* Dimensões Horizontais (Imagens) */
+        .carousel-section:nth-child(2) .slot {
+            width: var(--card-width-img);
+            height: var(--card-height-img);
+        }
+        
+        /* Dimensões Verticais REDIMENSIONADAS (Vídeos) */
+        .carousel-section:nth-child(3) .slot {
+            width: var(--card-width-vid);
+            height: var(--card-height-vid);
+        }
+
+        .slot img, .slot video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%); 
+            opacity: 0.6;
+            transition: 0.5s;
+        }
+
+        /* --- ESTÉTICA: COR E P&B --- */
+        .slot.center img, .slot.center video {
+            filter: grayscale(0%) !important; 
+            opacity: 1 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        .slot.side:hover img, .slot.side:hover video {
+             filter: grayscale(0%);
+             opacity: 1;
+        }
+
+        /* ESTADOS EXPANDIDOS E DE FOCO */
+        .slot.center {
+            transform: scale(1.05); 
+            z-index: 10;
+        }
+
+        /* ESTADO EXPANDIDO (1º CLIQUE) - Formato Horizontal */
+        .slot.expanded {
+            width: 700px; 
+            height: 350px; 
+            transform: scale(1.1);
+            cursor: zoom-in;
+            box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
+        }
+        .slot.expanded img {
+            width: 55%; 
+            float: left;
+            height: 100%; 
+            object-fit: cover;
+            opacity: 1;
+            box-shadow: none;
+            filter: grayscale(0%); 
+        }
+        
+        .expanded-info {
+            float: right;
+            width: 45%;
+            padding: 2rem 1rem;
+            text-align: left;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards 0.3s;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 768px) {
+            .hero-img { max-height: 50vh; } 
+            .carousel-section:nth-child(2) .slot { width: 70vw; height: 40vh; }
+            .carousel-section:nth-child(3) .slot { 
+                width: 50vw; 
+                height: 60vh; 
+            }
+            
+            .slot.expanded { width: 90vw; height: 50vh; }
+            .slot.expanded img {
+                 width: 100%; height: 60%; float: none;
+                 filter: grayscale(0%);
+            }
+            .expanded-info {
+                 float: none; width: 100%; height: 40%; padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Sombraz" class="brand-logo">
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-image-container">
+            <img id="hero-img" src="familia02.jpg" class="hero-img" alt="Destaque">
+        </div>
+        <div class="hero-info">
+            <h1 id="hero-title" class="hero-title serif">Família</h1>
+            <p id="hero-meta" class="meta-data">2025 • Gennoz • Pernambuco</p>
+        </div>
+    </section>
+
+    <section class="carousel-section">
+        <div class="section-header">
+            <h2 class="serif">Acervo</h2>
+            <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
+        </div>
+
+        <div class="carousel-track" id="track-images">
+            </div>
+
+        <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
+    </section>
+
+    <section class="carousel-section">
+        <div class="section-header">
+            <h2 class="serif">Motion</h2>
+            <p class="meta-data">Autoplay no Destaque</p>
+        </div>
+
+        <div class="carousel-track" id="track-videos">
+            </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
+        GENNOZ © 2025
+    </footer>
+
+    <script>
+        // === DADOS E CONFIGURAÇÃO ===
+        const CONFIG = {
+            heroSlideshowEnabled: false, 
+            heroInterval: 8000 
+        };
+        const images = [
+            { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
+            { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem04.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem05.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem06.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem07.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem08.jpg", title: "Sotave", year: "2023", location: "Recife" },
+            { src: "imagem09.jpg", title: "Brasília Teimosa", year: "2024", location: "Recife" },
+            { src: "imagem10.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem11.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
+            { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
+        ];
+        const videos = [
+            { src: "video01.mp4", title: "Estudo de Cor" },
+            { src: "video02.mp4", title: "Loop Infinito" },
+            { src: "video03.mp4", title: "Céu Noturno" },
+            { src: "video04.mp4", title: "Transição" },
+            { src: "video05.mp4", title: "Onda de Pixel" },
+            { src: "video06.mp4", title: "Foco e Desfoco" },
+        ];
+
+        let idxImg = 0;
+        let idxVid = 0;
+
+        // --- FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO E ATUALIZAÇÃO ---
+        function renderCarousel(type, data, currentIndex) {
+            const track = document.getElementById(`track-${type}`);
+            if (!track || data.length < 3) return; 
+
+            // Limpa o conteúdo
+            track.innerHTML = ''; 
+            
+            const prevIndex = (currentIndex - 1 + data.length) % data.length;
+            const nextIndex = (currentIndex + 1) % data.length;
+
+            createSlot(track, data[prevIndex], 'side', type, prevIndex);
+            createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+            createSlot(track, data[nextIndex], 'side', type, nextIndex);
+            
+            // Gerenciamento de Vídeos
+            if (type === 'videos') {
+                track.querySelectorAll('video').forEach(v => v.pause()); 
+                const centerVideo = track.querySelector('.slot.center video');
+                if (centerVideo) {
+                    centerVideo.play().catch(error => {
+                        console.warn("Autoplay de vídeo bloqueado ou falhou:", error);
+                    });
+                }
+            }
+        }
+
+        // --- CRIAÇÃO DE SLOT ---
+        function createSlot(track, item, className, type, dataIndex) {
+            const div = document.createElement('div');
+            div.className = `slot ${className}`;
+            div.setAttribute('data-index', dataIndex);
+            div.setAttribute('data-clicks', 0);
+
+            let mediaElement;
+            if (type === 'videos') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.src;
+                mediaElement.muted = true;
+                mediaElement.loop = true;
+                mediaElement.playsInline = true;
+                if(className === 'center') mediaElement.load(); 
+            } else {
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.src;
+            }
+            div.appendChild(mediaElement);
+
+            if (type === 'images') {
+                const info = document.createElement('div');
+                info.className = 'expanded-info';
+                info.innerHTML = `
+                    <h3 class="serif">${item.title}</h3>
+                    <p>Ano: ${item.year || 'N/A'}</p>
+                    <p>Local: ${item.location || 'N/A'}</p>
+                    <p>Criador: Gennoz</p>
+                    <a href="obra.html?src=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}" class="cta">Ver Página da Obra →</a>
+                `;
+                div.appendChild(info);
+            }
+           
+
+            // Lógica do Clique (Movimentação e 2 Cliques)
+            div.onclick = function() {
+                // Lógica de movimento lateral (fluido, via CSS transition)
+                if (div.classList.contains('side')) {
+                    let isPrev = dataIndex === (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length);
+                    let direction = isPrev ? -1 : 1;
+                    
+                    if (type === 'images') {
+                        idxImg = (idxImg + direction + images.length) % images.length;
+                        renderCarousel('images', images, idxImg);
+                    } else {
+                        idxVid = (idxVid + direction + videos.length) % videos.length;
+                        renderCarousel('videos', videos, idxVid);
+                    }
+                    document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
+                    document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
+                    return;
+                }
+                
+                // Lógica de 2 Cliques Central (Apenas para Imagens)
+                if (type === 'images' && div.classList.contains('center')) {
+                    let clicks = parseInt(div.getAttribute('data-clicks'));
+
+                    // 1º Clique: Expande
+                    if (clicks === 0) {
+                        document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
+                        div.classList.add('expanded');
+                        div.setAttribute('data-clicks', 1);
+                        return;
+                    }
+
+                    // 2º Clique: Navega
+                    if (clicks === 1) {
+                        div.setAttribute('data-clicks', 0); 
+                        window.location.href = div.querySelector('.cta').href;
+                        return;
+                    }
+                }
+            };
+
+            track.appendChild(div);
+        }
+
+        // --- INICIALIZAÇÃO GARANTIDA ---
+        function initializeCarousels() {
+             if (images.length >= 3) {
+                renderCarousel('images', images, idxImg);
+            }
+            if (videos.length >= 3) {
+                renderCarousel('videos', videos, idxVid);
+            }
+        }
+
+        // 1. Tenta inicializar assim que o DOM estiver pronto (mais rápido)
+        document.addEventListener('DOMContentLoaded', initializeCarousels);
+        
+        // 2. Como fallback (se o DOMContentLoaded não funcionar, espere o carregamento total)
+        window.onload = initializeCarousels;
+    </script>
+</body>
+</html>
