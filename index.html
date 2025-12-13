@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gennoz</title>
+    <title>Gennoz | Arquivo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
             --bg-color: #050505;
             --text-main: #Eaeaea;
             --text-muted: #888;
-            --card-width: 300px; /* Tamanho controlado da roleta */
+            --card-width: 300px;
             --card-height: 450px;
             --transition-curve: cubic-bezier(0.25, 1, 0.5, 1);
         }
@@ -43,37 +43,41 @@
             margin-top: 0.5rem;
         }
 
-        /* --- HEADER & HERO (O DESTAQUE) --- */
+        /* --- HEADER & HERO --- */
         header {
             width: 100%;
             padding: 2rem;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: absolute; /* Torna a logo flutuante */
+            z-index: 100;
         }
 
         .brand-logo { 
             width: 140px; 
             filter: invert(1); 
-            opacity: 0.5;
+            opacity: 0.9;
+            transition: opacity 0.5s;
         }
+        .brand-logo:hover { opacity: 1; }
 
-        /* O Palco Principal */
+        /* HERO SECTION - SEM ALTERAÇÕES - PERFEITO */
         .hero-section {
-            min-height: 90vh; /* Ocupa a tela inicial inteira */
+            min-height: 90vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             padding: 0 5%;
-            margin-bottom: 5rem; /* Respiro para a próxima seção */
+            margin-bottom: 5rem;
         }
 
         .hero-image-container {
             position: relative;
             width: 100%;
-            max-width: 900px; /* Limite elegante */
+            max-width: 900px;
             height: auto;
             margin-bottom: 2rem;
             opacity: 0;
@@ -84,7 +88,7 @@
             width: 100%;
             height: auto;
             max-height: 70vh;
-            object-fit: contain; /* Garante que a obra apareça inteira */
+            object-fit: contain;
             box-shadow: 0 20px 60px rgba(0,0,0,0.6);
         }
 
@@ -93,17 +97,17 @@
             animation: slideUp 1s ease-out forwards 0.5s;
         }
 
-        .hero-title { font-size: clamp(2rem, 5vw, 4rem); /* Tamanho dinâmico */ }
+        .hero-title { font-size: clamp(2rem, 5vw, 4rem); }
 
-        /* --- CAROUSEL (ROLETA CONTIDA) --- */
+        /* --- CAROUSEL REESTRUTURADO --- */
         .carousel-section {
-            min-height: 60vh; /* Menor que antes */
+            min-height: 60vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
-            margin: 5rem 0; /* Espaçamento vital */
+            margin: 5rem 0;
         }
 
         .section-header {
@@ -121,6 +125,7 @@
             width: 100%;
         }
 
+        /* CARD SLOT */
         .slot {
             width: var(--card-width);
             height: var(--card-height);
@@ -137,6 +142,12 @@
             opacity: 0.6;
             filter: grayscale(100%);
             transition: 0.5s;
+        }
+
+        /* EFEITO HOVER DIVINO: Lateral ou Central */
+        .slot:hover img, .slot:hover video {
+             opacity: 1;
+             filter: grayscale(0%);
         }
 
         /* ESTADOS DA ROLETA */
@@ -182,7 +193,7 @@
         @media (max-width: 768px) {
             :root { --card-width: 70vw; --card-height: 50vh; }
             .hero-section { min-height: 80vh; }
-            .slot.side { display: none; } /* Mobile foca apenas no centro */
+            .slot.side { display: none; }
             .carousel-track { gap: 0; }
         }
     </style>
@@ -190,7 +201,7 @@
 <body>
 
     <header>
-        <img src="logo.png" alt="Gennoz" class="brand-logo">
+        <img src="logo-v1-png (1).png" alt="Gennoz" class="brand-logo">
     </header>
 
     <section class="hero-section">
@@ -205,30 +216,24 @@
 
     <section class="carousel-section">
         <div class="section-header">
-            <img src="imagem01.jpg">
-            <img src="imagem02.jpg">
-            <img src="imagem03.jpg">
-            <img src="imagem04.jpg">
-            <img src="imagem05.jpg">
-            <img src="imagem06.jpg">
             <h2 class="serif">Acervo</h2>
             <p class="meta-data">Deslize para navegar</p>
         </div>
 
         <div class="carousel-track" id="track-images">
-            </div>
+        </div>
 
         <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
     </section>
 
     <section class="carousel-section">
         <div class="section-header">
-            <img src="video01">
-            <h2 class="serif">Acervo</h2>
+            <h2 class="serif">Motion</h2>
+            <p class="meta-data">Autoplay no Destaque</p>
         </div>
 
         <div class="carousel-track" id="track-videos">
-            </div>
+        </div>
     </section>
 
     <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
@@ -255,7 +260,7 @@
         ];
 
         const videos = [
-            { src: "video01.mp4" }, // Substitua pelos seus arquivos
+            { src: "video01.mp4" },
             { src: "video02.mp4" },
             { src: "video03.mp4" },
             { src: "video04.mp4" },
@@ -268,14 +273,73 @@
         let idxVid = 0;
 
         function renderCarousel(type, data, currentIndex) {
-            const track = document.getElementById(`track-${type}`);
-            track.innerHTML = ''; // Limpa
+            // Se a lista de dados for menor que 3, não renderiza o carrossel.
+            if (data.length < 3) return; 
 
-            // Lógica Circular
+            const track = document.getElementById(`track-${type}`);
+            track.innerHTML = ''; // Limpa antes de renderizar
+
+            // Lógica Circular para Esquerda, Centro e Direita
             const prevIndex = (currentIndex - 1 + data.length) % data.length;
             const nextIndex = (currentIndex + 1) % data.length;
 
             // Criar Esquerda
             createSlot(track, data[prevIndex], 'side', type);
             // Criar Centro
-            createSlot(track, data[currentIndex], 'center', type,
+            createSlot(track, data[currentIndex], 'center', type, true); 
+            // Criar Direita
+            createSlot(track, data[nextIndex], 'side', type);
+        }
+
+        function createSlot(track, item, className, type, isCenter = false) {
+            const div = document.createElement('div');
+            div.className = `slot ${className}`;
+
+            if (type === 'videos') {
+                const vid = document.createElement('video');
+                vid.src = item.src;
+                vid.muted = true;
+                vid.loop = true;
+                vid.playsInline = true;
+                if(className === 'center') vid.play(); // Autoplay criativo: só no centro
+                else vid.pause();
+                div.appendChild(vid);
+            } else {
+                const img = document.createElement('img');
+                img.src = item.src;
+                div.appendChild(img);
+            }
+
+            // Ação: Ao clicar, gira o carrossel (mesmo que seja o centro)
+            div.onclick = () => {
+                if (type === 'images') {
+                    // Se for lateral, avança 1 (para o centro)
+                    if (className === 'side') {
+                         idxImg = (idxImg + 1) % images.length;
+                    }
+                    // Se for centro, avança 1 (para a próxima obra)
+                    else {
+                         idxImg = (idxImg + 1) % images.length;
+                    }
+                    renderCarousel('images', images, idxImg);
+                } else {
+                    // Lógica similar para vídeos
+                    if (className === 'side') {
+                         idxVid = (idxVid + 1) % videos.length;
+                    } else {
+                         idxVid = (idxVid + 1) % videos.length;
+                    }
+                    renderCarousel('videos', videos, idxVid);
+                }
+            };
+
+            track.appendChild(div);
+        }
+
+        // Inicializa Carrosséis
+        renderCarousel('images', images, idxImg);
+        renderCarousel('videos', videos, idxVid);
+        
+    </script>
+</body>
+</html>
