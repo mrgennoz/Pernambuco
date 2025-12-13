@@ -13,12 +13,13 @@
             --bg-color: #050505;
             --text-main: #Eaeaea;
             --text-muted: #888;
-            /* Dimensões do Carrossel de IMAGENS (Horizontal) */
+            /* Dimensões IMAGENS (Horizontal) */
             --card-width-img: 450px; 
             --card-height-img: 300px; 
-            /* Dimensões do Carrossel de VÍDEOS (Vertical REDIMENSIONADA) */
+            /* Dimensões VÍDEOS (Vertical Redimensionada) */
             --card-width-vid: 250px; 
             --card-height-vid: 350px; 
+            --transition-speed: 0.5s;
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -32,7 +33,7 @@
             padding-bottom: 5rem;
         }
 
-        /* --- TIPOGRAFIA --- */
+        /* TIPOGRAFIA */
         h1, h2, .serif {
             font-family: 'Bodoni Moda', serif;
             font-weight: 400;
@@ -47,108 +48,66 @@
             margin-top: 0.5rem;
         }
 
-        /* --- HEADER & LOGO --- */
-        header {
-            width: 100%;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative; 
-            z-index: 100;
-        }
-
-        .brand-logo { 
-            width: 140px; 
-            filter: invert(1); 
-            opacity: 0.9;
-            transition: opacity 0.5s;
-        }
-        .brand-logo:hover { opacity: 1; }
-
-        /* HERO SECTION */
+        /* HEADER & HERO */
+        header { padding: 2rem; display: flex; justify-content: center; }
+        .brand-logo { width: 140px; filter: invert(1); opacity: 0.9; transition: var(--transition-speed); }
         .hero-section {
-            min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 5%;
-            margin-bottom: 10rem; 
+            min-height: 90vh; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; text-align: center; padding: 0 5%; margin-bottom: 10rem; 
         }
 
         .hero-img {
-            width: 100%;
-            height: auto;
-            max-height: 60vh; 
-            object-fit: contain;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 
-                        0 20px 60px rgba(0,0,0,0.8); 
+            width: 100%; height: auto; max-height: 60vh; object-fit: contain;
+            /* Borda preta e sutil */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 20px 60px rgba(0,0,0,0.8); 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             transition: all 1s ease-in-out; 
         }
 
         .hero-title { 
+            /* Título ligeiramente menor */
             font-size: clamp(2.2rem, 4.5vw, 4.5rem); 
         }
 
-        /* --- CAROUSEL BASE --- */
+        /* CARROSSEL BASE */
         .carousel-section {
-            padding: 5rem 0; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            padding: 5rem 0; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; position: relative;
         }
-
-        .section-header {
-            margin-bottom: 5rem; 
-            text-align: center;
-            opacity: 0.7;
-        }
-
+        .section-header { margin-bottom: 5rem; text-align: center; opacity: 0.7; }
         .carousel-track {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4rem; 
-            perspective: 1000px;
-            width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 4rem; 
+            perspective: 1000px; width: 100%;
         }
 
-        /* CARD SLOT GERAL */
-        /* A CLASSE 'slot-img' E 'slot-vid' SÃO INSERIDAS PELO JS PARA FORÇAR A PROPORÇÃO */
+        /* SLOTS (DIMENSÕES E TRANSIÇÃO FLUIDA) */
         .slot {
             position: relative;
-            transition: all 0.5s var(--transition-curve);
+            transition: all var(--transition-speed) var(--transition-curve);
             cursor: pointer;
             flex-shrink: 0;
             overflow: hidden; 
         }
-
-        /* Dimensões Horizontais (IMAGENS) */
+        
+        /* 1. Imagens: Horizontal */
         .slot.slot-img {
             width: var(--card-width-img);
             height: var(--card-height-img);
         }
         
-        /* Dimensões Verticais REDIMENSIONADAS (VÍDEOS) */
+        /* 2. Vídeos: Vertical Redimensionada */
         .slot.slot-vid {
             width: var(--card-width-vid);
             height: var(--card-height-vid);
         }
-        
-        /* O restante do CSS de efeitos (hover, center, expanded) permanece igual. */
+
         .slot img, .slot video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(100%); 
-            opacity: 0.6;
-            transition: 0.5s;
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%); opacity: 0.6;
+            transition: var(--transition-speed);
         }
+
+        /* EFEITOS DE FOCO */
         .slot.center {
             transform: scale(1.05); 
             z-index: 10;
@@ -158,14 +117,36 @@
             opacity: 1 !important;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         }
-        /* ... (CSS expanded e responsividade omitidos por brevidade, mas estão no código final) */
+        .slot.side:hover img, .slot.side:hover video {
+             filter: grayscale(0%);
+             opacity: 1;
+        }
 
-        /* --- RESPONSIVIDADE (PARA GARANTIR A PROPORÇÃO) --- */
+        /* ESTADO EXPANDIDO (Imagens apenas) */
+        .slot.expanded {
+            width: 700px; 
+            height: 350px; 
+            transform: scale(1.1);
+            cursor: zoom-in;
+            box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
+        }
+        .slot.expanded img { width: 55%; float: left; height: 100%; box-shadow: none; filter: grayscale(0%); }
+        .expanded-info {
+            float: right; width: 45%; padding: 2rem 1rem; text-align: left;
+            opacity: 0; animation: fadeIn 0.5s ease forwards 0.3s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* RESPONSIVIDADE */
         @media (max-width: 768px) {
+            .hero-img { max-height: 50vh; } 
             .slot.slot-img { width: 70vw; height: 40vh; }
             .slot.slot-vid { width: 50vw; height: 60vh; }
+            
             .slot.expanded { width: 90vw; height: 50vh; }
-            /* ... (Outros ajustes de media query) */
+            .slot.expanded img { width: 100%; height: 60%; float: none; }
+            .expanded-info { float: none; width: 100%; height: 40%; padding: 0.5rem 1rem; }
         }
     </style>
 </head>
@@ -189,19 +170,16 @@
             <h2 class="serif">Acervo</h2>
             <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
         </div>
-
         <div class="carousel-track" id="track-images">
             </div>
-
         <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
     </section>
 
     <section class="carousel-section">
         <div class="section-header">
-            <h2 class="serif">Memórias</h2>
-            <p class="meta-data">Pernambuco</p>
+            <h2 class="serif">Motion</h2>
+            <p class="meta-data">Autoplay no Destaque</p>
         </div>
-
         <div class="carousel-track" id="track-videos">
             </div>
     </section>
@@ -211,11 +189,7 @@
     </footer>
 
     <script>
-        // === DADOS E CONFIGURAÇÃO ===
-        const CONFIG = {
-            heroSlideshowEnabled: false, 
-            heroInterval: 8000 
-        };
+        // === 1. DADOS ===
         const images = [
             { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
             { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
@@ -240,37 +214,17 @@
             { src: "video06.mp4", title: "Foco e Desfoco" },
         ];
 
-        let idxImg = 0;
-        let idxVid = 0;
+        let currentIdxImg = 0;
+        let currentIdxVid = 0;
 
-        function renderCarousel(type, data, currentIndex) {
-            const track = document.getElementById(`track-${type}`);
-            if (!track || data.length < 3) return; 
+        // === 2. FUNÇÕES CORE ===
 
-            track.innerHTML = ''; 
-            
-            const prevIndex = (currentIndex - 1 + data.length) % data.length;
-            const nextIndex = (currentIndex + 1) % data.length;
-
-            createSlot(track, data[prevIndex], 'side', type, prevIndex);
-            createSlot(track, data[currentIndex], 'center', type, currentIndex); 
-            createSlot(track, data[nextIndex], 'side', type, nextIndex);
-            
-            if (type === 'videos') {
-                track.querySelectorAll('video').forEach(v => v.pause()); 
-                const centerVideo = track.querySelector('.slot.center video');
-                if (centerVideo) {
-                    centerVideo.play().catch(error => {
-                        console.warn("Autoplay de vídeo bloqueado ou falhou:", error);
-                    });
-                }
-            }
-        }
-
-        // --- FUNÇÃO CRÍTICA DE CRIAÇÃO DO SLOT ---
+        /**
+         * Cria e anexa o elemento slot ao track.
+         */
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
-            // Adiciona a classe específica para dimensões: 'slot-img' ou 'slot-vid'
+            // Aplica a classe de dimensão (Horizontal ou Vertical Redimensionada)
             const sizeClass = type === 'images' ? 'slot-img' : 'slot-vid';
             div.className = `slot ${className} ${sizeClass}`; 
             div.setAttribute('data-index', dataIndex);
@@ -303,34 +257,43 @@
                 div.appendChild(info);
             }
            
-            // Lógica do Clique (Movimentação e 2 Cliques)
+            // Lógica do Clique
             div.onclick = function() {
+                const isImages = type === 'images';
+                let currentIdx = isImages ? currentIdxImg : currentIdxVid;
+                const data = isImages ? images : videos;
+
+                // 1. Movimento Lateral (Clique no Slide 'side')
                 if (div.classList.contains('side')) {
-                    let isPrev = dataIndex === (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length);
-                    let direction = isPrev ? -1 : 1;
+                    const prevIndex = (currentIdx - 1 + data.length) % data.length;
+                    const isPrev = dataIndex === prevIndex;
+                    const direction = isPrev ? -1 : 1;
                     
-                    if (type === 'images') {
-                        idxImg = (idxImg + direction + images.length) % images.length;
-                        renderCarousel('images', images, idxImg);
-                    } else {
-                        idxVid = (idxVid + direction + videos.length) % videos.length;
-                        renderCarousel('videos', videos, idxVid);
-                    }
+                    currentIdx = (currentIdx + direction + data.length) % data.length;
+
+                    if (isImages) { currentIdxImg = currentIdx; } else { currentIdxVid = currentIdx; }
+
+                    renderCarousel(type, data, currentIdx);
+                    // Resetar estados de clique/expansão
                     document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
                     document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                     return;
                 }
                 
-                if (type === 'images' && div.classList.contains('center')) {
+                // 2. Ações no Centro (Apenas para Imagens)
+                if (isImages && div.classList.contains('center')) {
                     let clicks = parseInt(div.getAttribute('data-clicks'));
 
+                    // Primeiro clique: Expande
                     if (clicks === 0) {
+                        // Fecha qualquer outro expandido
                         document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                         div.classList.add('expanded');
                         div.setAttribute('data-clicks', 1);
                         return;
                     }
 
+                    // Segundo clique: Navega
                     if (clicks === 1) {
                         div.setAttribute('data-clicks', 0); 
                         window.location.href = div.querySelector('.cta').href;
@@ -342,26 +305,51 @@
             track.appendChild(div);
         }
 
-        // --- INICIALIZAÇÃO GARANTIDA ---
-        function initializeCarousels() {
-             // Debugging line (Pode ser removida após a confirmação de funcionamento)
-             console.log("Inicializando carrosséis...");
-             
-             if (images.length >= 3) {
-                renderCarousel('images', images, idxImg);
-            } else {
-                 console.error("Dados insuficientes para carrossel de imagens.");
-            }
-            if (videos.length >= 3) {
-                renderCarousel('videos', videos, idxVid);
-            } else {
-                console.error("Dados insuficientes para carrossel de vídeos.");
+        /**
+         * Renderiza o carrossel (track) com os slides prev, center e next.
+         */
+        function renderCarousel(type, data, currentIndex) {
+            const track = document.getElementById(`track-${type}`);
+            if (!track || data.length < 3) return; 
+
+            // 1. Limpa o track para inserção dos novos slides
+            track.innerHTML = ''; 
+            
+            // 2. Calcula os índices (circular)
+            const prevIndex = (currentIndex - 1 + data.length) % data.length;
+            const nextIndex = (currentIndex + 1) % data.length;
+
+            // 3. Cria e insere os slots
+            createSlot(track, data[prevIndex], 'side', type, prevIndex);
+            createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+            createSlot(track, data[nextIndex], 'side', type, nextIndex);
+            
+            // 4. Gerenciamento de Vídeos (Autoplay no centro)
+            if (type === 'videos') {
+                // Pausa todos para economizar recursos
+                track.querySelectorAll('video').forEach(v => v.pause()); 
+                const centerVideo = track.querySelector('.slot.center video');
+                if (centerVideo) {
+                    centerVideo.play().catch(error => {
+                        console.warn("Autoplay de vídeo bloqueado ou falhou. Clique para interagir.", error);
+                    });
+                }
             }
         }
 
-        // Estratégia de inicialização mais robusta
+        // === 3. INICIALIZAÇÃO ESTÁVEL ===
+        function initializeCarousels() {
+             if (images.length >= 3) {
+                renderCarousel('images', images, currentIdxImg);
+            }
+            if (videos.length >= 3) {
+                renderCarousel('videos', videos, currentIdxVid);
+            }
+        }
+
+        // Estratégia de Inicialização Robustíssima para evitar erros de Timing
         document.addEventListener('DOMContentLoaded', initializeCarousels);
-        window.onload = initializeCarousels;
+        window.onload = initializeCarousels; // Fallback completo
     </script>
 </body>
 </html>
