@@ -94,10 +94,14 @@
         .hero-img {
             width: 100%;
             height: auto;
-            max-height: 70vh;
+            /* Tamanho ligeiramente diminuído (de 70vh para 60vh) */
+            max-height: 60vh; 
             object-fit: contain;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            transition: opacity 1s ease-in-out; 
+            /* Sombra sutil e suave (azul/ciano para harmonizar com a água) */
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4), 
+                        0 20px 60px rgba(0,0,0,0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Borda muito fina para definir a foto */
+            transition: all 1s ease-in-out; 
         }
 
         .hero-info {
@@ -106,7 +110,6 @@
         }
 
         .hero-title { 
-            /* Tamanho Ampliado */
             font-size: clamp(2.5rem, 6vw, 6rem); 
         }
 
@@ -211,4 +214,237 @@
             padding: 2rem 1rem;
             text-align: left;
             opacity: 0;
-            animation: fadeIn 0.5s ease forwards 0
+            animation: fadeIn 0.5s ease forwards 0.3s;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 768px) {
+            .hero-img { max-height: 50vh; } /* Diminui ainda mais no mobile */
+            /* Imagens (Horizontal no mobile) */
+            .carousel-section:nth-child(2) .slot { width: 70vw; height: 40vh; }
+            /* Vídeos (Vertical no mobile) */
+            .carousel-section:nth-child(3) .slot { width: 50vw; height: 70vh; }
+            
+            /* Ajuste da expansão para mobile */
+            .slot.expanded { width: 90vw; height: 50vh; }
+            .slot.expanded img {
+                 width: 100%; height: 60%; float: none;
+                 filter: grayscale(0%);
+            }
+            .expanded-info {
+                 float: none; width: 100%; height: 40%; padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Gennoz" class="brand-logo">
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-image-container">
+            <img id="hero-img" src="familia02.jpg" class="hero-img" alt="Destaque">
+        </div>
+        <div class="hero-info">
+            <h1 id="hero-title" class="hero-title serif">Família</h1>
+            <p id="hero-meta" class="meta-data">2025 • Gennoz • Pernambuco</p>
+        </div>
+    </section>
+
+    <section class="carousel-section">
+        <div class="section-header">
+            <h2 class="serif">Acervo</h2>
+            <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
+        </div>
+
+        <div class="carousel-track" id="track-images">
+            </div>
+
+        <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
+    </section>
+
+    <section class="carousel-section">
+        <div class="section-header">
+            <h2 class="serif">Motion</h2>
+            <p class="meta-data">Autoplay no Destaque</p>
+        </div>
+
+        <div class="carousel-track" id="track-videos">
+            </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
+        GENNOZ © 2025
+    </footer>
+
+    <script defer>
+        // === CONTROLE E DADOS ===
+        const CONFIG = {
+            heroSlideshowEnabled: false, 
+            heroInterval: 8000 
+        };
+
+        const heroSlides = [
+            { src: "familia02.jpg", title: "Família", year: "2025", location: "Pernambuco" },
+            { src: "familia01.jpg", title: "Em Casa", year: "2024", location: "Recife" },
+            { src: "familia03.jpg", title: "Viagem", year: "2023", location: "Rio de Janeiro" }
+        ];
+
+        const images = [
+            { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
+            { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem04.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem05.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem06.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem07.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem08.jpg", title: "Sotave", year: "2023", location: "Recife" },
+            { src: "imagem09.jpg", title: "Brasília Teimosa", year: "2024", location: "Recife" },
+            { src: "imagem10.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem11.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
+            { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
+        ];
+
+        const videos = [
+            { src: "video01.mp4", title: "Estudo de Cor" },
+            { src: "video02.mp4", title: "Loop Infinito" },
+            { src: "video03.mp4", title: "Céu Noturno" },
+            { src: "video04.mp4", title: "Transição" },
+            { src: "video05.mp4", title: "Onda de Pixel" },
+            { src: "video06.mp4", title: "Foco e Desfoco" },
+        ];
+
+        // --- LÓGICA HERO SECTION ---
+        // (Mantida, mas não requer alteração de inicialização crítica)
+
+        // --- LÓGICA DO CARROSSEL E TRANSIÇÃO SUAVE ---
+        let idxImg = 0;
+        let idxVid = 0;
+
+        function renderCarousel(type, data, currentIndex) {
+            const track = document.getElementById(`track-${type}`);
+            if (!track || data.length < 3) return; 
+
+            // Inicia o Fade-out (Transição Suave)
+            track.classList.add('fade-transition');
+            track.innerHTML = ''; 
+            
+            // Pequeno timeout para garantir que o browser registre o fade-out
+            setTimeout(() => {
+                const prevIndex = (currentIndex - 1 + data.length) % data.length;
+                const nextIndex = (currentIndex + 1) % data.length;
+
+                createSlot(track, data[prevIndex], 'side', type, prevIndex);
+                createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+                createSlot(track, data[nextIndex], 'side', type, nextIndex);
+
+                // Inicia o Fade-in
+                track.classList.remove('fade-transition');
+                track.classList.add('fade-transition-active');
+                
+                setTimeout(() => {
+                     track.classList.remove('fade-transition-active');
+                }, 500); 
+
+                // Tenta dar play no vídeo central logo após a montagem do slide
+                if (type === 'videos') {
+                    const centerVideo = track.querySelector('.slot.center video');
+                    if (centerVideo) {
+                         centerVideo.play().catch(error => {
+                            console.warn("Autoplay de vídeo bloqueado, aguardando interação do usuário.", error);
+                         });
+                    }
+                }
+
+            }, 50); 
+        }
+
+        function createSlot(track, item, className, type, dataIndex) {
+            const div = document.createElement('div');
+            div.className = `slot ${className}`;
+            div.setAttribute('data-index', dataIndex);
+            div.setAttribute('data-clicks', 0);
+
+            let mediaElement;
+            if (type === 'videos') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.src;
+                mediaElement.muted = true;
+                mediaElement.loop = true;
+                mediaElement.playsInline = true;
+                if(className === 'center') mediaElement.load(); // Pré-carrega o vídeo central
+            } else {
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.src;
+            }
+            div.appendChild(mediaElement);
+
+            if (type === 'images') {
+                const info = document.createElement('div');
+                info.className = 'expanded-info';
+                info.innerHTML = `
+                    <h3 class="serif">${item.title}</h3>
+                    <p>Ano: ${item.year || 'N/A'}</p>
+                    <p>Local: ${item.location || 'N/A'}</p>
+                    <p>Criador: Gennoz</p>
+                    <a href="obra.html?src=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}" class="cta">Ver Página da Obra →</a>
+                `;
+                div.appendChild(info);
+            }
+           
+
+            // Lógica do Clique
+            div.onclick = function() {
+                // Lógica de movimento lateral
+                if (className === 'side' || div.classList.contains('side')) {
+                    let direction = (div.getAttribute('data-index') == (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length)) ? -1 : 1;
+                    
+                    if (type === 'images') {
+                        idxImg = (idxImg + direction + images.length) % images.length;
+                        renderCarousel('images', images, idxImg);
+                    } else {
+                        idxVid = (idxVid + direction + videos.length) % videos.length;
+                        renderCarousel('videos', videos, idxVid);
+                    }
+                    // Resetar cliques
+                    document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0)); 
+                    return;
+                }
+                
+                // Lógica de 2 Cliques Central (Apenas para Imagens)
+                if (type === 'images' && div.classList.contains('center')) {
+                    let clicks = parseInt(div.getAttribute('data-clicks'));
+
+                    if (clicks === 0) {
+                        document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
+                        div.classList.add('expanded');
+                        div.setAttribute('data-clicks', 1);
+                        return;
+                    }
+
+                    if (clicks === 1) {
+                        div.setAttribute('data-clicks', 0); 
+                        window.location.href = div.querySelector('.cta').href;
+                        return;
+                    }
+                }
+            };
+
+            track.appendChild(div);
+        }
+
+        // --- INICIALIZAÇÃO (O atributo 'defer' garante que isso rode após o DOM) ---
+        (function initializeCarousels() {
+            if (images.length >= 3) {
+                renderCarousel('images', images, idxImg);
+            }
+            if (videos.length >= 3) {
+                renderCarousel('videos', videos, idxVid);
+            }
+        })();
+
+    </script>
+</body>
+</html>
