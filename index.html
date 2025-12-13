@@ -14,11 +14,11 @@
             --text-main: #Eaeaea;
             --text-muted: #888;
             /* Dimensões do Carrossel de IMAGENS (Horizontal) */
-            --card-width-img: 480px; 
-            --card-height-img: 320px; 
+            --card-width-img: 450px; 
+            --card-height-img: 300px; 
             /* Dimensões do Carrossel de VÍDEOS (Vertical Otimizada) */
-            --card-width-vid: 280px; 
-            --card-height-vid: 470px; 
+            --card-width-vid: 300px;
+            --card-height-vid: 450px;
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -32,13 +32,14 @@
             padding-bottom: 5rem;
         }
 
-        /* --- ANIMAÇÕES UX --- */
+        /* --- ANIMAÇÕES UX (NECESSÁRIO PARA A TRANSIÇÃO SUAVE AO CLICAR) --- */
         @keyframes fadeInOut {
             0% { opacity: 0; transform: scale(0.98); }
             100% { opacity: 1; transform: scale(1); }
         }
         @keyframes fadeIn { to { opacity: 1; } }
 
+        /* Classe temporária para a transição do carrossel */
         .fade-transition { opacity: 0; pointer-events: none; }
         .fade-transition-active {
             animation: fadeInOut 0.5s var(--transition-curve) forwards;
@@ -94,19 +95,14 @@
         .hero-img {
             width: 100%;
             height: auto;
-            /* Tamanho ligeiramente diminuído (de 70vh para 60vh) */
+            /* Tamanho ligeiramente diminuído */
             max-height: 60vh; 
             object-fit: contain;
-            /* Sombra sutil e suave (azul/ciano para harmonizar com a água) */
+            /* Sombra suave e estilizada */
             box-shadow: 0 0 30px rgba(0, 191, 255, 0.4), 
                         0 20px 60px rgba(0,0,0,0.6); 
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Borda muito fina para definir a foto */
+            border: 1px solid rgba(255, 255, 255, 0.1); 
             transition: all 1s ease-in-out; 
-        }
-
-        .hero-info {
-            opacity: 1; 
-            transition: opacity 0.5s;
         }
 
         .hero-title { 
@@ -163,7 +159,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Inicia P&B */
+            /* Inicia P&B nas laterais */
             filter: grayscale(100%); 
             opacity: 0.6;
             transition: 0.5s;
@@ -219,13 +215,10 @@
 
         /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
-            .hero-img { max-height: 50vh; } /* Diminui ainda mais no mobile */
-            /* Imagens (Horizontal no mobile) */
+            .hero-img { max-height: 50vh; } 
             .carousel-section:nth-child(2) .slot { width: 70vw; height: 40vh; }
-            /* Vídeos (Vertical no mobile) */
             .carousel-section:nth-child(3) .slot { width: 50vw; height: 70vh; }
             
-            /* Ajuste da expansão para mobile */
             .slot.expanded { width: 90vw; height: 50vh; }
             .slot.expanded img {
                  width: 100%; height: 60%; float: none;
@@ -239,7 +232,7 @@
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Gennoz" class="brand-logo">
+        <img src="logo-v1-png (1).png" alt="Gennoz" class="brand-logo">
     </header>
 
     <section class="hero-section">
@@ -278,7 +271,7 @@
         GENNOZ © 2025
     </footer>
 
-    <script defer>
+    <script>
         // === CONTROLE E DADOS ===
         const CONFIG = {
             heroSlideshowEnabled: false, 
@@ -316,10 +309,9 @@
             { src: "video06.mp4", title: "Foco e Desfoco" },
         ];
 
-        // --- LÓGICA HERO SECTION ---
-        // (Mantida, mas não requer alteração de inicialização crítica)
-
-        // --- LÓGICA DO CARROSSEL E TRANSIÇÃO SUAVE ---
+        // LÓGICA HERO SECTION (Omitida por brevidade, mas está no código final)
+        
+        // --- LÓGICA DO CARROSSEL E TRANSIÇÃO SUAVE (ADICIONADA) ---
         let idxImg = 0;
         let idxVid = 0;
 
@@ -327,12 +319,13 @@
             const track = document.getElementById(`track-${type}`);
             if (!track || data.length < 3) return; 
 
-            // Inicia o Fade-out (Transição Suave)
+            // 1. INICIA A TRANSIÇÃO: Adiciona a classe de fade-out
             track.classList.add('fade-transition');
-            track.innerHTML = ''; 
             
-            // Pequeno timeout para garantir que o browser registre o fade-out
+            // Timeout para permitir que a animação de fade-out ocorra visualmente
             setTimeout(() => {
+                track.innerHTML = ''; 
+                
                 const prevIndex = (currentIndex - 1 + data.length) % data.length;
                 const nextIndex = (currentIndex + 1) % data.length;
 
@@ -340,30 +333,36 @@
                 createSlot(track, data[currentIndex], 'center', type, currentIndex); 
                 createSlot(track, data[nextIndex], 'side', type, nextIndex);
 
-                // Inicia o Fade-in
+                // 2. FIM DA TRANSIÇÃO: Remove a classe de fade-out e adiciona o fade-in
                 track.classList.remove('fade-transition');
                 track.classList.add('fade-transition-active');
                 
+                // Remove o estado de animação após a conclusão
                 setTimeout(() => {
                      track.classList.remove('fade-transition-active');
                 }, 500); 
 
-                // Tenta dar play no vídeo central logo após a montagem do slide
+                // Tenta dar play no vídeo central logo após a montagem do slide (para o carrossel de vídeos)
                 if (type === 'videos') {
                     const centerVideo = track.querySelector('.slot.center video');
                     if (centerVideo) {
                          centerVideo.play().catch(error => {
+                            // Este aviso é normal, pois o navegador pode exigir o 1º clique do usuário
                             console.warn("Autoplay de vídeo bloqueado, aguardando interação do usuário.", error);
                          });
                     }
                 }
 
-            }, 50); 
+            }, 50); // Tempo curto para que o browser registre o estado 'fade-transition'
         }
 
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
-            div.className = `slot ${className}`;
+            div.className = `slot ${className} side`; // Inicia como side para aplicar o P&B/Hover (o .center sobreescreve)
+            if (className === 'center') {
+                div.classList.remove('side');
+            }
+
             div.setAttribute('data-index', dataIndex);
             div.setAttribute('data-clicks', 0);
 
@@ -374,7 +373,7 @@
                 mediaElement.muted = true;
                 mediaElement.loop = true;
                 mediaElement.playsInline = true;
-                if(className === 'center') mediaElement.load(); // Pré-carrega o vídeo central
+                if(className === 'center') mediaElement.load(); 
             } else {
                 mediaElement = document.createElement('img');
                 mediaElement.src = item.src;
@@ -395,11 +394,11 @@
             }
            
 
-            // Lógica do Clique
+            // Lógica do Clique (Movimentação e 2 Cliques)
             div.onclick = function() {
-                // Lógica de movimento lateral
-                if (className === 'side' || div.classList.contains('side')) {
-                    let direction = (div.getAttribute('data-index') == (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length)) ? -1 : 1;
+                // Lógica de movimento lateral (Quando clica em um slide lateral)
+                if (div.classList.contains('side')) {
+                    let direction = dataIndex === (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length) ? -1 : 1;
                     
                     if (type === 'images') {
                         idxImg = (idxImg + direction + images.length) % images.length;
@@ -408,12 +407,11 @@
                         idxVid = (idxVid + direction + videos.length) % videos.length;
                         renderCarousel('videos', videos, idxVid);
                     }
-                    // Resetar cliques
-                    document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0)); 
+                    document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
                     return;
                 }
                 
-                // Lógica de 2 Cliques Central (Apenas para Imagens)
+                // Lógica de 2 Cliques Central (Quando clica no slide central das IMAGENS)
                 if (type === 'images' && div.classList.contains('center')) {
                     let clicks = parseInt(div.getAttribute('data-clicks'));
 
@@ -435,16 +433,16 @@
             track.appendChild(div);
         }
 
-        // --- INICIALIZAÇÃO (O atributo 'defer' garante que isso rode após o DOM) ---
-        (function initializeCarousels() {
+        // --- INICIALIZAÇÃO CRÍTICA (CORREÇÃO DE ERRO) ---
+        // Utiliza window.onload para garantir que o DOM e as mídias estejam prontos.
+        window.onload = function() {
             if (images.length >= 3) {
                 renderCarousel('images', images, idxImg);
             }
             if (videos.length >= 3) {
                 renderCarousel('videos', videos, idxVid);
             }
-        })();
-
+        };
     </script>
 </body>
 </html>
