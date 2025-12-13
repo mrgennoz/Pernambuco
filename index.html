@@ -6,331 +6,304 @@
     <title>GENNOZ | Archive</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg-color: #050505;
-            --text-main: #F0F0F0;
-            --text-muted: #666666;
-            --accent-gold: #D4AF37; /* Um toque sutil, opcional */
-            --transition-slow: all 1.2s cubic-bezier(0.19, 1, 0.22, 1); /* Curva Bézier para suavidade extrema */
+            --text-main: #Eaeaea;
+            --dim-opacity: 0.3;
+            --transition-speed: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            opacity: 0;
-            animation: genesis 2s forwards; /* O site nasce do escuro */
         }
 
-        @keyframes genesis { to { opacity: 1; } }
-
-        /* --- TIPOGRAFIA --- */
-        h1, h2, .art-title {
+        h1, h2, .caption {
             font-family: 'Bodoni Moda', serif;
-            font-weight: 400;
             text-transform: uppercase;
+            font-weight: 400;
         }
 
         /* --- HEADER --- */
         header {
-            height: 80vh;
+            padding: 2rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+        .brand-logo { 
+            width: 120px; 
+            filter: invert(1); 
+            transition: transform 0.5s;
+        }
+        .brand-logo:hover { transform: scale(1.05); }
+
+        /* --- ESTRUTURA DAS ROLETAS (CAROUSEL) --- */
+        section {
+            height: 90vh; /* Ocupa quase toda a tela */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+        }
+
+        .carousel-title {
+            position: absolute;
+            top: 5%;
+            font-size: 1.5rem;
+            letter-spacing: 0.2em;
+            color: #444;
             z-index: 10;
         }
 
-        .brand-logo {
-            max-width: 160px;
-            filter: invert(1);
-            opacity: 0.8;
-            transition: var(--transition-slow);
-        }
-        
-        .brand-logo:hover { opacity: 1; transform: scale(1.02); }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 5%;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 0.2em;
-            animation: float 3s infinite ease-in-out;
-        }
-
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-
-        /* --- SEÇÃO 1: A GALERIA VIVA (EXPANSIVA) --- */
-        .gallery-section {
-            padding: 5vh 5%;
+        .carousel-container {
             display: flex;
-            flex-direction: column;
-            gap: 4rem;
-        }
-
-        .gallery-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .media-container {
-            flex: 1 1 300px; /* Tamanho base */
-            height: 400px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: var(--transition-slow);
-            filter: grayscale(100%) brightness(0.4); /* O estado "Sombra" */
-        }
-
-        /* O Surgimento ao passar o mouse */
-        .media-container:hover {
-            filter: grayscale(0%) brightness(1);
-            flex-basis: 350px; /* Ligeira expansão no hover */
-        }
-
-        /* O Estado Expandido (Clicado) */
-        .media-container.active {
-            flex: 1 1 100%; /* Ocupa a linha inteira */
-            height: 85vh; /* Altura de tela cheia */
-            filter: grayscale(0%) brightness(1);
-            z-index: 20;
-            order: -1; /* Opcional: Traz para o topo ou mantém fluxo */
-        }
-
-        .media-item {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition-slow);
-        }
-
-        .media-container.active .media-item {
-            object-fit: contain; /* Mostra a imagem inteira sem cortes quando expandida */
-            background: #0a0a0a;
-        }
-
-        /* --- SEÇÃO 2: O SPOTLIGHT (OBRAS ESPECÍFICAS) --- */
-        .spotlight-section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 5rem 5%;
-            border-top: 1px solid #1a1a1a;
-        }
-
-        .spotlight-stage {
+            gap: 40px; /* Espaço entre as obras */
             width: 100%;
-            max-width: 900px;
-            margin-bottom: 3rem;
-            text-align: center;
+            perspective: 1000px;
         }
 
-        .spotlight-image {
-            width: 100%;
-            max-height: 70vh;
-            object-fit: contain;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            border: 1px solid #111;
-        }
-
-        .spotlight-info {
-            margin-top: 2rem;
-            opacity: 0;
-            animation: fadeInUp 1s forwards 0.5s;
-        }
-
-        .art-title {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.05em;
-        }
-
-        .art-meta {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-        }
-
-        .spotlight-controls {
-            display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-family: 'Bodoni Moda', serif;
-            font-size: 1.5rem;
+        /* O SLOT DA OBRA */
+        .slot {
+            position: relative;
+            transition: var(--transition-speed);
             cursor: pointer;
-            transition: 0.3s;
-            padding: 1rem;
         }
 
-        .control-btn:hover { color: var(--text-main); transform: scale(1.1); }
-
-        /* Thumbnails laterais para seleção */
-        .thumbnails-row {
-            display: flex;
-            gap: 10px;
-            opacity: 0.5;
-            transition: 0.5s;
-        }
-        .thumbnails-row:hover { opacity: 1; }
-
-        .thumb {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            cursor: pointer;
-            border: 1px solid transparent;
+        /* ESTADO: LATERAL (Menor e Escuro) */
+        .slot.side {
+            width: 250px;
+            height: 350px;
+            opacity: var(--dim-opacity);
+            transform: scale(0.85) rotateY(10deg); /* Leve rotação 3D */
             filter: grayscale(100%);
+            z-index: 1;
         }
-        .thumb:hover, .thumb.selected {
-            border-color: var(--text-main);
+        
+        /* Ajuste da rotação para o lado esquerdo */
+        .slot.side.left { transform: scale(0.85) rotateY(15deg); }
+        .slot.side.right { transform: scale(0.85) rotateY(-15deg); }
+
+        /* ESTADO: CENTRAL (Maior e Vivo) */
+        .slot.center {
+            width: 450px; /* Largura enfática */
+            height: 600px;
+            opacity: 1;
+            transform: scale(1) translateZ(50px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            z-index: 10;
             filter: grayscale(0%);
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* MÍDIA INTERNA */
+        .media-content {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
         }
-        
-        /* Mobile adjustment */
-        @media(max-width: 768px) {
-            .media-container.active { height: 50vh; }
-            .art-title { font-size: 1.5rem; }
+
+        /* CAPTION (Título da Obra) */
+        .meta-info {
+            position: absolute;
+            bottom: -3rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: 0.5s;
+        }
+
+        .slot.center .meta-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- CONTROLES DE NAVEGAÇÃO --- */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 3rem;
+            font-family: 'Bodoni Moda', serif;
+            cursor: pointer;
+            z-index: 20;
+            padding: 2rem;
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { opacity: 1; scale: 1.1; }
+        .prev-btn { left: 5%; }
+        .next-btn { right: 5%; }
+
+        /* SEPARADOR */
+        .divider {
+            height: 1px;
+            width: 50px;
+            background: #333;
+            margin: 0 auto;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .slot.side { display: none; } /* Esconde laterais no celular */
+            .slot.center { width: 90%; height: 60vh; }
+            .carousel-container { gap: 0; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="logo.png" alt="Gennoz" class="brand-logo">
-        <div class="scroll-indicator">EXPLORE O ARQUIVO</div>
+        <img src="logo.png" alt="Gennoz Logo" class="brand-logo">
     </header>
 
-    <section class="gallery-section">
-        <div class="gallery-grid" id="mainGallery">
-            
-            <div class="media-container" onclick="expand(this)">
-                <img src="https://images.unsplash.com/photo-1515462277126-2dd0c162007a?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra I">
-            </div>
-
-            <div class="media-container" onclick="expand(this)">
-                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra II">
-            </div>
-
-            <div class="media-container" onclick="expand(this)">
-                <video class="media-item" autoplay muted loop playsinline>
-                    <source src="seu-video-1.mp4" type="video/mp4">
-                </video>
-            </div>
-
-            <div class="media-container" onclick="expand(this)">
-                <img src="https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?q=80&w=800&auto=format&fit=crop" class="media-item" alt="Obra IV">
-            </div>
-
-        </div>
-    </section>
-
-    <section class="spotlight-section">
+    <section id="section-images">
+        <h2 class="carousel-title">VISUAL ARCHIVE</h2>
         
-        <div class="spotlight-stage">
-            <img id="spotlight-img" src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=1200" class="spotlight-image" alt="Destaque">
-            
-            <div class="spotlight-info">
-                <h2 id="spot-title" class="art-title">A Dualidade da Forma</h2>
-                <p id="spot-meta" class="art-meta">2024 • Gennoz • Digital Archive</p>
+        <button class="nav-btn prev-btn" onclick="moveCarousel('images', -1)">‹</button>
+        
+        <div class="carousel-container" id="container-images">
             </div>
-        </div>
-
-        <div class="thumbnails-row">
-            <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=200" class="thumb selected" 
-                 onclick="changeSpotlight(this, 'A Dualidade da Forma', '2024 • Gennoz • Digital Archive', 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=1200')">
-            
-            <img src="https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=200" class="thumb" 
-                 onclick="changeSpotlight(this, 'O Vazio Iluminado', '2023 • Colaboração X • Fotografia', 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=1200')">
-            
-            <img src="https://images.unsplash.com/photo-1499558231460-70f907c11f71?q=80&w=200" class="thumb" 
-                 onclick="changeSpotlight(this, 'Estrutura Óssea', '2024 • Gennoz • Render', 'https://images.unsplash.com/photo-1499558231460-70f907c11f71?q=80&w=1200')">
-        </div>
-
+        
+        <button class="nav-btn next-btn" onclick="moveCarousel('images', 1)">›</button>
     </section>
 
-    <footer>
-        <p style="color: #333; font-size: 0.7rem; letter-spacing: 0.3em; padding: 2rem;">GENNOZ © 2025</p>
+    <div class="divider"></div>
+
+    <section id="section-videos">
+        <h2 class="carousel-title">MOTION</h2>
+
+        <button class="nav-btn prev-btn" onclick="moveCarousel('videos', -1)">‹</button>
+        
+        <div class="carousel-container" id="container-videos">
+            </div>
+        
+        <button class="nav-btn next-btn" onclick="moveCarousel('videos', 1)">›</button>
+    </section>
+
+    <footer style="text-align:center; padding: 4rem; font-size: 0.7rem; color: #444; letter-spacing: 0.2em;">
+        GENNOZ © 2025
     </footer>
 
     <script>
-        // FUNÇÃO 1: EXPANDIR A GALERIA
-        // Ao clicar, a imagem ganha a classe 'active', empurrando as outras suavemente
-        function expand(element) {
-            // Se já estiver ativo, fecha
-            if (element.classList.contains('active')) {
-                element.classList.remove('active');
-            } else {
-                // Fecha qualquer outro aberto primeiro para manter o foco único
-                const openItems = document.querySelectorAll('.media-container.active');
-                openItems.forEach(item => item.classList.remove('active'));
+        /* ================================================================
+           ÁREA DE CURADORIA (Edite aqui para adicionar/remover obras)
+           ================================================================
+           Para adicionar uma imagem, copie uma linha e mude o 'src'.
+           O 'id' é usado para abrir a página de detalhes.
+        */
+        
+        const imageData = [
+            { src: "nome-da-imagem-1.jpg", title: "Obra I: Gênesis", id: "obra1" },
+            { src: "nome-da-imagem-2.jpg", title: "Obra II: Estrutura", id: "obra2" },
+            { src: "nome-da-imagem-3.jpg", title: "Obra III: Vazio", id: "obra3" },
+            { src: "nome-da-imagem-4.jpg", title: "Obra IV: Sombra", id: "obra4" }, 
+            // Adicione mais linhas aqui...
+        ];
+
+        const videoData = [
+            { src: "nome-do-video-1.mp4", title: "Motion I", id: "vid1" },
+            { src: "nome-do-video-2.mp4", title: "Motion II", id: "vid2" },
+            { src: "nome-do-video-3.mp4", title: "Motion III", id: "vid3" },
+            // Adicione mais linhas aqui...
+        ];
+
+        /* ================================================================ */
+
+        // Índices atuais (qual obra está no centro)
+        let indexes = {
+            images: 0,
+            videos: 0
+        };
+
+        function initCarousel(type, data) {
+            const container = document.getElementById(`container-${type}`);
+            container.innerHTML = ''; // Limpa
+
+            // Define quem é o centro, esquerda e direita baseado no índice atual
+            const current = indexes[type];
+            const prev = (current - 1 + data.length) % data.length;
+            const next = (current + 1) % data.length;
+
+            // Renderiza Esquerda
+            createSlot(container, data[prev], 'side left', type);
+            // Renderiza Centro
+            createSlot(container, data[current], 'center', type);
+            // Renderiza Direita
+            createSlot(container, data[next], 'side right', type);
+        }
+
+        function createSlot(container, item, className, type) {
+            const div = document.createElement('div');
+            div.className = `slot ${className}`;
+            
+            // Se for vídeo
+            if (type === 'videos') {
+                const video = document.createElement('video');
+                video.src = item.src;
+                video.className = 'media-content';
+                video.muted = true;
+                video.loop = true;
+                video.playsInline = true;
                 
-                // Abre o clicado
-                element.classList.add('active');
-                
-                // Rola suavemente para centralizar a imagem expandida
-                setTimeout(() => {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);
+                // Lógica Criativa: Toca apenas se for o centro
+                if (className.includes('center')) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+                div.appendChild(video);
+            } 
+            // Se for imagem
+            else {
+                const img = document.createElement('img');
+                img.src = item.src;
+                img.className = 'media-content';
+                div.appendChild(img);
+
+                // Clique na imagem central abre a página da obra
+                if (className.includes('center')) {
+                    div.onclick = () => window.location.href = `obra.html?img=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}`;
+                }
             }
+
+            // Título abaixo da obra
+            const meta = document.createElement('div');
+            meta.className = 'meta-info';
+            meta.innerHTML = `<h3 class="caption">${item.title}</h3>`;
+            div.appendChild(meta);
+
+            container.appendChild(div);
         }
 
-        // FUNÇÃO 2: O SPOTLIGHT (Troca de Obras)
-        function changeSpotlight(thumb, title, meta, highResUrl) {
-            // Atualiza visual dos thumbnails
-            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('selected'));
-            thumb.classList.add('selected');
-
-            // Elementos do palco
-            const mainImg = document.getElementById('spotlight-img');
-            const mainTitle = document.getElementById('spot-title');
-            const mainMeta = document.getElementById('spot-meta');
-            const infoBox = document.querySelector('.spotlight-info');
-
-            // Efeito de Fade Out
-            mainImg.style.opacity = 0;
-            infoBox.style.opacity = 0;
-
-            setTimeout(() => {
-                // Troca o conteúdo
-                mainImg.src = highResUrl;
-                mainTitle.innerText = title;
-                mainMeta.innerText = meta;
-
-                // Efeito de Fade In
-                mainImg.onload = () => {
-                    mainImg.style.opacity = 1;
-                    infoBox.style.animation = 'none';
-                    infoBox.offsetHeight; /* trigger reflow */
-                    infoBox.style.animation = 'fadeInUp 1s forwards';
-                };
-            }, 300);
+        function moveCarousel(type, direction) {
+            const data = type === 'images' ? imageData : videoData;
+            
+            // Atualiza índice circularmente
+            indexes[type] = (indexes[type] + direction + data.length) % data.length;
+            
+            // Re-renderiza com animação suave
+            initCarousel(type, data);
         }
+
+        // Inicializa
+        initCarousel('images', imageData);
+        initCarousel('videos', videoData);
+
     </script>
 </body>
 </html>
