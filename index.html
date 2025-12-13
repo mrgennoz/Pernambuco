@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gennoz | Arcevo</title>
+    <title>Gennoz | Acervo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -47,21 +47,34 @@
             margin-top: 0.5rem;
         }
 
-        /* 1. SEÇÃO DO LOGO (Interação de Estrutura) */
+        /* 1. SEÇÃO DO LOGO (Efeito Bokeh Light e Poeira Flutuante) */
         .logo-section {
             min-height: 20vh; 
             display: flex; 
             justify-content: center; 
             align-items: center;
             padding: 2rem;
-            transition: all 0.8s var(--transition-curve); /* Transição para o efeito de layout */
+            transition: all 0.8s var(--transition-curve); 
+            position: relative;
+            cursor: pointer; /* Indica que é clicável */
         }
         
-        /* Efeito Sutil de Estrutura ao passar sobre a logo */
+        /* Efeito Bokeh Light (Sombra de luz suave e difusa) */
         .logo-section:hover {
              padding-bottom: 3rem; 
-             background-color: rgba(255, 255, 255, 0.02); /* Fundo sutilmente mais claro */
-             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, rgba(5, 5, 5, 0) 70%);
+             box-shadow: 0 5px 20px rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Animação de Partículas ao Clicar (Simulação de Poeira Flutuante) */
+        .brand-logo.clicked {
+            animation: pulse-and-shake 0.3s ease-in-out;
+        }
+
+        @keyframes pulse-and-shake {
+            0% { transform: scale(1.05) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(0.5deg); opacity: 1; }
+            100% { transform: scale(1.05) rotate(-0.5deg); opacity: 1; }
         }
 
         .brand-logo { 
@@ -75,7 +88,7 @@
             transform: scale(1.05); 
         }
 
-        /* 2. HERO SECTION (Com Funcionalidade de Expansão) */
+        /* 2. HERO SECTION (Expansão In-Place) */
         .hero-section {
             min-height: 80vh; 
             display: flex; 
@@ -90,7 +103,7 @@
 
         .hero-image-container {
              position: relative;
-             cursor: pointer; /* Indica que é clicável */
+             cursor: pointer; 
              transition: all 0.5s var(--transition-curve);
         }
 
@@ -99,39 +112,66 @@
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 20px 60px rgba(0,0,0,0.8); 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             transition: all 1s ease-in-out; 
+            z-index: 20; /* Fica acima da Hero Info padrão */
         }
         
-        /* Overlay de Expansão (Mensagem sutil) */
-        .hero-image-container::before {
-            content: "Clique para Detalhes";
-            position: absolute;
+        /* Estado Expandido Hero (Simulação de Pop-up, In-Place) */
+        .hero-expanded {
+            position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            color: var(--highlight-color);
+            background: rgba(0, 0, 0, 0.85); /* Obscurece o fundo */
+            z-index: 100;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            padding: 2rem;
             opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            pointer-events: none;
+            visibility: hidden;
+            transition: opacity 0.4s ease-out, visibility 0.4s;
         }
-        .hero-image-container:hover::before {
-             opacity: 1;
+        .hero-expanded.active {
+            opacity: 1;
+            visibility: visible;
         }
+
+        .expanded-content {
+            display: flex;
+            max-width: 90%;
+            max-height: 90%;
+            background: var(--bg-color);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 101;
+        }
+
+        .expanded-hero-img {
+            width: 65%;
+            height: auto;
+            object-fit: contain;
+            transition: all 0.5s;
+        }
+        .expanded-hero-info {
+            width: 35%;
+            padding: 2rem;
+            text-align: left;
+            overflow-y: auto;
+        }
+        .expanded-hero-info .serif { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        
+        /* Área Clicável fora da Imagem/Info (para fechar) */
+        .hero-expanded:not(.expanded-content) { cursor: pointer; }
+
 
         .hero-title { 
             font-size: clamp(2.2rem, 5vw, 4.5rem); 
             position: relative;
-            text-shadow: 0 0 1px rgba(255, 255, 255, 0.4), 
-                         1px 1px 5px rgba(255, 255, 255, 0.05);
+            text-shadow: 0 0 1px rgba(255, 255, 255, 0.4), 1px 1px 5px rgba(255, 255, 255, 0.05);
             transition: all var(--transition-speed);
+            z-index: 20;
         }
         .hero-title:hover {
-             text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 
-                          -2px -2px 10px rgba(0, 255, 255, 0.1);
+             text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), -2px -2px 10px rgba(0, 255, 255, 0.1);
         }
         
         .hero-section::after {
@@ -139,113 +179,32 @@
             transform: translateX(-50%); width: 1px; height: 15vh; 
             background: var(--text-muted); opacity: 0.2;
             animation: pulse 2s infinite alternate;
+            z-index: 1;
         }
 
-        /* 3. Modal de Expansão Hero */
-        .hero-modal {
-             display: none;
-             position: fixed;
-             top: 0; left: 0; right: 0; bottom: 0;
-             background: rgba(0, 0, 0, 0.95);
-             z-index: 1000;
-             overflow: auto;
-             padding: 5vh 5vw;
-             animation: fadeIn 0.3s ease-out;
-        }
-        .modal-content {
-             display: flex;
-             max-width: 1200px;
-             margin: auto;
-             gap: 40px;
-        }
-        .modal-image {
-             width: 60%;
-             height: auto;
-             object-fit: contain;
-        }
-        .modal-info {
-             width: 40%;
-             padding: 20px;
-             text-align: left;
-        }
-        .modal-close {
-             position: absolute;
-             top: 20px; right: 40px;
-             color: var(--highlight-color);
-             font-size: 2rem;
-             font-weight: bold;
-             cursor: pointer;
-             transition: color 0.3s;
-        }
-        .modal-close:hover { color: #f00; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-
-        /* 4. CARROSSEL BASE (Melhoria de Animação) */
+        /* 3. CARROSSEL BASE (Centralização de Vídeo ao Clicar) */
         .carousel-section {
             padding: 5rem 0; display: flex; flex-direction: column; align-items: center;
             position: relative;
         }
         
-        /* Configurações de Cabeçalho e Link */
         .section-header-wrapper {
             width: 100%; max-width: 90%; margin-bottom: 3rem; 
             display: flex; align-items: flex-end; padding: 0 2rem; 
         }
 
         .section-header-wrapper.acervo { justify-content: space-between; }
-        .section-header-wrapper.memorias { justify-content: center; } /* Centraliza Memórias */
+        .section-header-wrapper.memorias { justify-content: center; } 
 
         .section-header { text-align: left; opacity: 0.9; }
         .section-header-wrapper.memorias .section-header { text-align: center; }
-
-        .collection-link {
-            color: var(--highlight-color); text-decoration: none; font-size: 0.9rem;
-            letter-spacing: 0.1em; opacity: 0.8; transition: opacity var(--transition-speed);
-        }
-        .collection-link:hover { opacity: 1; }
 
         .carousel-track {
             display: flex; align-items: center; justify-content: center; gap: 4rem; 
             perspective: 1000px; width: 100%;
         }
 
-        /* Animação de Troca Sutil (Reforçada) */
-        .slot {
-            position: relative;
-            /* Aumenta um pouco a velocidade para melhorar a percepção da troca */
-            transition: all 0.4s var(--transition-curve); 
-            cursor: pointer;
-            flex-shrink: 0;
-            overflow: hidden; 
-        }
-        
-        .slot.slot-img { width: var(--card-width-img); height: var(--card-height-img); }
-        .slot.slot-vid { width: var(--card-width-vid); height: var(--card-height-vid); }
-
-        .slot img, .slot video {
-            width: 100%; height: 100%; object-fit: cover;
-            filter: grayscale(100%); opacity: 0.6;
-            transition: var(--transition-speed);
-        }
-
-        /* Efeitos de Foco */
-        .slot.center { transform: scale(1.05); z-index: 10; }
-        
-        .slot.center img, .slot.center video {
-            filter: grayscale(0%) !important; 
-            opacity: 1 !important;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            animation: scaleIn 0.4s ease-out; 
-        }
-        
-        @keyframes scaleIn {
-            0% { transform: scale(0.9); opacity: 0.5; } /* Início mais discreto */
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Estado Expandido */
+        /* Expansão Carrossel Imagem */
         .slot.expanded {
             width: 700px; height: 350px; transform: scale(1.1);
             cursor: zoom-in; box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
@@ -258,7 +217,7 @@
             text-align: left;
             visibility: hidden; 
             opacity: 0;
-            transition: opacity 0.5s, visibility 0.5s; /* Garante a transição de retorno */
+            transition: opacity 0.5s, visibility 0.5s;
         }
         
         .slot.expanded .expanded-info {
@@ -267,31 +226,52 @@
             animation: fadeIn 0.5s ease forwards 0.3s;
         }
 
-        .cta {
-            display: inline-block; margin-top: 1.5rem; 
-            padding: 0.5rem 1rem; border: 1px solid var(--highlight-color);
-            color: var(--highlight-color); text-decoration: none;
-            transition: background var(--transition-speed);
+        /* Estado Centralizado do Vídeo (Ao Clicar) */
+        .slot.centered-video {
+            /* Simula a expansão In-Place para vídeos, ficando maior e centralizado */
+            width: 70vw; 
+            height: 80vh; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.1);
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 100px rgba(255, 255, 255, 0.1);
+            cursor: default;
         }
-        .cta:hover { background: rgba(255, 255, 255, 0.1); }
+        .slot.centered-video video {
+            object-fit: contain; /* Garante que o vídeo caiba na tela */
+            filter: grayscale(0%) !important;
+            opacity: 1 !important;
+        }
         
-        /* RESPONSIVIDADE (Ajustes para Modal) */
+        /* Overlay para o Fundo Obscurecido ao Centralizar Vídeo */
+        .overlay-active::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 99; 
+            pointer-events: auto;
+            transition: opacity 0.3s;
+        }
+
+        /* RESPONSIVIDADE */
         @media (max-width: 768px) {
             /* ... (Ajustes de carrossel omitidos por brevidade) ... */
-            .modal-content {
+            .expanded-content {
                  flex-direction: column;
             }
-            .modal-image, .modal-info {
+            .expanded-hero-img, .expanded-hero-info {
                  width: 100%;
             }
-            .modal-close { right: 20px; }
         }
     </style>
 </head>
 <body>
     
     <header class="logo-section">
-        <img src="logo.png" alt="Gennoz" class="brand-logo">
+        <img src="logo.png" alt="Sombraz" class="brand-logo" id="main-logo">
     </header>
 
     <section class="hero-section">
@@ -304,14 +284,305 @@
         </div>
     </section>
     
-    <div id="hero-modal" class="hero-modal">
-        <span class="modal-close" id="close-modal">&times;</span>
-        <div class="modal-content">
-            <img id="modal-img" class="modal-image" src="familia02.jpg" alt="Destaque">
-            <div class="modal-info">
-                <h2 id="modal-title" class="serif" style="font-size: 3rem;">Família</h2>
-                <p class="meta-data" style="margin-bottom: 2rem;">2025 • Gennoz • Pernambuco</p>
+    <div id="hero-expanded" class="hero-expanded">
+        <div class="expanded-content">
+            <img id="expanded-hero-img" class="expanded-hero-img" src="familia02.jpg" alt="Destaque">
+            <div class="expanded-hero-info">
+                <h2 id="expanded-hero-title" class="serif">Família</h2>
+                <p class="meta-data">2025 • Jaboatão dos Guararapes • Gennoz</p>
+                <h3 style="margin-top: 2rem; font-size: 1.2rem;">Descrição da Obra</h3>
                 <p style="line-height: 1.6;">
-                    Esta obra, intitulada "Família", captura um momento íntimo e espontâneo, refletindo a essência da conexão e do lazer em Jaboatão dos Guararapes, Pernambuco. É a peça central do acervo, definindo o tom emocional de toda a coleção.
+                    Esta obra captura um momento íntimo e espontâneo, refletindo a essência da conexão e do lazer familiar. É a peça central do acervo, definindo o tom emocional de toda a coleção Pernambuco. A iluminação natural e o contraste entre as cores quentes da pele e o azul da piscina criam uma atmosfera vibrante e nostálgica. 
                 </p>
-                <p style="margin
+                <h3 style="margin-top: 1.5rem; font-size: 1.2rem;">Detalhes Técnicos</h3>
+                <p>Câmera: Nikon D850</p>
+                <p>Lente: 50mm f/1.4</p>
+                <p>Ano de Criação: 2025</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="carousel-section">
+        <div class="section-header-wrapper acervo">
+            <div class="section-header">
+                <h2 class="serif">Acervo</h2>
+                <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
+            </div>
+            <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
+        </div>
+        
+        <div class="carousel-track" id="track-images">
+            </div>
+    </section>
+
+    <section class="carousel-section">
+        <div class="section-header-wrapper memorias">
+            <div class="section-header">
+                <h2 class="serif">Memórias</h2>
+                <p class="meta-data">Pernambuco</p>
+            </div>
+        </div>
+        
+        <div class="carousel-track" id="track-videos">
+            </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
+        GENNOZ © 2025
+    </footer>
+
+    <script>
+        // === DADOS ===
+        const images = [
+            // ... (Dados omitidos por brevidade) ...
+            { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
+            { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem04.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem05.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem06.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem07.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem08.jpg", title: "Sotave", year: "2023", location: "Recife" },
+            { src: "imagem09.jpg", title: "Brasília Teimosa", year: "2024", location: "Recife" },
+            { src: "imagem10.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem11.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
+            { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
+        ];
+        const videos = [
+            // ... (Dados omitidos por brevidade) ...
+            { src: "video01.mp4", title: "Estudo de Cor" },
+            { src: "video02.mp4", title: "Loop Infinito" },
+            { src: "video03.mp4", title: "Céu Noturno" },
+            { src: "video04.mp4", title: "Transição" },
+            { src: "video05.mp4", title: "Onda de Pixel" },
+            { src: "video06.mp4", title: "Foco e Desfoco" },
+        ];
+
+        let currentIdxImg = 0;
+        let currentIdxVid = 0;
+
+        const heroExpanded = document.getElementById('hero-expanded');
+        const body = document.body;
+
+        /**
+         * Lógica de Expansão/Retração da Hero (In-Place)
+         */
+        document.getElementById('hero-image-container').addEventListener('click', function() {
+            heroExpanded.classList.add('active');
+            body.style.overflow = 'hidden'; 
+        });
+
+        // Fechar a expansão ao clicar fora do conteúdo
+        heroExpanded.addEventListener('click', function(event) {
+             const expandedContent = document.querySelector('.expanded-content');
+             if (event.target === heroExpanded || !expandedContent.contains(event.target)) {
+                 heroExpanded.classList.remove('active');
+                 body.style.overflow = 'auto';
+             }
+        });
+        
+        /**
+         * Lógica do Logo (Animação de Partículas ao Clicar)
+         */
+        document.getElementById('main-logo').addEventListener('click', function(event) {
+             const logo = event.target;
+             // Adiciona a classe para a animação
+             logo.classList.add('clicked'); 
+             
+             // Remove a classe após a animação (para que possa ser clicado novamente)
+             setTimeout(() => {
+                 logo.classList.remove('clicked');
+             }, 400); // Duração da animação (0.3s) + um buffer
+        });
+
+
+        /**
+         * Função para fechar qualquer elemento pop-up (carrossel ou vídeo centralizado)
+         */
+        function closePopups() {
+            // Fecha a expansão de imagem do carrossel
+            document.querySelectorAll('.slot.expanded').forEach(s => {
+                s.classList.remove('expanded');
+                s.setAttribute('data-clicks', 0);
+            });
+            
+            // Fecha a centralização de vídeo
+            const centeredVideo = document.querySelector('.slot.centered-video');
+            if (centeredVideo) {
+                 centeredVideo.classList.remove('centered-video');
+                 centeredVideo.querySelector('video').pause();
+                 // Remove o overlay do body
+                 body.classList.remove('overlay-active');
+            }
+        }
+        
+        // Listener global para fechar pop-ups ao clicar fora
+        document.addEventListener('click', function(event) {
+            // Se o alvo não for um slot ou a expansão do Hero
+            if (!event.target.closest('.slot') && !event.target.closest('#hero-expanded')) {
+                 closePopups();
+            }
+            
+            // Se o alvo for o overlay de vídeo, feche
+            if (event.target.classList.contains('overlay-active')) {
+                 closePopups();
+            }
+        });
+
+        /**
+         * Lógica CORE: Criação do Slot (Adicionado o clique de vídeo)
+         */
+        function createSlot(track, item, className, type, dataIndex) {
+            const div = document.createElement('div');
+            const sizeClass = type === 'images' ? 'slot-img' : 'slot-vid';
+            div.className = `slot ${className} ${sizeClass}`; 
+            div.setAttribute('data-index', dataIndex);
+            div.setAttribute('data-clicks', 0);
+
+            let mediaElement;
+            if (type === 'videos') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.src;
+                mediaElement.muted = true;
+                mediaElement.loop = true;
+                mediaElement.playsInline = true;
+                if(className === 'center') mediaElement.load(); 
+            } else {
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.src;
+            }
+            div.appendChild(mediaElement);
+
+            if (type === 'images') {
+                const info = document.createElement('div');
+                info.className = 'expanded-info';
+                info.innerHTML = `
+                    <h3 class="serif">${item.title}</h3>
+                    <p>Ano: ${item.year || 'N/A'}</p>
+                    <p>Local: ${item.location || 'N/A'}</p>
+                    <p>Criador: Gennoz</p>
+                    <a href="obra.html?src=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}" class="cta">Ver Página da Obra →</a>
+                `;
+                div.appendChild(info);
+            }
+           
+            div.onclick = function(event) {
+                // Fechar Hero Expansion se estiver aberta
+                heroExpanded.classList.remove('active');
+                body.style.overflow = 'auto'; 
+
+                const isImages = type === 'images';
+                let currentIdx = isImages ? currentIdxImg : currentIdxVid;
+                const data = isImages ? images : videos;
+
+                // AÇÃO 1: Clique em Vídeo (Centralizar)
+                if (type === 'videos' && div.classList.contains('center')) {
+                    if (div.classList.contains('centered-video')) {
+                        // Se já está centralizado, fecha
+                        closePopups();
+                    } else {
+                        // Centraliza o vídeo (fecha outros popups antes)
+                        closePopups();
+                        div.classList.add('centered-video');
+                        body.classList.add('overlay-active');
+                        div.querySelector('video').play();
+                    }
+                    // Previne a ação de carrossel após centralizar/fechar
+                    event.stopPropagation(); 
+                    return; 
+                }
+                
+                // AÇÃO 2: Movimento Lateral (ou clique em side)
+                if (div.classList.contains('side')) {
+                    const prevIndex = (currentIdx - 1 + data.length) % data.length;
+                    const isPrev = dataIndex === prevIndex;
+                    const direction = isPrev ? -1 : 1;
+                    
+                    currentIdx = (currentIdx + direction + data.length) % data.length;
+
+                    if (isImages) { currentIdxImg = currentIdx; } else { currentIdxVid = currentIdx; }
+
+                    renderCarousel(type, data, currentIdx);
+                    closePopups(); // Garante que a expansão feche ao mover
+                    return;
+                }
+                
+                // AÇÃO 3: Expansão de Imagem (Carrossel)
+                if (isImages && div.classList.contains('center')) {
+                    let clicks = parseInt(div.getAttribute('data-clicks'));
+
+                    if (clicks === 0) {
+                        closePopups(); 
+                        div.classList.add('expanded');
+                        div.setAttribute('data-clicks', 1);
+                        return;
+                    }
+
+                    if (clicks === 1) {
+                        div.setAttribute('data-clicks', 0); 
+                        window.location.href = div.querySelector('.cta').href;
+                        return;
+                    }
+                }
+            };
+
+            track.appendChild(div);
+        }
+
+        /**
+         * Renderiza o carrossel (track).
+         */
+        function renderCarousel(type, data, currentIndex) {
+            const track = document.getElementById(`track-${type}`);
+            if (!track || data.length < 3) return; 
+
+            track.innerHTML = ''; 
+            
+            const prevIndex = (currentIndex - 1 + data.length) % data.length;
+            const nextIndex = (currentIndex + 1) % data.length;
+
+            createSlot(track, data[prevIndex], 'side', type, prevIndex);
+            createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+            createSlot(track, data[nextIndex], 'side', type, nextIndex);
+            
+            if (type === 'videos') {
+                track.querySelectorAll('video').forEach(v => v.pause()); 
+                const centerVideo = track.querySelector('.slot.center video');
+                if (centerVideo) {
+                    centerVideo.load(); 
+                    centerVideo.play().catch(error => {
+                        console.warn("Autoplay de vídeo bloqueado ou falhou.", error);
+                    });
+                }
+            }
+        }
+
+        /**
+         * FUNÇÃO CRÍTICA DE INICIALIZAÇÃO (Reforçada contra erros de carregamento)
+         */
+        function initializeCarousels() {
+             try {
+                 if (images.length >= 3) {
+                    renderCarousel('images', images, currentIdxImg);
+                 } else {
+                    console.error("Dados de imagens insuficientes para carrossel.");
+                 }
+                 
+                 if (videos.length >= 3) {
+                    renderCarousel('videos', videos, currentIdxVid);
+                 } else {
+                    console.error("Dados de vídeos insuficientes para carrossel.");
+                 }
+             } catch (e) {
+                 console.error("Erro fatal durante a inicialização dos carrosséis:", e);
+                 // Adicionar aqui uma mensagem de fallback visual se necessário.
+             }
+        }
+
+        // Estratégia de Inicialização Robusta
+        document.addEventListener('DOMContentLoaded', initializeCarousels);
+        window.onload = initializeCarousels; 
+    </script>
+</body>
+</html>
