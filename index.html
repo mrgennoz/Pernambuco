@@ -6,7 +6,7 @@
     <title>Gennoz | Acervo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -14,10 +14,11 @@
             --text-main: #Eaeaea;
             --text-muted: #888;
             --highlight-color: #Eaeaea;
-            --card-width-img: 450px; 
-            --card-height-img: 300px; 
-            --card-width-vid: 250px; 
-            --card-height-vid: 350px; 
+            /* Dimensões Corrigidas dos Carrosséis */
+            --card-width-img: 400px; 
+            --card-height-img: 280px; 
+            --card-width-vid: 350px; /* Aumentado para melhor visualização */
+            --card-height-vid: 220px; /* Proporção horizontal para vídeos (cinematográfica) */
             --transition-speed: 0.5s;
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -32,9 +33,9 @@
             padding-bottom: 5rem;
         }
 
-        /* TIPOGRAFIA */
+        /* TIPOGRAFIA (Playfair Display) */
         h1, h2, .serif {
-            font-family: 'Bodoni Moda', serif;
+            font-family: 'Playfair Display', serif; /* Nova fonte */
             font-weight: 400;
             letter-spacing: 0.05em;
         }
@@ -47,48 +48,37 @@
             margin-top: 0.5rem;
         }
 
-        /* 1. SEÇÃO DO LOGO (Efeito Bokeh Light e Poeira Flutuante) */
+        /* 1. SEÇÃO DO LOGO (Opacidade, Movimento e Efeito de Brilho) */
         .logo-section {
             min-height: 20vh; 
             display: flex; 
+            /* Movimenta a logo para o centro superior na interação */
             justify-content: center; 
             align-items: center;
             padding: 2rem;
             transition: all 0.8s var(--transition-curve); 
             position: relative;
-            cursor: pointer; /* Indica que é clicável */
+            cursor: pointer;
         }
         
-        /* Efeito Bokeh Light (Sombra de luz suave e difusa) */
         .logo-section:hover {
              padding-bottom: 3rem; 
-             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, rgba(5, 5, 5, 0) 70%);
+             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 5, 0) 70%); /* Brilho sutilmente mais forte */
              box-shadow: 0 5px 20px rgba(255, 255, 255, 0.05);
-        }
-        
-        /* Animação de Partículas ao Clicar (Simulação de Poeira Flutuante) */
-        .brand-logo.clicked {
-            animation: pulse-and-shake 0.3s ease-in-out;
-        }
-
-        @keyframes pulse-and-shake {
-            0% { transform: scale(1.05) rotate(0deg); opacity: 1; }
-            50% { transform: scale(1.1) rotate(0.5deg); opacity: 1; }
-            100% { transform: scale(1.05) rotate(-0.5deg); opacity: 1; }
         }
 
         .brand-logo { 
             width: 140px; 
             filter: invert(1); 
-            opacity: 0.7; 
+            opacity: 0.1; /* Quase imperceptível */
             transition: opacity var(--transition-speed), transform var(--transition-speed); 
         }
-        .brand-logo:hover { 
-            opacity: 1; 
-            transform: scale(1.05); 
+        .brand-logo:hover, .brand-logo.clicked { 
+            opacity: 1; /* Aparece ao interagir */
+            transform: scale(1.10); 
         }
-
-        /* 2. HERO SECTION (Expansão In-Place) */
+        
+        /* 2. HERO SECTION (Efeito de Brilho de Partículas) */
         .hero-section {
             min-height: 80vh; 
             display: flex; 
@@ -101,25 +91,27 @@
             position: relative;
         }
 
-        .hero-image-container {
-             position: relative;
-             cursor: pointer; 
-             transition: all 0.5s var(--transition-curve);
-        }
-
-        .hero-img {
-            width: 100%; height: auto; max-height: 60vh; object-fit: contain;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 20px 60px rgba(0,0,0,0.8); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            transition: all 1s ease-in-out; 
-            z-index: 20; /* Fica acima da Hero Info padrão */
+        .hero-section::after {
+            content: ''; position: absolute; bottom: 3rem; left: 50%;
+            transform: translateX(-50%); width: 2px; /* Linha um pouco mais grossa */
+            height: 15vh; 
+            background: var(--text-muted); 
+            opacity: 0.4; /* Mais visível */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Brilho mais forte */
+            animation: pulse 1.5s infinite alternate; /* Animação mais fluida */
+            z-index: 1;
         }
         
-        /* Estado Expandido Hero (Simulação de Pop-up, In-Place) */
+        @keyframes pulse {
+            from { opacity: 0.2; transform: translateX(-50%) scaleY(0.8); }
+            to { opacity: 0.5; transform: translateX(-50%) scaleY(1); }
+        }
+
+        /* Expansão Hero (Animação de Retorno Sutil) */
         .hero-expanded {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85); /* Obscurece o fundo */
+            background: rgba(0, 0, 0, 0.85); 
             z-index: 100;
             display: flex;
             justify-content: center;
@@ -128,124 +120,86 @@
             padding: 2rem;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.4s ease-out, visibility 0.4s;
+            /* Aumentar a transição para o retorno suave (0.5s) */
+            transition: opacity 0.5s ease-out, visibility 0.5s; 
         }
         .hero-expanded.active {
             opacity: 1;
             visibility: visible;
         }
-
+        
         .expanded-content {
-            display: flex;
-            max-width: 90%;
-            max-height: 90%;
-            background: var(--bg-color);
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 101;
+            transition: transform 0.4s ease-out;
         }
 
-        .expanded-hero-img {
-            width: 65%;
-            height: auto;
-            object-fit: contain;
-            transition: all 0.5s;
-        }
-        .expanded-hero-info {
-            width: 35%;
-            padding: 2rem;
-            text-align: left;
-            overflow-y: auto;
-        }
-        .expanded-hero-info .serif { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        
-        /* Área Clicável fora da Imagem/Info (para fechar) */
-        .hero-expanded:not(.expanded-content) { cursor: pointer; }
-
-
-        .hero-title { 
-            font-size: clamp(2.2rem, 5vw, 4.5rem); 
-            position: relative;
-            text-shadow: 0 0 1px rgba(255, 255, 255, 0.4), 1px 1px 5px rgba(255, 255, 255, 0.05);
-            transition: all var(--transition-speed);
-            z-index: 20;
-        }
-        .hero-title:hover {
-             text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), -2px -2px 10px rgba(0, 255, 255, 0.1);
+        /* Efeito de Retorno Sutil (Ao clicar fora/ESC) */
+        .hero-expanded:not(.active) .expanded-content {
+             transform: scale(0.95) translateY(10px); /* Leve animação de recuo */
         }
         
-        .hero-section::after {
-            content: ''; position: absolute; bottom: 3rem; left: 50%;
-            transform: translateX(-50%); width: 1px; height: 15vh; 
-            background: var(--text-muted); opacity: 0.2;
-            animation: pulse 2s infinite alternate;
-            z-index: 1;
-        }
-
-        /* 3. CARROSSEL BASE (Centralização de Vídeo ao Clicar) */
-        .carousel-section {
-            padding: 5rem 0; display: flex; flex-direction: column; align-items: center;
-            position: relative;
-        }
-        
-        .section-header-wrapper {
-            width: 100%; max-width: 90%; margin-bottom: 3rem; 
-            display: flex; align-items: flex-end; padding: 0 2rem; 
-        }
-
-        .section-header-wrapper.acervo { justify-content: space-between; }
-        .section-header-wrapper.memorias { justify-content: center; } 
-
-        .section-header { text-align: left; opacity: 0.9; }
-        .section-header-wrapper.memorias .section-header { text-align: center; }
-
+        /* 3. CARROSSEL (Correções de Dimensões) */
         .carousel-track {
             display: flex; align-items: center; justify-content: center; gap: 4rem; 
             perspective: 1000px; width: 100%;
         }
 
-        /* Expansão Carrossel Imagem */
-        .slot.expanded {
-            width: 700px; height: 350px; transform: scale(1.1);
-            cursor: zoom-in; box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
-        }
-        .slot.expanded img { width: 55%; float: left; height: 100%; box-shadow: none; }
-        
-        .expanded-info {
-            float: right; width: 45%; 
-            padding: 1.5rem 1rem; 
-            text-align: left;
-            visibility: hidden; 
-            opacity: 0;
-            transition: opacity 0.5s, visibility 0.5s;
+        /* Correção: Imagens Horizontal */
+        .slot.slot-img { width: var(--card-width-img); height: var(--card-height-img); }
+        /* Correção: Vídeos Horizontal (Cinematográfico) */
+        .slot.slot-vid { width: var(--card-width-vid); height: var(--card-height-vid); }
+
+        /* Estilos de Vídeo (Player Sutil) */
+        .slot video {
+             /* Estilos de base */
+             width: 100%; height: 100%; object-fit: cover;
+             filter: grayscale(100%); opacity: 0.6;
+             transition: var(--transition-speed);
         }
         
-        .slot.expanded .expanded-info {
-            visibility: visible;
-            opacity: 1; 
-            animation: fadeIn 0.5s ease forwards 0.3s;
+        /* Conteiner do Player Sutil */
+        .video-player-container {
+             position: relative;
+             width: 100%;
+             height: 100%;
         }
 
-        /* Estado Centralizado do Vídeo (Ao Clicar) */
-        .slot.centered-video {
-            /* Simula a expansão In-Place para vídeos, ficando maior e centralizado */
-            width: 70vw; 
-            height: 80vh; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1.1);
-            z-index: 100;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 100px rgba(255, 255, 255, 0.1);
-            cursor: default;
-        }
-        .slot.centered-video video {
-            object-fit: contain; /* Garante que o vídeo caiba na tela */
-            filter: grayscale(0%) !important;
-            opacity: 1 !important;
+        .custom-controls {
+             position: absolute;
+             bottom: 10px; left: 10px; right: 10px;
+             display: flex;
+             align-items: center;
+             opacity: 0;
+             transition: opacity 0.3s;
         }
         
-        /* Overlay para o Fundo Obscurecido ao Centralizar Vídeo */
+        /* Visível apenas no estado centrado/focado */
+        .slot.centered-video .custom-controls,
+        .slot.center .custom-controls {
+             opacity: 1;
+        }
+
+        .play-pause-btn {
+             background: none; border: none; color: var(--text-main); 
+             font-size: 1rem; cursor: pointer; margin-right: 10px;
+        }
+        
+        .progress-bar-container {
+             flex-grow: 1;
+             height: 3px; 
+             background: rgba(255, 255, 255, 0.1); 
+             position: relative;
+             overflow: hidden;
+        }
+
+        .progress-bar {
+             height: 100%;
+             width: 0%;
+             background: var(--text-main);
+             box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); /* Iluminação sutil */
+             transition: width 0.1s linear;
+        }
+
+        /* Overlay para o Fundo Obscurecido ao Centralizar Vídeo (Necessário no Body) */
         .overlay-active::after {
             content: '';
             position: fixed;
@@ -256,16 +210,6 @@
             transition: opacity 0.3s;
         }
 
-        /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
-            /* ... (Ajustes de carrossel omitidos por brevidade) ... */
-            .expanded-content {
-                 flex-direction: column;
-            }
-            .expanded-hero-img, .expanded-hero-info {
-                 width: 100%;
-            }
-        }
     </style>
 </head>
 <body>
@@ -327,7 +271,7 @@
             </div>
     </section>
 
-    <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
+    <footer>
         GENNOZ © 2025
     </footer>
 
@@ -366,35 +310,96 @@
         const body = document.body;
 
         /**
-         * Lógica de Expansão/Retração da Hero (In-Place)
+         * Lógica de Expansão/Retração da Hero
          */
         document.getElementById('hero-image-container').addEventListener('click', function() {
             heroExpanded.classList.add('active');
             body.style.overflow = 'hidden'; 
         });
 
-        // Fechar a expansão ao clicar fora do conteúdo
+        // Fechar a expansão ao clicar fora do conteúdo OU pressionar ESC
         heroExpanded.addEventListener('click', function(event) {
              const expandedContent = document.querySelector('.expanded-content');
-             if (event.target === heroExpanded || !expandedContent.contains(event.target)) {
-                 heroExpanded.classList.remove('active');
-                 body.style.overflow = 'auto';
+             // Clica fora da caixa de conteúdo
+             if (event.target === heroExpanded) {
+                 closeHeroExpansion();
              }
         });
         
-        /**
-         * Lógica do Logo (Animação de Partículas ao Clicar)
-         */
+        document.addEventListener('keydown', function(event) {
+             if (event.key === 'Escape' && heroExpanded.classList.contains('active')) {
+                 closeHeroExpansion();
+             }
+        });
+
+        function closeHeroExpansion() {
+            // Animação de recuo
+            document.querySelector('.expanded-content').style.transform = 'scale(0.95) translateY(10px)';
+             
+            // Retorno ao estado padrão após a animação
+            setTimeout(() => {
+                heroExpanded.classList.remove('active');
+                body.style.overflow = 'auto';
+                document.querySelector('.expanded-content').style.transform = ''; // Reseta para próxima abertura
+            }, 300); // Executa o retorno 300ms antes da transição CSS terminar
+        }
+        
+        // Lógica do Logo
         document.getElementById('main-logo').addEventListener('click', function(event) {
              const logo = event.target;
-             // Adiciona a classe para a animação
              logo.classList.add('clicked'); 
-             
-             // Remove a classe após a animação (para que possa ser clicado novamente)
              setTimeout(() => {
                  logo.classList.remove('clicked');
-             }, 400); // Duração da animação (0.3s) + um buffer
+             }, 400); 
         });
+
+        /**
+         * Funções Auxiliares do Vídeo (Player Sutil)
+         */
+        function setupVideoControls(videoElement) {
+             const container = videoElement.parentElement;
+             if (!container || container.querySelector('.custom-controls')) return; // Já configurado
+
+             // Cria o player sutil
+             const controlsDiv = document.createElement('div');
+             controlsDiv.className = 'custom-controls';
+             controlsDiv.innerHTML = `
+                 <button class="play-pause-btn">&#x23F8;</button> <div class="progress-bar-container"><div class="progress-bar"></div></div>
+             `;
+             container.appendChild(controlsDiv);
+
+             const playPauseBtn = controlsDiv.querySelector('.play-pause-btn');
+             const progressBar = controlsDiv.querySelector('.progress-bar');
+             
+             // Eventos de Play/Pause
+             playPauseBtn.addEventListener('click', (e) => {
+                 e.stopPropagation();
+                 if (videoElement.paused) {
+                     videoElement.play();
+                     playPauseBtn.innerHTML = '&#x23F8;'; // Pause Symbol
+                 } else {
+                     videoElement.pause();
+                     playPauseBtn.innerHTML = '&#x25B6;'; // Play Symbol
+                 }
+             });
+             
+             // Atualização da Barra de Progresso
+             videoElement.addEventListener('timeupdate', () => {
+                 if (!videoElement.duration) return;
+                 const progress = (videoElement.currentTime / videoElement.duration) * 100;
+                 progressBar.style.width = `${progress}%`;
+             });
+             
+             // Resetar o botão e barra ao terminar
+             videoElement.addEventListener('ended', () => {
+                 playPauseBtn.innerHTML = '&#x25B6;'; // Play Symbol
+                 progressBar.style.width = '0%';
+             });
+
+             // Atualizar o ícone se o autoplay falhar ou iniciar
+             videoElement.addEventListener('play', () => playPauseBtn.innerHTML = '&#x23F8;');
+             videoElement.addEventListener('pause', () => playPauseBtn.innerHTML = '&#x25B6;');
+        }
 
 
         /**
@@ -417,13 +422,12 @@
             }
         }
         
-        // Listener global para fechar pop-ups ao clicar fora
+        // Listener global para fechar pop-ups ao clicar fora (excluindo os controles de vídeo)
         document.addEventListener('click', function(event) {
-            // Se o alvo não for um slot ou a expansão do Hero
-            if (!event.target.closest('.slot') && !event.target.closest('#hero-expanded')) {
+            // Se o alvo não for um slot, a expansão do Hero ou um controle de vídeo
+            if (!event.target.closest('.slot') && !event.target.closest('#hero-expanded') && !event.target.closest('.custom-controls')) {
                  closePopups();
             }
-            
             // Se o alvo for o overlay de vídeo, feche
             if (event.target.classList.contains('overlay-active')) {
                  closePopups();
@@ -431,7 +435,7 @@
         });
 
         /**
-         * Lógica CORE: Criação do Slot (Adicionado o clique de vídeo)
+         * Lógica CORE: Criação do Slot (Corrigido e com Player)
          */
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
@@ -440,6 +444,9 @@
             div.setAttribute('data-index', dataIndex);
             div.setAttribute('data-clicks', 0);
 
+            let mediaContainer = document.createElement('div');
+            mediaContainer.className = (type === 'videos') ? 'video-player-container' : '';
+            
             let mediaElement;
             if (type === 'videos') {
                 mediaElement = document.createElement('video');
@@ -448,11 +455,14 @@
                 mediaElement.loop = true;
                 mediaElement.playsInline = true;
                 if(className === 'center') mediaElement.load(); 
+                mediaContainer.appendChild(mediaElement);
+                setupVideoControls(mediaElement); // Configura os controles
             } else {
                 mediaElement = document.createElement('img');
                 mediaElement.src = item.src;
+                mediaContainer.appendChild(mediaElement);
             }
-            div.appendChild(mediaElement);
+            div.appendChild(mediaContainer);
 
             if (type === 'images') {
                 const info = document.createElement('div');
@@ -468,33 +478,33 @@
             }
            
             div.onclick = function(event) {
-                // Fechar Hero Expansion se estiver aberta
-                heroExpanded.classList.remove('active');
-                body.style.overflow = 'auto'; 
+                closeHeroExpansion(); 
 
                 const isImages = type === 'images';
                 let currentIdx = isImages ? currentIdxImg : currentIdxVid;
                 const data = isImages ? images : videos;
 
-                // AÇÃO 1: Clique em Vídeo (Centralizar)
+                // AÇÃO 1: Clique em Vídeo (Centralizar e liberar áudio/controles)
                 if (type === 'videos' && div.classList.contains('center')) {
+                    const videoElement = div.querySelector('video');
                     if (div.classList.contains('centered-video')) {
-                        // Se já está centralizado, fecha
                         closePopups();
                     } else {
-                        // Centraliza o vídeo (fecha outros popups antes)
                         closePopups();
                         div.classList.add('centered-video');
                         body.classList.add('overlay-active');
-                        div.querySelector('video').play();
+                        
+                        // Libera áudio e garante o play
+                        videoElement.muted = false; 
+                        videoElement.play();
                     }
-                    // Previne a ação de carrossel após centralizar/fechar
                     event.stopPropagation(); 
                     return; 
                 }
                 
                 // AÇÃO 2: Movimento Lateral (ou clique em side)
                 if (div.classList.contains('side')) {
+                    // ... Lógica de Movimento Lateral ...
                     const prevIndex = (currentIdx - 1 + data.length) % data.length;
                     const isPrev = dataIndex === prevIndex;
                     const direction = isPrev ? -1 : 1;
@@ -504,7 +514,7 @@
                     if (isImages) { currentIdxImg = currentIdx; } else { currentIdxVid = currentIdx; }
 
                     renderCarousel(type, data, currentIdx);
-                    closePopups(); // Garante que a expansão feche ao mover
+                    closePopups(); 
                     return;
                 }
                 
@@ -547,40 +557,34 @@
             createSlot(track, data[nextIndex], 'side', type, nextIndex);
             
             if (type === 'videos') {
-                track.querySelectorAll('video').forEach(v => v.pause()); 
+                track.querySelectorAll('video').forEach(v => { v.pause(); v.muted = true; }); 
                 const centerVideo = track.querySelector('.slot.center video');
                 if (centerVideo) {
                     centerVideo.load(); 
                     centerVideo.play().catch(error => {
-                        console.warn("Autoplay de vídeo bloqueado ou falhou.", error);
+                        console.warn("Autoplay de vídeo bloqueado.", error);
                     });
                 }
             }
         }
 
         /**
-         * FUNÇÃO CRÍTICA DE INICIALIZAÇÃO (Reforçada contra erros de carregamento)
+         * FUNÇÃO CRÍTICA DE INICIALIZAÇÃO
          */
         function initializeCarousels() {
              try {
                  if (images.length >= 3) {
                     renderCarousel('images', images, currentIdxImg);
-                 } else {
-                    console.error("Dados de imagens insuficientes para carrossel.");
                  }
                  
                  if (videos.length >= 3) {
                     renderCarousel('videos', videos, currentIdxVid);
-                 } else {
-                    console.error("Dados de vídeos insuficientes para carrossel.");
                  }
              } catch (e) {
                  console.error("Erro fatal durante a inicialização dos carrosséis:", e);
-                 // Adicionar aqui uma mensagem de fallback visual se necessário.
              }
         }
 
-        // Estratégia de Inicialização Robusta
         document.addEventListener('DOMContentLoaded', initializeCarousels);
         window.onload = initializeCarousels; 
     </script>
