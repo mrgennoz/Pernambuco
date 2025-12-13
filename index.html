@@ -14,11 +14,11 @@
             --text-main: #Eaeaea;
             --text-muted: #888;
             /* Dimensões do Carrossel de IMAGENS (Horizontal) */
-            --card-width-img: 450px; 
-            --card-height-img: 300px; 
-            /* Dimensões do Carrossel de VÍDEOS (Vertical) */
-            --card-width-vid: 300px;
-            --card-height-vid: 450px;
+            --card-width-img: 480px; /* Aumento sutil para melhor visualização */
+            --card-height-img: 320px; 
+            /* Dimensões do Carrossel de VÍDEOS (Vertical Otimizada) */
+            --card-width-vid: 280px; /* Mais estreito */
+            --card-height-vid: 470px; /* Mais alto */
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -32,19 +32,16 @@
             padding-bottom: 5rem;
         }
 
-        /* --- ANIMAÇÃO DE SUAVIZAÇÃO DO CARROSSEL --- */
+        /* --- ANIMAÇÕES UX --- */
         @keyframes fadeInOut {
             0% { opacity: 0; transform: scale(0.98); }
             100% { opacity: 1; transform: scale(1); }
         }
+        @keyframes fadeIn { to { opacity: 1; } }
 
-        .fade-transition {
-            opacity: 0;
-            pointer-events: none; 
-        }
-
+        .fade-transition { opacity: 0; pointer-events: none; }
         .fade-transition-active {
-            animation: fadeInOut 0.5s ease-in-out forwards;
+            animation: fadeInOut 0.5s var(--transition-curve) forwards;
             pointer-events: all;
         }
         
@@ -63,7 +60,7 @@
             margin-top: 0.5rem;
         }
 
-        /* --- HEADER & LOGO (ESTRUTURA FIXA E CORRETA) --- */
+        /* --- HEADER & LOGO --- */
         header {
             width: 100%;
             padding: 2rem;
@@ -82,7 +79,7 @@
         }
         .brand-logo:hover { opacity: 1; }
 
-        /* HERO SECTION (TÍTULO GRANDE) */
+        /* HERO SECTION */
         .hero-section {
             min-height: 90vh;
             display: flex;
@@ -109,8 +106,7 @@
         }
 
         .hero-title { 
-            /* Aumento do tamanho do título */
-            font-size: clamp(2.5rem, 5vw, 5rem); 
+            font-size: clamp(2.5rem, 6vw, 6rem); 
         }
 
         /* --- CAROUSEL BASE --- */
@@ -147,13 +143,13 @@
             overflow: hidden; 
         }
 
-        /* Formato Horizontal (Imagens) */
+        /* Dimensões Horizontais (Imagens) */
         .carousel-section:nth-child(2) .slot {
             width: var(--card-width-img);
             height: var(--card-height-img);
         }
         
-        /* Formato Vertical (Vídeos) */
+        /* Dimensões Verticais (Vídeos) */
         .carousel-section:nth-child(3) .slot {
             width: var(--card-width-vid);
             height: var(--card-height-vid);
@@ -163,18 +159,28 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* Inicia P&B para Imagens, e mantém P&B nas laterais de Vídeos */
+            filter: grayscale(100%); 
             opacity: 0.6;
-            filter: grayscale(100%);
             transition: 0.5s;
         }
 
-        /* EFEITO HOVER */
-        .slot:hover img, .slot:hover video {
-             opacity: 1;
-             filter: grayscale(0%);
+        /* --- ESTÉTICA EXIGIDA: COR E P&B --- */
+        
+        /* 1. Imagem Central (Sempre Colorida) */
+        .slot.center img {
+            filter: grayscale(0%) !important; 
+            opacity: 1 !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         }
 
-        /* ESTADOS DA ROLETA */
+        /* 2. Laterais (Coloridas APENAS no Hover) */
+        .slot.side:hover img {
+             filter: grayscale(0%);
+             opacity: 1;
+        }
+
+        /* ESTADOS EXPANDIDOS E DE FOCO */
         .slot.center {
             transform: scale(1.05); 
             z-index: 10;
@@ -195,6 +201,8 @@
             object-fit: cover;
             opacity: 1;
             box-shadow: none;
+            /* Garantir que a imagem expandida mantenha a cor */
+            filter: grayscale(0%); 
         }
         
         .expanded-info {
@@ -206,43 +214,28 @@
             animation: fadeIn 0.5s ease forwards 0.3s;
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
-
         /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
             /* Imagens (Horizontal no mobile) */
-            .carousel-section:nth-child(2) .slot {
-                width: 70vw; 
-                height: 40vh;
-            }
+            .carousel-section:nth-child(2) .slot { width: 70vw; height: 40vh; }
             /* Vídeos (Vertical no mobile) */
-            .carousel-section:nth-child(3) .slot {
-                width: 50vw;
-                height: 70vh;
-            }
+            .carousel-section:nth-child(3) .slot { width: 50vw; height: 70vh; }
             
             /* Ajuste da expansão para mobile */
-            .slot.expanded {
-                 width: 90vw;
-                 height: 50vh;
-            }
+            .slot.expanded { width: 90vw; height: 50vh; }
             .slot.expanded img {
-                 width: 100%;
-                 height: 60%;
-                 float: none;
+                 width: 100%; height: 60%; float: none;
+                 filter: grayscale(0%);
             }
             .expanded-info {
-                 float: none;
-                 width: 100%;
-                 height: 40%;
-                 padding: 0.5rem 1rem;
+                 float: none; width: 100%; height: 40%; padding: 0.5rem 1rem;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Gennoz" class="brand-logo">
+        <img src="logo.png" alt="Sombraz" class="brand-logo">
     </header>
 
     <section class="hero-section">
@@ -250,221 +243,4 @@
             <img id="hero-img" src="familia02.jpg" class="hero-img" alt="Destaque">
         </div>
         <div class="hero-info">
-            <h1 id="hero-title" class="hero-title serif">Família</h1>
-            <p id="hero-meta" class="meta-data">2025 • Gennoz • Pernambuco</p>
-        </div>
-    </section>
-
-    <section class="carousel-section">
-        <div class="section-header">
-            <h2 class="serif">Acervo</h2>
-            <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
-        </div>
-
-        <div class="carousel-track" id="track-images">
-        </div>
-
-        <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
-    </section>
-
-    <section class="carousel-section">
-        <div class="section-header">
-            <h2 class="serif">Motion</h2>
-            <p class="meta-data">Autoplay no Destaque</p>
-        </div>
-
-        <div class="carousel-track" id="track-videos">
-        </div>
-    </section>
-
-    <footer style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.7rem; letter-spacing: 0.2em;">
-        GENNOZ © 2025
-    </footer>
-
-    <script>
-        // === CONTROLE DA PÁGINA ===
-        const CONFIG = {
-            // MUDANÇA CRÍTICA: Troque 'false' por 'true' para ATIVAR a rolagem automática da Hero Section
-            heroSlideshowEnabled: false, 
-            heroInterval: 8000 // Intervalo de 8 segundos
-        };
-
-        // --- DADOS DA HERO SLIDESHOW ---
-        const heroSlides = [
-            { src: "familia02.jpg", title: "Família", year: "2025", location: "Pernambuco" },
-            { src: "familia01.jpg", title: "Em Casa", year: "2024", location: "Recife" },
-            { src: "familia03.jpg", title: "Viagem", year: "2023", location: "Rio de Janeiro" }
-        ];
-
-        // --- DADOS DO CARROSSEL ---
-        const images = [
-            { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
-            { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
-            { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
-            { src: "imagem04.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
-            { src: "imagem05.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
-            { src: "imagem06.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
-            { src: "imagem07.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
-            { src: "imagem08.jpg", title: "Sotave", year: "2023", location: "Recife" },
-            { src: "imagem09.jpg", title: "Brasília Teimosa", year: "2024", location: "Recife" },
-            { src: "imagem10.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
-            { src: "imagem11.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
-            { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
-            { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
-        ];
-
-        const videos = [
-            { src: "video01.mp4", title: "Estudo de Cor" },
-            { src: "video02.mp4", title: "Loop Infinito" },
-            { src: "video03.mp4", title: "Céu Noturno" },
-            { src: "video04.mp4", title: "Transição" },
-            { src: "video05.mp4", title: "Onda de Pixel" },
-            { src: "video06.mp4", title: "Foco e Desfoco" },
-        ];
-
-        // --- LÓGICA DA HERO SLIDESHOW (OPCIONAL) ---
-        let currentHeroIndex = 0;
-        const heroImg = document.getElementById('hero-img');
-        const heroTitle = document.getElementById('hero-title');
-        const heroMeta = document.getElementById('hero-meta');
-
-        function updateHeroContent() {
-            const slide = heroSlides[currentHeroIndex];
-            
-            heroImg.style.opacity = '0';
-            heroTitle.style.opacity = '0';
-            heroMeta.style.opacity = '0';
-
-            setTimeout(() => {
-                heroImg.src = slide.src;
-                heroTitle.textContent = slide.title;
-                heroMeta.textContent = `${slide.year} • Gennoz • ${slide.location}`;
-
-                heroImg.style.opacity = '1';
-                heroTitle.style.opacity = '1';
-                heroMeta.style.opacity = '1';
-                
-                currentHeroIndex = (currentHeroIndex + 1) % heroSlides.length;
-            }, 1000); 
-        }
-
-        if (CONFIG.heroSlideshowEnabled) {
-            setInterval(updateHeroContent, CONFIG.heroInterval);
-            updateHeroContent();
-        }
-
-        // --- LÓGICA DO CARROSSEL E TRANSIÇÃO SUAVE ---
-        let idxImg = 0;
-        let idxVid = 0;
-
-        function renderCarousel(type, data, currentIndex) {
-            if (data.length < 3) return; 
-
-            const track = document.getElementById(`track-${type}`);
-            
-            // PASSO 1: Inicia o Fade-out (para a transição suave)
-            track.classList.add('fade-transition');
-            
-            // Limpa o conteúdo (aqui a troca de imagem acontece)
-            track.innerHTML = ''; 
-            
-            // Delay para permitir que o Fade-out comece a ser renderizado
-            setTimeout(() => {
-                const prevIndex = (currentIndex - 1 + data.length) % data.length;
-                const nextIndex = (currentIndex + 1) % data.length;
-
-                createSlot(track, data[prevIndex], 'side', type, prevIndex);
-                createSlot(track, data[currentIndex], 'center', type, currentIndex); 
-                createSlot(track, data[nextIndex], 'side', type, nextIndex);
-
-                // PASSO 2 & 3: Inicia o Fade-in e limpa a classe após o término
-                track.classList.remove('fade-transition');
-                track.classList.add('fade-transition-active');
-                
-                setTimeout(() => {
-                     track.classList.remove('fade-transition-active');
-                }, 500); // 0.5s é a duração da animação no CSS
-
-            }, 50); // Delay curto
-        }
-
-        function createSlot(track, item, className, type, dataIndex) {
-            const div = document.createElement('div');
-            div.className = `slot ${className}`;
-            div.setAttribute('data-index', dataIndex);
-            div.setAttribute('data-clicks', 0);
-
-            let mediaElement;
-            if (type === 'videos') {
-                mediaElement = document.createElement('video');
-                mediaElement.src = item.src;
-                mediaElement.muted = true;
-                mediaElement.loop = true;
-                mediaElement.playsInline = true;
-                if(className === 'center') mediaElement.play(); 
-                else mediaElement.pause();
-            } else {
-                mediaElement = document.createElement('img');
-                mediaElement.src = item.src;
-            }
-            div.appendChild(mediaElement);
-
-            if (type === 'images') {
-                const info = document.createElement('div');
-                info.className = 'expanded-info';
-                info.innerHTML = `
-                    <h3 class="serif">${item.title}</h3>
-                    <p>Ano: ${item.year || 'N/A'}</p>
-                    <p>Local: ${item.location || 'N/A'}</p>
-                    <p>Criador: Gennoz</p>
-                    <a href="obra.html?src=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}" class="cta">Ver Página da Obra →</a>
-                `;
-                div.appendChild(info);
-            }
-           
-
-            // Lógica do Clique
-            div.onclick = function() {
-                // Lógica de movimento lateral
-                if (className === 'side' || div.classList.contains('side')) {
-                    let direction = dataIndex === (idxImg - 1 + images.length) % images.length ? -1 : 1;
-                    if (type === 'images') {
-                        idxImg = (idxImg + direction + images.length) % images.length;
-                        renderCarousel('images', images, idxImg);
-                    } else {
-                        idxVid = (idxVid + direction + videos.length) % videos.length;
-                        renderCarousel('videos', videos, idxVid);
-                    }
-                    document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
-                    return;
-                }
-                
-                // Lógica de 2 Cliques Central (Apenas para Imagens)
-                if (type === 'images' && div.classList.contains('center')) {
-                    let clicks = parseInt(div.getAttribute('data-clicks'));
-
-                    if (clicks === 0) {
-                        document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
-                        div.classList.add('expanded');
-                        div.setAttribute('data-clicks', 1);
-                        return;
-                    }
-
-                    if (clicks === 1) {
-                        div.setAttribute('data-clicks', 0); 
-                        window.location.href = div.querySelector('.cta').href;
-                        return;
-                    }
-                }
-            };
-
-            track.appendChild(div);
-        }
-
-        // Inicializa Carrosséis
-        renderCarousel('images', images, idxImg);
-        renderCarousel('videos', videos, idxVid);
-        
-    </script>
-</body>
-</html>
+            <h1 id="hero-title"
