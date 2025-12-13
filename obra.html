@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhe da Obra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: #888;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: #fff; }
+
+        .artwork-container {
+            max-width: 90vh;
+            animation: fadeIn 1.5s ease;
+        }
+
+        img {
+            max-height: 70vh;
+            width: auto;
+            box-shadow: 0 0 100px rgba(255,255,255,0.05);
+            border: 1px solid #1a1a1a;
+        }
+
+        h1 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 400;
+            margin-top: 2rem;
+            font-size: 2.5rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Voltar à Coleção</a>
+
+    <div class="artwork-container">
+        <img id="art-display" src="" alt="Obra">
+        <h1 id="art-title"></h1>
+    </div>
+
+    <script>
+        // Este script "lê" o que foi enviado pela página anterior
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('art-display').src = params.get('img');
+        document.getElementById('art-title').innerText = params.get('title') || 'Obra Sem Título';
+    </script>
+
+</body>
+</html>
