@@ -33,11 +33,11 @@
             padding-bottom: 5rem;
         }
 
-        /* TIPOGRAFIA, LOGO E HERO BÁSICO */
+        /* TIPOGRAFIA BÁSICA */
         h1, h2, .serif { font-family: 'Playfair Display', serif; font-weight: 400; letter-spacing: 0.05em; }
         .meta-data { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 0.5rem; }
 
-        /* 1. LOGO SECTION (Efeito de Partículas Aprimorado) */
+        /* 1. LOGO SECTION (Partículas + Expansão Suave de Luz) */
         .logo-section {
             min-height: 20vh; 
             display: flex; justify-content: center; align-items: center;
@@ -45,14 +45,22 @@
             transition: all 0.8s var(--transition-curve); 
             position: relative;
             cursor: pointer;
+            z-index: 10; /* Garante que a logo e o efeito fiquem acima de tudo */
         }
         
+        /* Efeito de Expansão Suave de Luz (Restaurado) */
+        .logo-section:hover {
+             padding-bottom: 3rem; 
+             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 5, 0) 70%); 
+             box-shadow: 0 5px 20px rgba(255, 255, 255, 0.05);
+        }
+
         .brand-logo { 
             width: 140px; 
             filter: invert(1); 
-            opacity: 0.05; /* Início quase invisível */
+            opacity: 0.05; 
             transition: opacity var(--transition-speed), transform var(--transition-speed); 
-            position: relative; /* Para ficar acima do efeito de partículas */
+            position: relative; 
             z-index: 2;
         }
         .brand-logo:hover, .brand-logo.active { 
@@ -63,9 +71,9 @@
         /* Contêiner do Efeito de Partículas */
         .particle-effect-container {
             position: absolute;
-            width: 150px; /* Pouco maior que o logo */
+            width: 150px; 
             height: 150px;
-            display: none; /* Inicia oculto */
+            display: none; 
             justify-content: center;
             align-items: center;
             pointer-events: none;
@@ -77,13 +85,11 @@
             animation: fade-out 0.4s forwards;
         }
         
-        /* Simulação de Partículas (via Radial-Gradient) */
         .particles {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             opacity: 0;
-            /* Partículas leves e sutis (Brilho branco/cinza) */
             background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%); 
             animation: explode 0.4s ease-out forwards;
         }
@@ -101,14 +107,14 @@
 
         /* 2. HERO E EXPANSÃO (Mantido) */
         .hero-section { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 5%; margin-bottom: 10rem; position: relative; }
-        .hero-section::after { content: ''; position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); width: 2px; height: 15vh; background: linear-gradient(to top, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%); opacity: 0.4; box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); animation: pulse 1.5s infinite alternate; z-index: 1; }
         .hero-expanded { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); z-index: 100; opacity: 0; visibility: hidden; transition: opacity 0.4s ease-out, visibility 0.4s; }
         .hero-expanded.active { opacity: 1; visibility: visible; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 2rem; }
         .expanded-content { transition: transform 0.4s ease-out; }
         .hero-expanded:not(.active) .expanded-content { transform: scale(0.95) translateY(10px); }
         .overlay-active::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); z-index: 99; pointer-events: auto; transition: opacity 0.3s; }
 
-        /* 3. CARROSSÉIS (Correções Reforçadas) */
+
+        /* 3. CARROSSÉIS (Correções de Dimensão CRÍTICAS) */
         .carousel-section { padding: 5rem 0; display: flex; flex-direction: column; align-items: center; position: relative; }
         .section-header-wrapper { width: 100%; max-width: 90%; margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 5%; }
 
@@ -128,26 +134,72 @@
             background: rgba(255, 255, 255, 0.05);
             transition: all 0.5s ease-in-out; 
             overflow: hidden;
-            flex-shrink: 0; /* IMPEDE ENCOLHIMENTO - CRÍTICO */
+            flex-shrink: 0; /* IMPEDE ENCOLHIMENTO */
         }
 
-        /* Dimensões Forçadas - CRÍTICO */
+        /* Dimensões Forçadas */
         .slot.slot-img { width: var(--card-width-img); height: var(--card-height-img); }
         .slot.slot-vid { width: var(--card-width-vid); height: var(--card-height-vid); }
 
         .slot.side { opacity: 0.4; transform: scale(0.8); cursor: pointer; }
         .slot.center { opacity: 1; transform: scale(1); cursor: pointer; }
         
+        /* CRÍTICO: Garante que o contêiner de mídia preencha 100% do slot */
+        .slot > div { 
+             width: 100%; 
+             height: 100%; 
+             position: relative; /* Base para o player de vídeo */
+        }
+        
         .slot img, .slot video {
              width: 100%; 
              height: 100%; 
-             object-fit: cover; /* Garante preenchimento total */
+             object-fit: cover; /* ESSENCIAL: Garante preenchimento e elimina barras pretas */
              filter: grayscale(100%); 
              opacity: 0.8;
              transition: var(--transition-speed);
         }
 
         .slot.center img, .slot.center video { filter: grayscale(0%); opacity: 1; }
+        
+        /* EXPANSÃO DO SLOT (Correção de Alinhamento) */
+        .slot.expanded {
+            position: fixed;
+            width: 60vw; 
+            height: auto; 
+            max-width: 900px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 101; 
+            background: var(--bg-color);
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            display: flex; /* Flexbox para layout interno (imagem e info) */
+            gap: 2rem;
+        }
+
+        .slot.expanded > div:first-child { /* Container de mídia */
+             flex-basis: 60%;
+             max-height: 500px; 
+        }
+        
+        .slot.expanded .expanded-info {
+             flex-basis: 40%;
+             text-align: left;
+        }
+        
+        .slot.expanded img {
+             object-fit: contain; /* Exibir a imagem inteira na expansão */
+        }
+        
+        /* VÍDEO CENTRALIZADO (Mantido) */
+        .slot.centered-video {
+            width: 90vw; max-width: 1200px; height: 90vh; max-height: 800px;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1);
+            z-index: 100; cursor: default;
+        }
+
     </style>
 </head>
 <body>
@@ -202,17 +254,28 @@
     </footer>
 
     <script>
-        // === DADOS MOCKADOS (Manutenção simples) ===
+        // === DADOS MOCKADOS (Fácil de manter) ===
         const images = [
-            // Inclua seus 13 itens de imagem aqui
             { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
-            // ... (restante das imagens)
+            { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem04.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem05.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem06.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem07.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem08.jpg", title: "Sotave", year: "2023", location: "Recife" },
+            { src: "imagem09.jpg", title: "Brasília Teimosa", year: "2024", location: "Recife" },
+            { src: "imagem10.jpg", title: "Serrambi", year: "2024", location: "Ipojuca" },
+            { src: "imagem11.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
+            { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
             { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
         ];
         const videos = [
-            // Inclua seus 6 itens de vídeo aqui
             { src: "video01.mp4", title: "Estudo de Cor" },
-            // ... (restante dos vídeos)
+            { src: "video02.mp4", title: "Loop Infinito" },
+            { src: "video03.mp4", title: "Céu Noturno" },
+            { src: "video04.mp4", title: "Transição" },
+            { src: "video05.mp4", title: "Onda de Pixel" },
             { src: "video06.mp4", title: "Foco e Desfoco" },
         ];
 
@@ -226,38 +289,40 @@
 
 
         /**
-         * Lógica do Logo (Efeito de Partículas)
+         * Lógica do Logo (Partículas + Ativação da classe de hover)
          */
         mainLogo.addEventListener('click', function(event) {
+             // Otimiza a transição da logo
              mainLogo.classList.add('active'); 
              
-             // 1. Ativa o efeito de partícula
+             // Ativa e anima o efeito de partícula
              particleContainer.classList.add('show');
              
-             // 2. Remove as classes após o tempo da animação (0.4s)
+             // Usa o logo-section para disparar o efeito de luz do hover temporariamente
+             mainLogo.closest('.logo-section').classList.add('logo-section-active-glow');
+             
+             // Remove as classes após o tempo da animação (0.4s)
              setTimeout(() => {
                  mainLogo.classList.remove('active');
                  particleContainer.classList.remove('show');
+                 mainLogo.closest('.logo-section').classList.remove('logo-section-active-glow');
              }, 400); 
         });
 
-        // === Funções de UX e Player (Mantidas, testadas e estáveis) ===
-        
-        function closeHeroExpansion() {
-            document.querySelector('.expanded-content').style.transform = 'scale(0.95) translateY(10px)';
-            setTimeout(() => {
-                heroExpanded.classList.remove('active');
-                body.style.overflow = 'auto';
-                document.querySelector('.expanded-content').style.transform = '';
-            }, 300);
-        }
-
-        // ... Lógica de Expansão Hero (click/ESC) ...
+        /* === Funções de UX e Carrossel (Estáveis) === */
 
         function setupVideoControls(videoElement) {
              const container = videoElement.parentElement;
              if (!container || container.querySelector('.custom-controls')) return;
-             // ... (criação dos controles e lógica do player) ...
+
+             const controlsDiv = document.createElement('div');
+             controlsDiv.className = 'custom-controls';
+             controlsDiv.innerHTML = `
+                 <button class="play-pause-btn" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0 10px;">&#x23F8;</button> 
+                 <div class="progress-bar-container"><div class="progress-bar"></div></div>
+             `;
+             container.appendChild(controlsDiv);
+             // ... Lógica de Play/Pause/Progresso (Omitida por brevidade) ...
         }
         
         function closePopups() {
@@ -269,20 +334,9 @@
                  body.classList.remove('overlay-active');
             }
         }
-        
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.slot') && !event.target.closest('#hero-expanded') && !event.target.closest('.custom-controls')) { closePopups(); }
-        });
-        
-        document.addEventListener('keydown', function(event) {
-             if (event.key === 'Escape') { 
-                closePopups(); 
-                closeHeroExpansion(); // Garante o fechamento de qualquer modal aberto
-             }
-        });
 
         /**
-         * Lógica CORE: Criação do Slot (Testada e Estável)
+         * Lógica CORE: Criação do Slot
          */
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
@@ -291,9 +345,39 @@
             div.setAttribute('data-index', dataIndex);
             div.setAttribute('data-clicks', 0);
 
-            // ... (criação da mídia e infos) ...
+            // Container for media (image or video)
+            let mediaContainer = document.createElement('div');
+            mediaContainer.className = (type === 'videos') ? 'video-player-container' : 'image-container';
+            
+            let mediaElement;
+            if (type === 'videos') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.src;
+                mediaElement.muted = true;
+                mediaElement.loop = true;
+                mediaElement.playsInline = true;
+                mediaContainer.appendChild(mediaElement);
+                if(className === 'center') setupVideoControls(mediaElement); 
+            } else {
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.src;
+                mediaContainer.appendChild(mediaElement);
+            }
+            div.appendChild(mediaContainer);
 
-            // CRÍTICO: Lógica de clique para navegação e expansão
+            if (type === 'images') {
+                const info = document.createElement('div');
+                info.className = 'expanded-info';
+                info.innerHTML = `
+                    <h3 class="serif">${item.title}</h3>
+                    <p>Ano: ${item.year || 'N/A'}</p>
+                    <p>Local: ${item.location || 'N/A'}</p>
+                    <p>Criador: Gennoz</p>
+                    <a href="obra.html?src=${encodeURIComponent(item.src)}&title=${encodeURIComponent(item.title)}" class="cta" style="color: var(--highlight-color);">Ver Página da Obra →</a>
+                `;
+                div.appendChild(info);
+            }
+           
             div.onclick = function(event) {
                 closeHeroExpansion(); 
 
@@ -319,7 +403,11 @@
                 
                 // AÇÃO 2: Movimento Lateral
                 if (div.classList.contains('side')) {
-                    // ... Lógica de movimento ...
+                    const direction = (div.getAttribute('data-index') === ((currentIdx - 1 + data.length) % data.length).toString()) ? -1 : 1;
+                    currentIdx = (currentIdx + direction + data.length) % data.length;
+
+                    if (isImages) { currentIdxImg = currentIdx; } else { currentIdxVid = currentIdx; }
+
                     renderCarousel(type, data, currentIdx);
                     closePopups(); 
                     return;
@@ -332,6 +420,7 @@
                     if (clicks === 0) {
                         closePopups(); 
                         div.classList.add('expanded');
+                        body.classList.add('overlay-active'); /* Adiciona overlay para escurecer o fundo */
                         div.setAttribute('data-clicks', 1);
                         return;
                     }
@@ -381,6 +470,7 @@
          */
         function initializeCarousels() {
              try {
+                 // Verificação para garantir que há dados suficientes
                  if (images.length >= 3) { renderCarousel('images', images, currentIdxImg); }
                  if (videos.length >= 3) { renderCarousel('videos', videos, currentIdxVid); }
              } catch (e) {
