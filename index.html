@@ -23,24 +23,6 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        /* --- NOVA ANIMAÇÃO DE SUAVIZAÇÃO DO CARROSSEL --- */
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: scale(0.98); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-.fade-transition {
-    /* Esconde o carrossel no início da transição */
-    opacity: 0;
-    /* Garante que o CSS não bloqueie cliques */
-    pointer-events: none; 
-}
-
-.fade-transition-active {
-    /* Aplica a animação para reaparecer suavemente */
-    animation: fadeInOut 0.5s ease-in-out forwards;
-    pointer-events: all;
-}
         
         body {
             background-color: var(--bg-color);
@@ -50,6 +32,22 @@
             padding-bottom: 5rem;
         }
 
+        /* --- ANIMAÇÃO DE SUAVIZAÇÃO DO CARROSSEL --- */
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .fade-transition {
+            opacity: 0;
+            pointer-events: none; 
+        }
+
+        .fade-transition-active {
+            animation: fadeInOut 0.5s ease-in-out forwards;
+            pointer-events: all;
+        }
+        
         /* --- TIPOGRAFIA --- */
         h1, h2, .serif {
             font-family: 'Bodoni Moda', serif;
@@ -65,14 +63,14 @@
             margin-top: 0.5rem;
         }
 
-        /* --- HEADER & LOGO --- */
+        /* --- HEADER & LOGO (ESTRUTURA FIXA E CORRETA) --- */
         header {
             width: 100%;
             padding: 2rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative; /* Ajuste para evitar sobreposição */
+            position: relative; 
             z-index: 100;
         }
 
@@ -84,7 +82,7 @@
         }
         .brand-logo:hover { opacity: 1; }
 
-        /* HERO SECTION */
+        /* HERO SECTION (TÍTULO GRANDE) */
         .hero-section {
             min-height: 90vh;
             display: flex;
@@ -102,16 +100,18 @@
             max-height: 70vh;
             object-fit: contain;
             box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            /* Transição para a rolagem sutil da Hero */
             transition: opacity 1s ease-in-out; 
         }
 
         .hero-info {
-            opacity: 1; /* Mantido visível para atualização */
+            opacity: 1; 
             transition: opacity 0.5s;
         }
 
-        .hero-title { font-size: clamp(2.5rem, 6vw, 6rem); }
+        .hero-title { 
+            /* Aumento do tamanho do título */
+            font-size: clamp(2.5rem, 5vw, 5rem); 
+        }
 
         /* --- CAROUSEL BASE --- */
         .carousel-section {
@@ -147,13 +147,13 @@
             overflow: hidden; 
         }
 
-        /* Aplica as dimensões HORIZONTAIS nas Imagens */
+        /* Formato Horizontal (Imagens) */
         .carousel-section:nth-child(2) .slot {
             width: var(--card-width-img);
             height: var(--card-height-img);
         }
         
-        /* Aplica as dimensões VERTICAIS nos Vídeos */
+        /* Formato Vertical (Vídeos) */
         .carousel-section:nth-child(3) .slot {
             width: var(--card-width-vid);
             height: var(--card-height-vid);
@@ -180,7 +180,7 @@
             z-index: 10;
         }
 
-        /* ESTADO EXPANDIDO (1º CLIQUE) */
+        /* ESTADO EXPANDIDO (1º CLIQUE) - Formato Horizontal */
         .slot.expanded {
             width: 700px; 
             height: 350px; 
@@ -206,14 +206,16 @@
             animation: fadeIn 0.5s ease forwards 0.3s;
         }
 
-        /* --- RESPONSIVIDADE (Ajuste a distinção de formatos) --- */
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
-            /* Imagens (Horizontal) */
+            /* Imagens (Horizontal no mobile) */
             .carousel-section:nth-child(2) .slot {
                 width: 70vw; 
                 height: 40vh;
             }
-            /* Vídeos (Vertical) */
+            /* Vídeos (Vertical no mobile) */
             .carousel-section:nth-child(3) .slot {
                 width: 50vw;
                 height: 70vh;
@@ -240,7 +242,7 @@
 </head>
 <body>
     <header>
-        <img src="logo-v1-png (1).png" alt="Gennoz" class="brand-logo">
+        <img src="logo.png" alt="Gennoz" class="brand-logo">
     </header>
 
     <section class="hero-section">
@@ -287,7 +289,7 @@
             heroInterval: 8000 // Intervalo de 8 segundos
         };
 
-        // --- DADOS DA HERO SECTION ---
+        // --- DADOS DA HERO SLIDESHOW ---
         const heroSlides = [
             { src: "familia02.jpg", title: "Família", year: "2025", location: "Pernambuco" },
             { src: "familia01.jpg", title: "Em Casa", year: "2024", location: "Recife" },
@@ -296,7 +298,6 @@
 
         // --- DADOS DO CARROSSEL ---
         const images = [
-            // (Mantenha o resto de suas imagens aqui)
             { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
             { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
             { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
@@ -321,8 +322,7 @@
             { src: "video06.mp4", title: "Foco e Desfoco" },
         ];
 
-        // --- LÓGICA DA HERO SLIDESHOW (Opção OFF) ---
-        
+        // --- LÓGICA DA HERO SLIDESHOW (OPCIONAL) ---
         let currentHeroIndex = 0;
         const heroImg = document.getElementById('hero-img');
         const heroTitle = document.getElementById('hero-title');
@@ -331,72 +331,62 @@
         function updateHeroContent() {
             const slide = heroSlides[currentHeroIndex];
             
-            // Animação de fade-out antes de mudar o conteúdo
             heroImg.style.opacity = '0';
             heroTitle.style.opacity = '0';
             heroMeta.style.opacity = '0';
 
             setTimeout(() => {
-                // Atualiza o conteúdo
                 heroImg.src = slide.src;
                 heroTitle.textContent = slide.title;
                 heroMeta.textContent = `${slide.year} • Gennoz • ${slide.location}`;
 
-                // Animação de fade-in
                 heroImg.style.opacity = '1';
                 heroTitle.style.opacity = '1';
                 heroMeta.style.opacity = '1';
                 
-                // Avança para o próximo slide
                 currentHeroIndex = (currentHeroIndex + 1) % heroSlides.length;
-            }, 1000); // Espera o fade-out (1s)
+            }, 1000); 
         }
 
         if (CONFIG.heroSlideshowEnabled) {
-            // Inicia o slideshow se o switch estiver em TRUE
             setInterval(updateHeroContent, CONFIG.heroInterval);
-            // Garante que o conteúdo inicial seja o primeiro slide, mesmo que a página comece com familia02.jpg
             updateHeroContent();
         }
 
-        // --- LÓGICA DO CARROSSEL (Permanece igual) ---
+        // --- LÓGICA DO CARROSSEL E TRANSIÇÃO SUAVE ---
         let idxImg = 0;
         let idxVid = 0;
 
-        // --- LÓGICA DA ROLETA COM TRANSIÇÃO SUAVE (ATUALIZADA) ---
+        function renderCarousel(type, data, currentIndex) {
+            if (data.length < 3) return; 
 
-function renderCarousel(type, data, currentIndex) {
-    if (data.length < 3) return; 
+            const track = document.getElementById(`track-${type}`);
+            
+            // PASSO 1: Inicia o Fade-out (para a transição suave)
+            track.classList.add('fade-transition');
+            
+            // Limpa o conteúdo (aqui a troca de imagem acontece)
+            track.innerHTML = ''; 
+            
+            // Delay para permitir que o Fade-out comece a ser renderizado
+            setTimeout(() => {
+                const prevIndex = (currentIndex - 1 + data.length) % data.length;
+                const nextIndex = (currentIndex + 1) % data.length;
 
-    const track = document.getElementById(`track-${type}`);
-    
-    // PASSO 1: Inicia o Fade-out
-    track.classList.add('fade-transition');
-    
-    // Limpa o conteúdo (aqui a troca de imagem acontece)
-    track.innerHTML = ''; 
-    
-    // O Timeout permite que o browser registre a mudança de classe antes de prosseguir
-    setTimeout(() => {
-        // Lógica Circular para Esquerda, Centro e Direita (Continua a mesma)
-        const prevIndex = (currentIndex - 1 + data.length) % data.length;
-        const nextIndex = (currentIndex + 1) % data.length;
+                createSlot(track, data[prevIndex], 'side', type, prevIndex);
+                createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+                createSlot(track, data[nextIndex], 'side', type, nextIndex);
 
-        createSlot(track, data[prevIndex], 'side', type, prevIndex);
-        createSlot(track, data[currentIndex], 'center', type, currentIndex); 
-        createSlot(track, data[nextIndex], 'side', type, nextIndex);
+                // PASSO 2 & 3: Inicia o Fade-in e limpa a classe após o término
+                track.classList.remove('fade-transition');
+                track.classList.add('fade-transition-active');
+                
+                setTimeout(() => {
+                     track.classList.remove('fade-transition-active');
+                }, 500); // 0.5s é a duração da animação no CSS
 
-        // PASSO 2: Inicia o Fade-in (animação)
-        track.classList.remove('fade-transition');
-        track.classList.add('fade-transition-active');
-        
-        // PASSO 3: Remove a classe de animação após o término (0.5s)
-        setTimeout(() => {
-             track.classList.remove('fade-transition-active');
-        }, 500); 
-
-    }, 50); // Delay curto para registrar o fade-out e dar a sensação de transição
-}
+            }, 50); // Delay curto
+        }
 
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
@@ -433,7 +423,7 @@ function renderCarousel(type, data, currentIndex) {
             }
            
 
-            // Lógica do Clique (Permanece a mesma para expansão)
+            // Lógica do Clique
             div.onclick = function() {
                 // Lógica de movimento lateral
                 if (className === 'side' || div.classList.contains('side')) {
