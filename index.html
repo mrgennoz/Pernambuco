@@ -9,14 +9,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg-color: #050505;
-            --text-main: #Eaeaea;
-            --text-muted: #888;
-            --card-width: 300px;
-            --card-height: 450px;
-            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1); /* Curva mais moderna */
-        }
+    :root {
+        --bg-color: #050505;
+        --text-main: #Eaeaea;
+        --text-muted: #888;
+        --card-width: 450px; /* INVERSÃO: Era 300px, agora é a largura */
+        --card-height: 300px; /* INVERSÃO: Era 450px, agora é a altura */
+        --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ESTADO EXPANDIDO (1º CLIQUE) - Novo formato horizontal */
+    .slot.expanded {
+        width: 700px; /* Largura maior para a ficha técnica */
+        height: 350px; /* Altura ligeiramente maior para o resumo */
+        transform: scale(1.1);
+        cursor: zoom-in;
+        box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    .slot.expanded img {
+        width: 55%; /* Imagem se retrai para dar espaço ao texto */
+        float: left;
+        height: 100%; /* Garantir que ocupe a altura total */
+        object-fit: cover;
+        opacity: 1;
+        box-shadow: none;
+    }
+    
+    .expanded-info {
+        float: right;
+        width: 45%;
+        padding: 2rem 1rem;
+        text-align: left;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards 0.3s;
+    }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -228,6 +254,29 @@ header {
             border-color: var(--text-main);
             color: var(--text-main);
             background: rgba(255,255,255,0.02);
+        }
+        @media (max-width: 768px) {
+        /* Inverte as proporções para mobile, mantendo o formato horizontal */
+        :root { --card-width: 70vw; --card-height: 40vh; } 
+        .hero-section { min-height: 80vh; }
+        .slot.side { display: none; }
+        .carousel-track { gap: 0; }
+        
+        /* Ajuste da expansão para mobile */
+        .slot.expanded {
+             width: 90vw;
+             height: 50vh;
+        }
+        .slot.expanded img {
+             width: 100%;
+             height: 60%;
+             float: none;
+        }
+        .expanded-info {
+             float: none;
+             width: 100%;
+             height: 40%;
+             padding: 0.5rem 1rem;
         }
     </style>
 </head>
