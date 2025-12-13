@@ -13,6 +13,7 @@
             --bg-color: #050505;
             --text-main: #Eaeaea;
             --text-muted: #888;
+            --highlight-color: #Eaeaea; /* Nova cor para destaque (botões/logo) */
             /* Dimensões IMAGENS (Horizontal) */
             --card-width-img: 450px; 
             --card-height-img: 300px; 
@@ -47,59 +48,120 @@
             letter-spacing: 0.2em;
             margin-top: 0.5rem;
         }
+        
+        /* HEADER & LOGO (Charme Adicionado) */
+        header { 
+            padding: 2rem; 
+            display: flex; 
+            justify-content: center; 
+        }
+        .brand-logo { 
+            width: 140px; 
+            filter: invert(1); 
+            opacity: 0.7; 
+            transition: opacity var(--transition-speed), transform var(--transition-speed); 
+        }
+        .brand-logo:hover { 
+            opacity: 1; 
+            transform: scale(1.05); /* Efeito sutil */
+        }
 
-        /* HEADER & HERO */
-        header { padding: 2rem; display: flex; justify-content: center; }
-        .brand-logo { width: 140px; filter: invert(1); opacity: 0.9; transition: var(--transition-speed); }
+        /* HERO SECTION (Mais Apresentativa e Estrutural) */
         .hero-section {
-            min-height: 90vh; display: flex; flex-direction: column; align-items: center;
-            justify-content: center; text-align: center; padding: 0 5%; margin-bottom: 10rem; 
+            min-height: 90vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center; 
+            text-align: center; 
+            padding: 0 5%; 
+            margin-bottom: 10rem; 
+            position: relative;
+        }
+        
+        /* Linha Guia Minimalista (Estrutura Principal) */
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 15vh; /* Altura sutil */
+            background: var(--text-muted);
+            opacity: 0.2;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.1; }
+            to { opacity: 0.4; }
         }
 
         .hero-img {
             width: 100%; height: auto; max-height: 60vh; object-fit: contain;
-            /* Borda preta e sutil */
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 20px 60px rgba(0,0,0,0.8); 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             transition: all 1s ease-in-out; 
         }
 
-        .hero-title { 
-            /* Título ligeiramente menor */
-            font-size: clamp(2.2rem, 4.5vw, 4.5rem); 
+        .hero-title { font-size: clamp(2.2rem, 4vw, 4rem); }
+
+        /* CARROSSEL BASE & CORREÇÃO DE LAYOUT */
+        .carousel-section {
+            padding: 5rem 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            position: relative;
+        }
+        
+        /* CORREÇÃO DO BLOCO DE CABEÇALHO E LINK (Para corrigir o erro de "Coleções") */
+        .section-header-wrapper {
+            width: 100%;
+            max-width: 90%; /* Ajuste conforme a largura do seu conteúdo principal */
+            margin-bottom: 3rem; 
+            display: flex;
+            justify-content: space-between; /* Alinha o cabeçalho e o link nas extremidades */
+            align-items: flex-end;
+            padding: 0 2rem; 
         }
 
-        /* CARROSSEL BASE */
-        .carousel-section {
-            padding: 5rem 0; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; position: relative;
+        .section-header {
+            text-align: left;
+            opacity: 0.9;
         }
-        .section-header { margin-bottom: 5rem; text-align: center; opacity: 0.7; }
+
+        .collection-link {
+            color: var(--highlight-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+            transition: opacity var(--transition-speed);
+        }
+        .collection-link:hover { opacity: 1; }
+
+
         .carousel-track {
             display: flex; align-items: center; justify-content: center; gap: 4rem; 
             perspective: 1000px; width: 100%;
         }
 
-        /* SLOTS (DIMENSÕES E TRANSIÇÃO FLUIDA) */
+        /* SLOTS (ANIMAÇÃO SUTIL DE PASSAGEM) */
         .slot {
             position: relative;
-            transition: all var(--transition-speed) var(--transition-curve);
+            /* Transição de movimento (transform), opacidade e filtros para transição sutil */
+            transition: all var(--transition-speed) var(--transition-curve); 
             cursor: pointer;
             flex-shrink: 0;
             overflow: hidden; 
         }
         
         /* 1. Imagens: Horizontal */
-        .slot.slot-img {
-            width: var(--card-width-img);
-            height: var(--card-height-img);
-        }
-        
+        .slot.slot-img { width: var(--card-width-img); height: var(--card-height-img); }
         /* 2. Vídeos: Vertical Redimensionada */
-        .slot.slot-vid {
-            width: var(--card-width-vid);
-            height: var(--card-height-vid);
-        }
+        .slot.slot-vid { width: var(--card-width-vid); height: var(--card-height-vid); }
 
         .slot img, .slot video {
             width: 100%; height: 100%; object-fit: cover;
@@ -109,17 +171,22 @@
 
         /* EFEITOS DE FOCO */
         .slot.center {
-            transform: scale(1.05); 
+            transform: scale(1.05); /* Leve aumento */
             z-index: 10;
         }
+        
+        /* ANIMAÇÃO SUTIL AO CLICAR E CENTRALIZAR (Aplicada no JS) */
         .slot.center img, .slot.center video {
             filter: grayscale(0%) !important; 
             opacity: 1 !important;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            /* Adiciona o efeito de transição no momento do foco, reforçando a fluidez */
+            animation: scaleIn 0.5s ease-out; 
         }
-        .slot.side:hover img, .slot.side:hover video {
-             filter: grayscale(0%);
-             opacity: 1;
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         /* ESTADO EXPANDIDO (Imagens apenas) */
@@ -130,13 +197,28 @@
             cursor: zoom-in;
             box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
         }
-        .slot.expanded img { width: 55%; float: left; height: 100%; box-shadow: none; filter: grayscale(0%); }
+        .slot.expanded img { width: 55%; float: left; height: 100%; box-shadow: none; }
+        
         .expanded-info {
-            float: right; width: 45%; padding: 2rem 1rem; text-align: left;
+            float: right; width: 45%; 
+            padding: 2rem 1rem; 
+            text-align: left;
+            /* Ajuste de espaçamento (Mais espaço no topo) */
+            padding-top: 3rem; 
             opacity: 0; animation: fadeIn 0.5s ease forwards 0.3s;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .cta {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--highlight-color);
+            color: var(--highlight-color);
+            text-decoration: none;
+            transition: background var(--transition-speed);
+        }
+        .cta:hover { background: rgba(255, 255, 255, 0.1); }
+
 
         /* RESPONSIVIDADE */
         @media (max-width: 768px) {
@@ -147,6 +229,12 @@
             .slot.expanded { width: 90vw; height: 50vh; }
             .slot.expanded img { width: 100%; height: 60%; float: none; }
             .expanded-info { float: none; width: 100%; height: 40%; padding: 0.5rem 1rem; }
+            
+            .section-header-wrapper {
+                 flex-direction: column;
+                 align-items: flex-start;
+            }
+            .collection-link { margin-top: 0.5rem; }
         }
     </style>
 </head>
@@ -166,20 +254,26 @@
     </section>
 
     <section class="carousel-section">
-        <div class="section-header">
-            <h2 class="serif">Acervo</h2>
-            <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
+        <div class="section-header-wrapper">
+            <div class="section-header">
+                <h2 class="serif">Acervo</h2>
+                <p class="meta-data">Clique uma vez para expandir, duas para navegar</p>
+            </div>
+            <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
         </div>
+        
         <div class="carousel-track" id="track-images">
             </div>
-        <a href="colecoes.html" class="collection-link">Ver Todas as Coleções →</a>
     </section>
 
     <section class="carousel-section">
-        <div class="section-header">
-            <h2 class="serif">Motion</h2>
-            <p class="meta-data">Autoplay no Destaque</p>
+        <div class="section-header-wrapper">
+            <div class="section-header">
+                <h2 class="serif">Memórias</h2>
+                <p class="meta-data">PE</p>
+            </div>
         </div>
+        
         <div class="carousel-track" id="track-videos">
             </div>
     </section>
@@ -217,14 +311,11 @@
         let currentIdxImg = 0;
         let currentIdxVid = 0;
 
-        // === 2. FUNÇÕES CORE ===
-
         /**
          * Cria e anexa o elemento slot ao track.
          */
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
-            // Aplica a classe de dimensão (Horizontal ou Vertical Redimensionada)
             const sizeClass = type === 'images' ? 'slot-img' : 'slot-vid';
             div.className = `slot ${className} ${sizeClass}`; 
             div.setAttribute('data-index', dataIndex);
@@ -257,7 +348,7 @@
                 div.appendChild(info);
             }
            
-            // Lógica do Clique
+            // Lógica do Clique (Movimento e Expansão)
             div.onclick = function() {
                 const isImages = type === 'images';
                 let currentIdx = isImages ? currentIdxImg : currentIdxVid;
@@ -274,7 +365,6 @@
                     if (isImages) { currentIdxImg = currentIdx; } else { currentIdxVid = currentIdx; }
 
                     renderCarousel(type, data, currentIdx);
-                    // Resetar estados de clique/expansão
                     document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
                     document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                     return;
@@ -284,16 +374,13 @@
                 if (isImages && div.classList.contains('center')) {
                     let clicks = parseInt(div.getAttribute('data-clicks'));
 
-                    // Primeiro clique: Expande
                     if (clicks === 0) {
-                        // Fecha qualquer outro expandido
                         document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                         div.classList.add('expanded');
                         div.setAttribute('data-clicks', 1);
                         return;
                     }
 
-                    // Segundo clique: Navega
                     if (clicks === 1) {
                         div.setAttribute('data-clicks', 0); 
                         window.location.href = div.querySelector('.cta').href;
@@ -312,24 +399,22 @@
             const track = document.getElementById(`track-${type}`);
             if (!track || data.length < 3) return; 
 
-            // 1. Limpa o track para inserção dos novos slides
             track.innerHTML = ''; 
             
-            // 2. Calcula os índices (circular)
             const prevIndex = (currentIndex - 1 + data.length) % data.length;
             const nextIndex = (currentIndex + 1) % data.length;
 
-            // 3. Cria e insere os slots
             createSlot(track, data[prevIndex], 'side', type, prevIndex);
             createSlot(track, data[currentIndex], 'center', type, currentIndex); 
             createSlot(track, data[nextIndex], 'side', type, nextIndex);
             
-            // 4. Gerenciamento de Vídeos (Autoplay no centro)
+            // Gerenciamento de Vídeos
             if (type === 'videos') {
-                // Pausa todos para economizar recursos
                 track.querySelectorAll('video').forEach(v => v.pause()); 
                 const centerVideo = track.querySelector('.slot.center video');
                 if (centerVideo) {
+                    // Force a recriação do elemento para garantir a animação de scaleIn (se aplicável)
+                    centerVideo.load(); 
                     centerVideo.play().catch(error => {
                         console.warn("Autoplay de vídeo bloqueado ou falhou. Clique para interagir.", error);
                     });
@@ -347,9 +432,9 @@
             }
         }
 
-        // Estratégia de Inicialização Robustíssima para evitar erros de Timing
+        // Estratégia de Inicialização Robusta
         document.addEventListener('DOMContentLoaded', initializeCarousels);
-        window.onload = initializeCarousels; // Fallback completo
+        window.onload = initializeCarousels; 
     </script>
 </body>
 </html>
