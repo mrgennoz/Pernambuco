@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gennoz | Acervo</title>
+    <title>Gennoz | Arquivo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -14,11 +14,11 @@
             --text-main: #Eaeaea;
             --text-muted: #888;
             --highlight-color: #Eaeaea;
-            /* Dimensões Corrigidas dos Carrosséis */
-            --card-width-img: 400px; 
-            --card-height-img: 280px; 
-            --card-width-vid: 350px; /* Aumentado para melhor visualização */
-            --card-height-vid: 220px; /* Proporção horizontal para vídeos (cinematográfica) */
+            /* Proporções corrigidas: Imagem ligeiramente mais alta; Vídeo cinematográfico */
+            --card-width-img: 420px; 
+            --card-height-img: 300px; 
+            --card-width-vid: 480px; 
+            --card-height-vid: 270px; 
             --transition-speed: 0.5s;
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -33,9 +33,9 @@
             padding-bottom: 5rem;
         }
 
-        /* TIPOGRAFIA (Playfair Display) */
+        /* TIPOGRAFIA */
         h1, h2, .serif {
-            font-family: 'Playfair Display', serif; /* Nova fonte */
+            font-family: 'Playfair Display', serif; 
             font-weight: 400;
             letter-spacing: 0.05em;
         }
@@ -48,13 +48,10 @@
             margin-top: 0.5rem;
         }
 
-        /* 1. SEÇÃO DO LOGO (Opacidade, Movimento e Efeito de Brilho) */
+        /* 1. LOGO SECTION (Opacidade, Brilho, Animação de Clique Aprimorada) */
         .logo-section {
             min-height: 20vh; 
-            display: flex; 
-            /* Movimenta a logo para o centro superior na interação */
-            justify-content: center; 
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             padding: 2rem;
             transition: all 0.8s var(--transition-curve); 
             position: relative;
@@ -63,28 +60,37 @@
         
         .logo-section:hover {
              padding-bottom: 3rem; 
-             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 5, 0) 70%); /* Brilho sutilmente mais forte */
+             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 5, 0) 70%); 
              box-shadow: 0 5px 20px rgba(255, 255, 255, 0.05);
         }
 
         .brand-logo { 
             width: 140px; 
             filter: invert(1); 
-            opacity: 0.1; /* Quase imperceptível */
+            opacity: 0.05; /* Quase imperceptível */
             transition: opacity var(--transition-speed), transform var(--transition-speed); 
         }
         .brand-logo:hover, .brand-logo.clicked { 
-            opacity: 1; /* Aparece ao interagir */
-            transform: scale(1.10); 
+            opacity: 1; 
+            transform: scale(1.05); 
         }
-        
-        /* 2. HERO SECTION (Efeito de Brilho de Partículas) */
+
+        /* Efeito de Partículas (Poeira Flutuante - Aprimorado) */
+        .brand-logo.clicked {
+            animation: pulse-and-shift 0.4s ease-in-out;
+            box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.3); /* Simulação de Flash de Partículas */
+        }
+
+        @keyframes pulse-and-shift {
+            0% { transform: scale(1.05) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(0.5deg); opacity: 1; box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.5); }
+            100% { transform: scale(1.05) rotate(-0.5deg); opacity: 1; }
+        }
+
+        /* 2. HERO SECTION (Brilho da Linha Aprimorado) */
         .hero-section {
             min-height: 80vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            justify-content: center; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
             text-align: center; 
             padding: 0 5%; 
             margin-bottom: 10rem; 
@@ -93,129 +99,143 @@
 
         .hero-section::after {
             content: ''; position: absolute; bottom: 3rem; left: 50%;
-            transform: translateX(-50%); width: 2px; /* Linha um pouco mais grossa */
+            transform: translateX(-50%); width: 2px;
             height: 15vh; 
-            background: var(--text-muted); 
-            opacity: 0.4; /* Mais visível */
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Brilho mais forte */
-            animation: pulse 1.5s infinite alternate; /* Animação mais fluida */
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%); /* Fluxo de partículas de luz */
+            opacity: 0.4; 
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); /* Brilho mais forte */
+            animation: pulse 1.5s infinite alternate;
             z-index: 1;
         }
         
-        @keyframes pulse {
-            from { opacity: 0.2; transform: translateX(-50%) scaleY(0.8); }
-            to { opacity: 0.5; transform: translateX(-50%) scaleY(1); }
-        }
-
         /* Expansão Hero (Animação de Retorno Sutil) */
         .hero-expanded {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.85); 
             z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 2rem;
-            opacity: 0;
-            visibility: hidden;
-            /* Aumentar a transição para o retorno suave (0.5s) */
-            transition: opacity 0.5s ease-out, visibility 0.5s; 
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease-out, visibility 0.4s; 
         }
         .hero-expanded.active {
-            opacity: 1;
-            visibility: visible;
+            opacity: 1; visibility: visible;
+            display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 2rem;
         }
         
         .expanded-content {
             transition: transform 0.4s ease-out;
         }
 
-        /* Efeito de Retorno Sutil (Ao clicar fora/ESC) */
+        /* Efeito de Retorno Sutil (Ao fechar) */
         .hero-expanded:not(.active) .expanded-content {
-             transform: scale(0.95) translateY(10px); /* Leve animação de recuo */
-        }
-        
-        /* 3. CARROSSEL (Correções de Dimensões) */
-        .carousel-track {
-            display: flex; align-items: center; justify-content: center; gap: 4rem; 
-            perspective: 1000px; width: 100%;
+             transform: scale(0.95) translateY(10px); 
         }
 
-        /* Correção: Imagens Horizontal */
+        /* 3. CARROSSÉIS (Layout e Proporções Corrigidos) */
+        .carousel-section {
+            padding: 5rem 0; display: flex; flex-direction: column; align-items: center;
+            position: relative;
+        }
+        
+        .section-header-wrapper {
+            width: 100%; max-width: 90%; margin-bottom: 3rem; 
+            display: flex; align-items: flex-end; padding: 0 2rem; 
+        }
+
+        .carousel-track {
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 2rem; /* Espaçamento ajustado */
+            perspective: 1500px; /* Perspectiva melhorada */
+            width: 100%;
+        }
+
+        .slot {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.8s var(--transition-curve);
+            overflow: hidden;
+        }
+
+        /* Dimensões Corrigidas */
         .slot.slot-img { width: var(--card-width-img); height: var(--card-height-img); }
-        /* Correção: Vídeos Horizontal (Cinematográfico) */
         .slot.slot-vid { width: var(--card-width-vid); height: var(--card-height-vid); }
 
-        /* Estilos de Vídeo (Player Sutil) */
-        .slot video {
-             /* Estilos de base */
-             width: 100%; height: 100%; object-fit: cover;
-             filter: grayscale(100%); opacity: 0.6;
-             transition: var(--transition-speed);
+        /* Estilo dos Slots Laterais */
+        .slot.side {
+            opacity: 0.4;
+            transform: scale(0.85); /* Efeito 3D mais pronunciado */
+            cursor: pointer;
         }
         
-        /* Conteiner do Player Sutil */
-        .video-player-container {
-             position: relative;
-             width: 100%;
-             height: 100%;
+        .slot.side:hover {
+            opacity: 0.6;
+            transform: scale(0.9);
         }
 
-        .custom-controls {
-             position: absolute;
-             bottom: 10px; left: 10px; right: 10px;
-             display: flex;
-             align-items: center;
-             opacity: 0;
-             transition: opacity 0.3s;
+        /* Estilo do Slot Central */
+        .slot.center {
+            opacity: 1;
+            transform: scale(1);
+            cursor: pointer;
         }
         
-        /* Visível apenas no estado centrado/focado */
+        .slot img, .slot video {
+             width: 100%; height: 100%; object-fit: cover;
+             filter: grayscale(100%); opacity: 0.8;
+             transition: var(--transition-speed);
+        }
+
+        .slot.center img, .slot.center video {
+             filter: grayscale(0%); 
+             opacity: 1;
+        }
+
+        /* VÍDEO CENTRALIZADO (Ênfase) */
+        .slot.centered-video {
+            width: 80vw; 
+            height: 80vh; 
+            position: fixed; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(1.05);
+            z-index: 100;
+            cursor: default;
+        }
+        .slot.centered-video video {
+            object-fit: contain; /* Garante que o vídeo caiba na tela */
+            filter: grayscale(0%) !important;
+            opacity: 1 !important;
+        }
+        
+        /* Controles de Vídeo Sutil (Mesma lógica do CSS anterior) */
+        .video-player-container {
+             position: relative; width: 100%; height: 100%;
+        }
+        .custom-controls {
+             position: absolute; bottom: 10px; left: 10px; right: 10px;
+             display: flex; align-items: center; opacity: 0; transition: opacity 0.3s;
+        }
         .slot.centered-video .custom-controls,
         .slot.center .custom-controls {
              opacity: 1;
         }
+        .progress-bar-container { flex-grow: 1; height: 3px; background: rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--text-main); box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); transition: width 0.1s linear; }
 
-        .play-pause-btn {
-             background: none; border: none; color: var(--text-main); 
-             font-size: 1rem; cursor: pointer; margin-right: 10px;
-        }
-        
-        .progress-bar-container {
-             flex-grow: 1;
-             height: 3px; 
-             background: rgba(255, 255, 255, 0.1); 
-             position: relative;
-             overflow: hidden;
-        }
-
-        .progress-bar {
-             height: 100%;
-             width: 0%;
-             background: var(--text-main);
-             box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); /* Iluminação sutil */
-             transition: width 0.1s linear;
-        }
-
-        /* Overlay para o Fundo Obscurecido ao Centralizar Vídeo (Necessário no Body) */
+        /* Overlay */
         .overlay-active::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
             z-index: 99; 
             pointer-events: auto;
             transition: opacity 0.3s;
         }
-
     </style>
 </head>
 <body>
     
     <header class="logo-section">
-        <img src="logo.png" alt="Sombraz" class="brand-logo" id="main-logo">
+        <img src="logo.png" alt="Gennoz" class="brand-logo" id="main-logo">
     </header>
 
     <section class="hero-section">
@@ -224,7 +244,7 @@
         </div>
         <div class="hero-info">
             <h1 id="hero-title" class="hero-title serif">Família</h1>
-            <p id="hero-meta" class="meta-data">2025 • Gennoz • Pernambuco</p>
+            <p id="hero-meta" class="meta-data">2025 • GENNOZ • PERNAMBUCO</p>
         </div>
     </section>
     
@@ -276,9 +296,8 @@
     </footer>
 
     <script>
-        // === DADOS ===
+        // === DADOS MOCKADOS (Fácil de manter) ===
         const images = [
-            // ... (Dados omitidos por brevidade) ...
             { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
             { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
             { src: "imagem03.jpg", title: "Prazeres", year: "2025", location: "Jaboatão dos Guararapes" },
@@ -294,7 +313,6 @@
             { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
         ];
         const videos = [
-            // ... (Dados omitidos por brevidade) ...
             { src: "video01.mp4", title: "Estudo de Cor" },
             { src: "video02.mp4", title: "Loop Infinito" },
             { src: "video03.mp4", title: "Céu Noturno" },
@@ -310,22 +328,21 @@
         const body = document.body;
 
         /**
-         * Lógica de Expansão/Retração da Hero
+         * Lógica de Fechamento da Expansão Hero (ESC Key + Animação Sutil)
          */
         document.getElementById('hero-image-container').addEventListener('click', function() {
             heroExpanded.classList.add('active');
             body.style.overflow = 'hidden'; 
         });
 
-        // Fechar a expansão ao clicar fora do conteúdo OU pressionar ESC
+        // Fechar a expansão ao clicar fora da caixa de conteúdo
         heroExpanded.addEventListener('click', function(event) {
-             const expandedContent = document.querySelector('.expanded-content');
-             // Clica fora da caixa de conteúdo
              if (event.target === heroExpanded) {
                  closeHeroExpansion();
              }
         });
         
+        // Fechar ao pressionar ESC
         document.addEventListener('keydown', function(event) {
              if (event.key === 'Escape' && heroExpanded.classList.contains('active')) {
                  closeHeroExpansion();
@@ -333,18 +350,20 @@
         });
 
         function closeHeroExpansion() {
-            // Animação de recuo
+            // Aplica a animação de recuo antes de remover a classe 'active'
             document.querySelector('.expanded-content').style.transform = 'scale(0.95) translateY(10px)';
              
-            // Retorno ao estado padrão após a animação
+            // Retorno ao estado padrão (Remoção da camada)
             setTimeout(() => {
                 heroExpanded.classList.remove('active');
                 body.style.overflow = 'auto';
-                document.querySelector('.expanded-content').style.transform = ''; // Reseta para próxima abertura
-            }, 300); // Executa o retorno 300ms antes da transição CSS terminar
+                document.querySelector('.expanded-content').style.transform = ''; // Reseta o transform para a próxima abertura
+            }, 300); 
         }
         
-        // Lógica do Logo
+        /**
+         * Lógica do Logo (Animação Aprimorada)
+         */
         document.getElementById('main-logo').addEventListener('click', function(event) {
              const logo = event.target;
              logo.classList.add('clicked'); 
@@ -352,15 +371,14 @@
                  logo.classList.remove('clicked');
              }, 400); 
         });
-
+        
         /**
          * Funções Auxiliares do Vídeo (Player Sutil)
          */
         function setupVideoControls(videoElement) {
              const container = videoElement.parentElement;
-             if (!container || container.querySelector('.custom-controls')) return; // Já configurado
+             if (!container || container.querySelector('.custom-controls')) return;
 
-             // Cria o player sutil
              const controlsDiv = document.createElement('div');
              controlsDiv.className = 'custom-controls';
              controlsDiv.innerHTML = `
@@ -376,10 +394,10 @@
                  e.stopPropagation();
                  if (videoElement.paused) {
                      videoElement.play();
-                     playPauseBtn.innerHTML = '&#x23F8;'; // Pause Symbol
+                     playPauseBtn.innerHTML = '&#x23F8;'; 
                  } else {
                      videoElement.pause();
-                     playPauseBtn.innerHTML = '&#x25B6;'; // Play Symbol
+                     playPauseBtn.innerHTML = '&#x25B6;'; 
                  }
              });
              
@@ -390,52 +408,48 @@
                  progressBar.style.width = `${progress}%`;
              });
              
-             // Resetar o botão e barra ao terminar
              videoElement.addEventListener('ended', () => {
-                 playPauseBtn.innerHTML = '&#x25B6;'; // Play Symbol
+                 playPauseBtn.innerHTML = '&#x25B6;'; 
                  progressBar.style.width = '0%';
              });
 
-             // Atualizar o ícone se o autoplay falhar ou iniciar
              videoElement.addEventListener('play', () => playPauseBtn.innerHTML = '&#x23F8;');
              videoElement.addEventListener('pause', () => playPauseBtn.innerHTML = '&#x25B6;');
         }
 
 
         /**
-         * Função para fechar qualquer elemento pop-up (carrossel ou vídeo centralizado)
+         * Função para fechar popups (Carrossel e Vídeo Centralizado)
          */
         function closePopups() {
-            // Fecha a expansão de imagem do carrossel
             document.querySelectorAll('.slot.expanded').forEach(s => {
                 s.classList.remove('expanded');
                 s.setAttribute('data-clicks', 0);
             });
             
-            // Fecha a centralização de vídeo
             const centeredVideo = document.querySelector('.slot.centered-video');
             if (centeredVideo) {
                  centeredVideo.classList.remove('centered-video');
                  centeredVideo.querySelector('video').pause();
-                 // Remove o overlay do body
                  body.classList.remove('overlay-active');
             }
         }
         
-        // Listener global para fechar pop-ups ao clicar fora (excluindo os controles de vídeo)
+        // Listener global para fechar pop-ups ao clicar fora ou pressionar ESC
         document.addEventListener('click', function(event) {
-            // Se o alvo não for um slot, a expansão do Hero ou um controle de vídeo
             if (!event.target.closest('.slot') && !event.target.closest('#hero-expanded') && !event.target.closest('.custom-controls')) {
                  closePopups();
             }
-            // Se o alvo for o overlay de vídeo, feche
-            if (event.target.classList.contains('overlay-active')) {
+        });
+        
+        document.addEventListener('keydown', function(event) {
+             if (event.key === 'Escape') {
                  closePopups();
-            }
+             }
         });
 
         /**
-         * Lógica CORE: Criação do Slot (Corrigido e com Player)
+         * Lógica CORE: Criação do Slot
          */
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
@@ -456,7 +470,7 @@
                 mediaElement.playsInline = true;
                 if(className === 'center') mediaElement.load(); 
                 mediaContainer.appendChild(mediaElement);
-                setupVideoControls(mediaElement); // Configura os controles
+                setupVideoControls(mediaElement); 
             } else {
                 mediaElement = document.createElement('img');
                 mediaElement.src = item.src;
@@ -484,7 +498,7 @@
                 let currentIdx = isImages ? currentIdxImg : currentIdxVid;
                 const data = isImages ? images : videos;
 
-                // AÇÃO 1: Clique em Vídeo (Centralizar e liberar áudio/controles)
+                // AÇÃO 1: Clique em Vídeo (Centralizar - Prioridade)
                 if (type === 'videos' && div.classList.contains('center')) {
                     const videoElement = div.querySelector('video');
                     if (div.classList.contains('centered-video')) {
@@ -493,18 +507,15 @@
                         closePopups();
                         div.classList.add('centered-video');
                         body.classList.add('overlay-active');
-                        
-                        // Libera áudio e garante o play
-                        videoElement.muted = false; 
+                        videoElement.muted = false; // Libera áudio no modo de ênfase
                         videoElement.play();
                     }
                     event.stopPropagation(); 
                     return; 
                 }
                 
-                // AÇÃO 2: Movimento Lateral (ou clique em side)
+                // AÇÃO 2: Movimento Lateral
                 if (div.classList.contains('side')) {
-                    // ... Lógica de Movimento Lateral ...
                     const prevIndex = (currentIdx - 1 + data.length) % data.length;
                     const isPrev = dataIndex === prevIndex;
                     const direction = isPrev ? -1 : 1;
@@ -518,7 +529,7 @@
                     return;
                 }
                 
-                // AÇÃO 3: Expansão de Imagem (Carrossel)
+                // AÇÃO 3: Expansão de Imagem
                 if (isImages && div.classList.contains('center')) {
                     let clicks = parseInt(div.getAttribute('data-clicks'));
 
