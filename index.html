@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gennoz | Acervo</title>
+    <title>Gennoz | Arcevo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -16,9 +16,9 @@
             /* Dimensões do Carrossel de IMAGENS (Horizontal) */
             --card-width-img: 450px; 
             --card-height-img: 300px; 
-            /* Dimensões do Carrossel de VÍDEOS (Vertical Otimizada) */
-            --card-width-vid: 300px;
-            --card-height-vid: 450px;
+            /* Dimensões do Carrossel de VÍDEOS (Vertical REDIMENSIONADA) */
+            --card-width-vid: 250px; 
+            --card-height-vid: 350px; 
             --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -32,20 +32,6 @@
             padding-bottom: 5rem;
         }
 
-        /* --- ANIMAÇÕES UX (NECESSÁRIO PARA A TRANSIÇÃO SUAVE AO CLICAR) --- */
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: scale(0.98); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        @keyframes fadeIn { to { opacity: 1; } }
-
-        /* Classe temporária para a transição do carrossel */
-        .fade-transition { opacity: 0; pointer-events: none; }
-        .fade-transition-active {
-            animation: fadeInOut 0.5s var(--transition-curve) forwards;
-            pointer-events: all;
-        }
-        
         /* --- TIPOGRAFIA --- */
         h1, h2, .serif {
             font-family: 'Bodoni Moda', serif;
@@ -95,18 +81,18 @@
         .hero-img {
             width: 100%;
             height: auto;
-            /* Tamanho ligeiramente diminuído */
             max-height: 60vh; 
             object-fit: contain;
-            /* Sombra suave e estilizada */
-            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4), 
-                        0 20px 60px rgba(0,0,0,0.6); 
+            /* Sombra preta sutil */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 
+                        0 20px 60px rgba(0,0,0,0.8); 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             transition: all 1s ease-in-out; 
         }
 
         .hero-title { 
-            font-size: clamp(2.5rem, 6vw, 6rem); 
+            /* Tamanho ligeiramente reduzido */
+            font-size: clamp(2.2rem, 4.5vw, 4.5rem); 
         }
 
         /* --- CAROUSEL BASE --- */
@@ -137,6 +123,7 @@
         /* CARD SLOT GERAL */
         .slot {
             position: relative;
+            /* Transição fluida de CSS para movimentos e escala (o foco do movimento fluido) */
             transition: all 0.5s var(--transition-curve);
             cursor: pointer;
             flex-shrink: 0;
@@ -149,7 +136,7 @@
             height: var(--card-height-img);
         }
         
-        /* Dimensões Verticais (Vídeos) */
+        /* Dimensões Verticais REDIMENSIONADAS (Vídeos) */
         .carousel-section:nth-child(3) .slot {
             width: var(--card-width-vid);
             height: var(--card-height-vid);
@@ -159,22 +146,18 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Inicia P&B nas laterais */
             filter: grayscale(100%); 
             opacity: 0.6;
             transition: 0.5s;
         }
 
         /* --- ESTÉTICA: COR E P&B --- */
-        
-        /* 1. Imagem Central (Sempre Colorida e Focada) */
         .slot.center img, .slot.center video {
             filter: grayscale(0%) !important; 
             opacity: 1 !important;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
         }
 
-        /* 2. Laterais (Coloridas APENAS no Hover) */
         .slot.side:hover img, .slot.side:hover video {
              filter: grayscale(0%);
              opacity: 1;
@@ -217,7 +200,10 @@
         @media (max-width: 768px) {
             .hero-img { max-height: 50vh; } 
             .carousel-section:nth-child(2) .slot { width: 70vw; height: 40vh; }
-            .carousel-section:nth-child(3) .slot { width: 50vw; height: 70vh; }
+            .carousel-section:nth-child(3) .slot { 
+                width: 50vw; 
+                height: 60vh; 
+            }
             
             .slot.expanded { width: 90vw; height: 50vh; }
             .slot.expanded img {
@@ -272,18 +258,11 @@
     </footer>
 
     <script>
-        // === CONTROLE E DADOS ===
+        // === DADOS E CONFIGURAÇÃO ===
         const CONFIG = {
             heroSlideshowEnabled: false, 
             heroInterval: 8000 
         };
-
-        const heroSlides = [
-            { src: "familia02.jpg", title: "Família", year: "2025", location: "Pernambuco" },
-            { src: "familia01.jpg", title: "Em Casa", year: "2024", location: "Recife" },
-            { src: "familia03.jpg", title: "Viagem", year: "2023", location: "Rio de Janeiro" }
-        ];
-
         const images = [
             { src: "imagem01.jpg", title: "Calhetas", year: "2024", location: "Cabo de Santo Agostinho" },
             { src: "imagem02.jpg", title: "Piedade", year: "2025", location: "Jaboatão dos Guararapes" },
@@ -299,7 +278,6 @@
             { src: "imagem12.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
             { src: "imagem13.jpg", title: "Carpina", year: "2024", location: "Zona da Mata" },
         ];
-
         const videos = [
             { src: "video01.mp4", title: "Estudo de Cor" },
             { src: "video02.mp4", title: "Loop Infinito" },
@@ -309,60 +287,40 @@
             { src: "video06.mp4", title: "Foco e Desfoco" },
         ];
 
-        // LÓGICA HERO SECTION (Omitida por brevidade, mas está no código final)
-        
-        // --- LÓGICA DO CARROSSEL E TRANSIÇÃO SUAVE (ADICIONADA) ---
         let idxImg = 0;
         let idxVid = 0;
 
+        // --- FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO E ATUALIZAÇÃO ---
         function renderCarousel(type, data, currentIndex) {
             const track = document.getElementById(`track-${type}`);
             if (!track || data.length < 3) return; 
 
-            // 1. INICIA A TRANSIÇÃO: Adiciona a classe de fade-out
-            track.classList.add('fade-transition');
+            // Limpa o conteúdo
+            track.innerHTML = ''; 
             
-            // Timeout para permitir que a animação de fade-out ocorra visualmente
-            setTimeout(() => {
-                track.innerHTML = ''; 
-                
-                const prevIndex = (currentIndex - 1 + data.length) % data.length;
-                const nextIndex = (currentIndex + 1) % data.length;
+            const prevIndex = (currentIndex - 1 + data.length) % data.length;
+            const nextIndex = (currentIndex + 1) % data.length;
 
-                createSlot(track, data[prevIndex], 'side', type, prevIndex);
-                createSlot(track, data[currentIndex], 'center', type, currentIndex); 
-                createSlot(track, data[nextIndex], 'side', type, nextIndex);
-
-                // 2. FIM DA TRANSIÇÃO: Remove a classe de fade-out e adiciona o fade-in
-                track.classList.remove('fade-transition');
-                track.classList.add('fade-transition-active');
-                
-                // Remove o estado de animação após a conclusão
-                setTimeout(() => {
-                     track.classList.remove('fade-transition-active');
-                }, 500); 
-
-                // Tenta dar play no vídeo central logo após a montagem do slide (para o carrossel de vídeos)
-                if (type === 'videos') {
-                    const centerVideo = track.querySelector('.slot.center video');
-                    if (centerVideo) {
-                         centerVideo.play().catch(error => {
-                            // Este aviso é normal, pois o navegador pode exigir o 1º clique do usuário
-                            console.warn("Autoplay de vídeo bloqueado, aguardando interação do usuário.", error);
-                         });
-                    }
+            createSlot(track, data[prevIndex], 'side', type, prevIndex);
+            createSlot(track, data[currentIndex], 'center', type, currentIndex); 
+            createSlot(track, data[nextIndex], 'side', type, nextIndex);
+            
+            // Gerenciamento de Vídeos
+            if (type === 'videos') {
+                track.querySelectorAll('video').forEach(v => v.pause()); 
+                const centerVideo = track.querySelector('.slot.center video');
+                if (centerVideo) {
+                    centerVideo.play().catch(error => {
+                        console.warn("Autoplay de vídeo bloqueado ou falhou:", error);
+                    });
                 }
-
-            }, 50); // Tempo curto para que o browser registre o estado 'fade-transition'
+            }
         }
 
+        // --- CRIAÇÃO DE SLOT ---
         function createSlot(track, item, className, type, dataIndex) {
             const div = document.createElement('div');
-            div.className = `slot ${className} side`; // Inicia como side para aplicar o P&B/Hover (o .center sobreescreve)
-            if (className === 'center') {
-                div.classList.remove('side');
-            }
-
+            div.className = `slot ${className}`;
             div.setAttribute('data-index', dataIndex);
             div.setAttribute('data-clicks', 0);
 
@@ -396,9 +354,10 @@
 
             // Lógica do Clique (Movimentação e 2 Cliques)
             div.onclick = function() {
-                // Lógica de movimento lateral (Quando clica em um slide lateral)
+                // Lógica de movimento lateral (fluido, via CSS transition)
                 if (div.classList.contains('side')) {
-                    let direction = dataIndex === (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length) ? -1 : 1;
+                    let isPrev = dataIndex === (type === 'images' ? (idxImg - 1 + images.length) % images.length : (idxVid - 1 + videos.length) % videos.length);
+                    let direction = isPrev ? -1 : 1;
                     
                     if (type === 'images') {
                         idxImg = (idxImg + direction + images.length) % images.length;
@@ -408,13 +367,15 @@
                         renderCarousel('videos', videos, idxVid);
                     }
                     document.querySelectorAll('.slot').forEach(s => s.setAttribute('data-clicks', 0));
+                    document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                     return;
                 }
                 
-                // Lógica de 2 Cliques Central (Quando clica no slide central das IMAGENS)
+                // Lógica de 2 Cliques Central (Apenas para Imagens)
                 if (type === 'images' && div.classList.contains('center')) {
                     let clicks = parseInt(div.getAttribute('data-clicks'));
 
+                    // 1º Clique: Expande
                     if (clicks === 0) {
                         document.querySelectorAll('.slot.expanded').forEach(s => s.classList.remove('expanded'));
                         div.classList.add('expanded');
@@ -422,6 +383,7 @@
                         return;
                     }
 
+                    // 2º Clique: Navega
                     if (clicks === 1) {
                         div.setAttribute('data-clicks', 0); 
                         window.location.href = div.querySelector('.cta').href;
@@ -433,16 +395,21 @@
             track.appendChild(div);
         }
 
-        // --- INICIALIZAÇÃO CRÍTICA (CORREÇÃO DE ERRO) ---
-        // Utiliza window.onload para garantir que o DOM e as mídias estejam prontos.
-        window.onload = function() {
-            if (images.length >= 3) {
+        // --- INICIALIZAÇÃO GARANTIDA ---
+        function initializeCarousels() {
+             if (images.length >= 3) {
                 renderCarousel('images', images, idxImg);
             }
             if (videos.length >= 3) {
                 renderCarousel('videos', videos, idxVid);
             }
-        };
+        }
+
+        // 1. Tenta inicializar assim que o DOM estiver pronto (mais rápido)
+        document.addEventListener('DOMContentLoaded', initializeCarousels);
+        
+        // 2. Como fallback (se o DOMContentLoaded não funcionar, espere o carregamento total)
+        window.onload = initializeCarousels;
     </script>
 </body>
 </html>
