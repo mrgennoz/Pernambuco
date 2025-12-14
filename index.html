@@ -12,16 +12,16 @@
         :root {
             --bg-color: #050505;
             --text-main: #Eaeaea;
-            --text-muted: #888;
-            --gold-accent: #D4AF37; /* Toque de Realeza sutil */
+            --text-muted: #666;
+            --accent-gold: #D4AF37; /* Ouro Nobre */
+            --thread-color: rgba(255, 255, 255, 0.08);
             
-            /* Dimensões Desktop */
-            --card-height-fixed: 300px;
-            --video-land-width: 500px;
-            --video-port-width: 200px;
+            /* Configuração de Slots */
+            --slot-width-desktop: 450px;
+            --slot-height-desktop: 300px;
+            --slot-scale-side: 0.85;
             
-            --transition-luxury: cubic-bezier(0.25, 1, 0.5, 1); /* Curva "S" suave */
-            --border-radius: 4px; /* Minimalismo */
+            --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1); /* Curva suave profissional */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -32,553 +32,511 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             padding-bottom: 5rem;
+            position: relative;
         }
 
-        /* TIPOGRAFIA */
-        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; font-weight: 400; letter-spacing: 0.02em; }
-        .hero-title { font-size: 4rem; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .section-title { font-size: 2.5rem; color: var(--text-main); }
-        .meta-data { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 0.5rem; }
+        /* === O FILAMENTO DE ENERGIA (Fundo Interativo) === */
+        .energy-thread-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
         
-        /* === 1. LOGO MISTERIOSA & ONDA DE LUZ === */
+        /* A Linha Central */
+        .thread-line {
+            position: absolute; left: 50%; top: 150px; bottom: 50px; width: 1px;
+            background: var(--thread-color);
+            transform: translateX(-50%);
+            transition: background 1s;
+        }
+        
+        /* O "Nó" de Luz que viaja */
+        .energy-pulse {
+            position: absolute; left: 50%; top: 150px; width: 4px; height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--accent-gold), #fff, transparent);
+            transform: translateX(-50%) translateY(-200px);
+            opacity: 0;
+            box-shadow: 0 0 20px var(--accent-gold);
+            border-radius: 50%;
+        }
+
+        /* Pontos de conexão entre seções */
+        .connection-node {
+            position: absolute; left: 50%; width: 10px; height: 10px;
+            background: var(--bg-color); border: 1px solid var(--thread-color);
+            transform: translateX(-50%) rotate(45deg); /* Diamante */
+            transition: all 0.5s;
+        }
+        .connection-node.lit { border-color: var(--accent-gold); box-shadow: 0 0 15px var(--accent-gold); background: var(--accent-gold); }
+
+        /* Posições dos Nós (Ajuste conforme altura das seções) */
+        .node-hero { top: 80vh; }
+        .node-acervo { top: 160vh; }
+        .node-memorias { top: 240vh; }
+
+
+        /* === TIPOGRAFIA === */
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; font-weight: 400; letter-spacing: 0.02em; }
+        .hero-title { font-size: 4.5rem; text-shadow: 0 20px 40px rgba(0,0,0,0.8); margin: 0; line-height: 1; }
+        .section-title { font-size: 2.5rem; color: var(--text-main); }
+        .meta-data { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 1rem; }
+        .collection-link { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; transition: 0.3s; border-bottom: 1px solid transparent; }
+        .collection-link:hover { color: var(--accent-gold); border-color: var(--accent-gold); }
+
+
+        /* === 1. LOGO (MISTÉRIO) === */
         .logo-section {
-            min-height: 25vh; /* Mais respiro */
-            display: flex; justify-content: center; align-items: center;
-            position: relative;
-            z-index: 20;
+            height: 25vh; display: flex; justify-content: center; align-items: center;
+            position: relative; z-index: 20;
         }
         
         .brand-logo { 
-            width: 120px; 
-            filter: brightness(0.8) grayscale(1); 
-            transition: all 1s var(--transition-luxury);
+            width: 110px; 
+            opacity: 0.15; /* Requisito: Opacidade baixa */
+            transition: all 0.8s var(--transition-smooth);
             cursor: pointer;
-            position: relative;
-            z-index: 22;
+            filter: grayscale(1);
         }
         
-        /* Efeito Hover/Ativo respeitando PNG (Sem borda quadrada) */
-        .brand-logo:hover, .brand-logo.pulse-active { 
-            filter: brightness(1.2) grayscale(0) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)); 
+        .brand-logo:hover, .brand-logo.active { 
+            opacity: 1; 
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); /* Glow Dourado Sutil no PNG */
             transform: scale(1.05);
         }
 
-        /* Partículas */
-        .particle-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; pointer-events: none; }
-        .particle {
-            position: absolute; width: 4px; height: 4px; background: white; border-radius: 50%;
-            opacity: 0;
-        }
 
-        /* CONECTORES VISUAIS (LUZ E SOMBRA) */
-        .section-separator {
-            width: 1px; height: 100px;
-            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent);
-            margin: 0 auto;
-            opacity: 0.3;
-            transition: height 1s var(--transition-luxury), opacity 0.5s;
-        }
-        
-        /* Quando a logo pulsa, os separadores brilham */
-        body.light-wave .section-separator {
-            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.5), transparent);
-            height: 150px;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
-        }
-
-
-        /* === 2. HERO CAROUSEL (REALEZA) === */
+        /* === 2. HERO CAROUSEL === */
         .hero-section {
-            min-height: 90vh; /* Ocupa tela quase toda */
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 75vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; z-index: 10; margin-bottom: 8rem;
+        }
+
+        /* Container do Slot Hero (Maior que os outros) */
+        .hero-track-container {
+            width: 100%; height: 50vh; 
+            display: flex; justify-content: center; align-items: center;
             position: relative;
             perspective: 1000px;
-            margin-bottom: 5rem;
         }
 
-        .hero-carousel-wrapper {
+        .hero-info-wrapper {
+            margin-top: 3rem; text-align: center; height: 100px; /* Altura fixa para não pular */
+            opacity: 0; transform: translateY(20px); transition: 0.5s;
+        }
+        .hero-info-wrapper.visible { opacity: 1; transform: translateY(0); }
+
+
+        /* === 3. SEÇÕES GERAIS (ACERVO & MEMÓRIAS) === */
+        .section-wrapper { 
+            position: relative; z-index: 10; padding: 4rem 0; width: 100%; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* CABEÇALHO DE SEÇÃO (Restaurado para Coleções) */
+        .section-header-row {
+            width: 80%; max-width: 1200px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 3rem; padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05); /* Linha sutil separando header do carrossel */
+        }
+        .section-header-row.center { justify-content: center; text-align: center; border-bottom: none; }
+        
+        
+        /* === SISTEMA DE SLOTS (CRÍTICO PARA ESTABILIDADE) === */
+        .carousel-track {
             position: relative;
-            width: 100%; max-width: 1000px; height: 60vh;
+            width: 100%; max-width: 100vw;
+            height: var(--slot-height-desktop);
             display: flex; justify-content: center; align-items: center;
         }
 
-        .hero-slide {
+        .slot {
             position: absolute;
-            width: 60%; height: 100%;
-            transition: all 0.8s var(--transition-luxury);
-            opacity: 0; transform: scale(0.8) translateX(0);
-            border-radius: var(--border-radius);
+            transition: all 0.6s var(--transition-smooth);
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            background: #0a0a0a;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             cursor: pointer;
         }
 
-        .hero-slide.active { 
-            opacity: 1; transform: scale(1) translateX(0); z-index: 5; 
-            border: 1px solid rgba(255,255,255,0.1);
+        /* DIMENSÕES BASE */
+        .slot { width: var(--slot-width-desktop); height: 100%; }
+        
+        /* ESTADOS DE POSIÇÃO */
+        /* Centro */
+        .slot.center {
+            z-index: 10;
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            filter: grayscale(0);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
-        .hero-slide.prev { opacity: 0.3; transform: scale(0.85) translateX(-60%); z-index: 1; filter: grayscale(1); cursor: pointer; }
-        .hero-slide.next { opacity: 0.3; transform: scale(0.85) translateX(60%); z-index: 1; filter: grayscale(1); cursor: pointer; }
-
-        .hero-slide img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .hero-slide:hover img { transform: scale(1.05); }
-
-        .hero-info-display {
-            text-align: center; margin-top: 2rem;
-            opacity: 0; transform: translateY(20px);
-            transition: all 0.5s ease-out;
+        /* Laterais (Anterior/Próximo) */
+        .slot.left {
+            z-index: 5;
+            transform: translateX(-110%) scale(var(--slot-scale-side)); /* 110% afasta o suficiente */
+            opacity: 0.3; filter: grayscale(1);
         }
-        .hero-info-display.visible { opacity: 1; transform: translateY(0); }
-
-        /* EXPANSÃO HERO (MODO CINEMA) */
-        .hero-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(15px);
-            z-index: 100;
-            opacity: 0; visibility: hidden;
-            transition: all 0.6s var(--transition-luxury);
-            display: flex; align-items: center; justify-content: center;
+        .slot.right {
+            z-index: 5;
+            transform: translateX(110%) scale(var(--slot-scale-side));
+            opacity: 0.3; filter: grayscale(1);
         }
-        .hero-overlay.active { opacity: 1; visibility: visible; }
-
-        /* Borda Pulsante (Indica borda livre) */
-        .hero-overlay.active::before {
-            content: ''; position: absolute; inset: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            animation: border-pulse 4s infinite;
+        /* Escondidos (Fundo) */
+        .slot.hidden {
+            z-index: 0;
+            opacity: 0;
+            transform: scale(0.5);
             pointer-events: none;
         }
-        @keyframes border-pulse { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.4; border-color: rgba(255,255,255,0.3); } }
 
-        .expanded-container {
-            display: flex; gap: 4rem; width: 85%; max-width: 1400px; height: 80vh;
-            align-items: center;
-        }
-        .expanded-img-box { flex: 2; height: 100%; overflow: hidden; border-radius: 4px; position: relative; }
-        .expanded-img-box img { width: 100%; height: 100%; object-fit: contain; }
+        /* Hover nas laterais: Colorir */
+        .slot.left:hover, .slot.right:hover { filter: grayscale(0); opacity: 0.6; }
+
+        .slot img, .slot video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
         
-        .expanded-text-box { 
-            flex: 1; opacity: 0; transform: translateX(30px); 
-            display: flex; flex-direction: column; justify-content: center; 
+        /* HERO MODIFICAÇÕES (Sobrescreve dimensões base) */
+        .hero-track-container .slot { width: 600px; height: 100%; } /* Hero é maior */
+        .hero-track-container .slot.left { transform: translateX(-80%) scale(0.8); }
+        .hero-track-container .slot.right { transform: translateX(80%) scale(0.8); }
+        .hero-track-container .slot.center img { transform: scale(1.05); } /* Zoom sutil */
+
+        /* INTERATIVIDADE DENTRO DO SLOT */
+        .slot-info-layer {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            opacity: 0; transition: 0.3s;
+            padding: 2rem;
         }
-        .hero-overlay.active .expanded-text-box { 
-            opacity: 1; transform: translateX(0); transition: 0.8s 0.3s var(--transition-luxury); 
-        }
+        .slot.center.show-info .slot-info-layer { opacity: 1; }
 
 
-        /* === 3. CARROSSÉIS PADRÃO (ACERVO & MEMÓRIAS) === */
-        .carousel-container {
-            padding: 4rem 0;
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-        }
+        /* === EXPANSÕES E MODAIS === */
         
-        .track {
-            display: flex; align-items: center; gap: 2rem;
-            width: max-content; margin: 0 auto;
-            transition: transform 0.5s var(--transition-luxury);
-            padding: 2rem 50vw; /* Padding lateral gigante para centralização */
+        /* Hero Modal (Cinema) */
+        .hero-modal {
+            position: fixed; inset: 0; background: #050505; z-index: 100;
+            display: grid; grid-template-columns: 1.5fr 1fr;
+            opacity: 0; visibility: hidden; transition: 0.5s var(--transition-smooth);
         }
-
-        .card {
-            position: relative;
-            height: var(--card-height-fixed);
-            flex-shrink: 0; /* IMPEDE ENCOLHIMENTO */
-            transition: all 0.6s var(--transition-luxury);
-            opacity: 0.3; filter: grayscale(100%);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            background: #111;
-            cursor: pointer;
-        }
-
-        /* TAMANHOS DINÂMICOS */
-        /* Imagens (Padrão) */
-        .card.type-img { width: 400px; }
+        .hero-modal.active { opacity: 1; visibility: visible; }
         
-        /* Vídeos (Smart Ratio) */
-        .card.landscape { width: var(--video-land-width); }
-        .card.portrait { width: var(--video-port-width); }
-
-        .card img, .card video { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Estado ATIVO (Centro) */
-        .card.active { opacity: 1; filter: grayscale(0%); transform: scale(1.1); z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        /* Hover nas laterais (Colorir) */
-        .card:not(.active):hover { opacity: 0.8; filter: grayscale(0%); }
-
-        /* INFO OVERLAY (Dentro do Card) */
-        .card-info-overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 2rem 1rem 1rem;
-            opacity: 0; transform: translateY(20px);
-            transition: all 0.4s ease;
-            text-align: center;
+        .hero-modal-img { width: 100%; height: 100%; object-fit: contain; background: black; }
+        .hero-modal-content { 
+            padding: 4rem; display: flex; flex-direction: column; justify-content: center; 
+            border-left: 1px solid rgba(255,255,255,0.1);
         }
-        .card.show-info .card-info-overlay { opacity: 1; transform: translateY(0); }
-        .cta-btn { font-size: 0.7rem; color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 5px 15px; margin-top: 10px; display: inline-block; text-decoration: none; }
-
-
-        /* === VIDEO EXPANDIDO === */
-        .video-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 200;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: 0.4s;
+        .close-btn { 
+            position: absolute; top: 2rem; right: 2rem; 
+            background: none; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 10px 20px; cursor: pointer; transition: 0.3s; 
         }
-        .video-modal.active { opacity: 1; visibility: visible; }
-        .video-modal video { max-width: 95%; max-height: 80vh; outline: none; }
-        .video-modal-info { margin-top: 1rem; text-align: center; }
+        .close-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
 
-        /* === MOBILE RESPONSIVENESS === */
+        /* === MOBILE === */
         @media (max-width: 768px) {
             :root {
-                --card-height-fixed: 220px;
-                --video-land-width: 320px;
-                --video-port-width: 160px;
+                --slot-width-desktop: 280px; /* Cards menores */
             }
+            .hero-track-container { height: 40vh; }
+            .hero-track-container .slot { width: 80vw; }
+            
+            /* No mobile, escondemos os laterais quase completamente ou empilhamos?
+               Melhor manter a lógica, mas com transform menor */
+            .hero-track-container .slot.left { transform: translateX(-15%) scale(0.85); opacity: 0.1; }
+            .hero-track-container .slot.right { transform: translateX(15%) scale(0.85); opacity: 0.1; }
+            .slot.left { transform: translateX(-15%) scale(0.85); opacity: 0.1; }
+            .slot.right { transform: translateX(15%) scale(0.85); opacity: 0.1; }
+
             .hero-title { font-size: 2.5rem; }
-            .hero-carousel-wrapper { height: 45vh; width: 100%; }
-            .hero-slide { width: 75%; }
-            .hero-slide.prev { transform: scale(0.8) translateX(-45%); }
-            .hero-slide.next { transform: scale(0.8) translateX(45%); }
+            .hero-modal { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; overflow-y: auto; }
+            .hero-modal-content { padding: 2rem; border-left: none; border-top: 1px solid rgba(255,255,255,0.1); }
             
-            /* Expansão Hero Mobile */
-            .expanded-container { flex-direction: column; width: 90%; height: 90vh; gap: 1rem; }
-            .expanded-img-box { flex: none; height: 50%; width: 100%; }
-            .expanded-text-box { flex: 1; width: 100%; text-align: center; justify-content: flex-start; overflow-y: auto; }
-            
-            .card.type-img { width: 260px; }
-            
-            /* Ajuste de toque */
-            .cta-btn { padding: 10px 20px; }
-            
-            .section-separator { height: 50px; }
-            body.light-wave .section-separator { height: 80px; }
+            .section-header-row { flex-direction: column; align-items: center; gap: 1rem; text-align: center; }
         }
+
     </style>
 </head>
 <body>
 
+    <div class="energy-thread-container">
+        <div class="thread-line"></div>
+        <div class="energy-pulse" id="soul-pulse"></div>
+        
+        <div class="connection-node node-hero" id="node-1"></div>
+        <div class="connection-node node-acervo" id="node-2"></div>
+        <div class="connection-node node-memorias" id="node-3"></div>
+    </div>
+
     <header class="logo-section">
-        <div class="particle-container" id="particles"></div>
-        <img src="logo.png" alt="Gennoz" class="brand-logo" id="logo">
+        <img src="logo.png" alt="Gennoz" class="brand-logo" id="logo-trigger">
     </header>
 
-    <div class="section-separator"></div>
-
-    <section class="hero-section">
-        <div class="hero-carousel-wrapper" id="hero-track">
+    <section class="hero-section" id="section-hero">
+        <div class="hero-track-container" id="hero-track">
             </div>
         
-        <div class="hero-info-display" id="hero-info">
-            <h1 class="hero-title serif" id="hero-title-text">Título</h1>
-            <p class="meta-data" id="hero-meta-text">Info</p>
+        <div class="hero-info-wrapper" id="hero-text-box">
+            <h1 class="hero-title serif" id="hero-title-el">Família</h1>
+            <p class="meta-data" id="hero-meta-el">2025 • GENNOZ</p>
+            <p class="meta-data" style="margin-top: 5px; opacity: 0.5;">[ Clique para Expandir ]</p>
         </div>
     </section>
 
-    <div class="hero-overlay" id="hero-overlay">
-        <div class="expanded-container">
-            <div class="expanded-img-box">
-                <img src="" id="exp-hero-img" alt="">
-            </div>
-            <div class="expanded-text-box">
-                <h2 class="serif section-title" id="exp-hero-title">Título</h2>
-                <p class="meta-data" id="exp-hero-meta" style="margin-bottom: 2rem;">ANO • LOCAL</p>
-                <p style="line-height: 1.6; color: #ccc;">
-                    Esta é a descrição detalhada da obra principal. Aqui o espaço é dedicado para contar a história, 
-                    a técnica e a emoção por trás do registro. A estrutura minimalista permite que o texto respire 
-                    ao lado da imagem.
-                </p>
-                <div style="margin-top: 2rem; opacity: 0.6; font-size: 0.8rem;">
-                    [ Clique fora ou pressione ESC para retornar ]
-                </div>
+    <div class="hero-modal" id="hero-modal">
+        <button class="close-btn" onclick="toggleHeroModal(false)">FECHAR [ESC]</button>
+        <div style="background: #000; display:flex; align-items:center; justify-content:center;">
+            <img src="" class="hero-modal-img" id="hero-modal-img">
+        </div>
+        <div class="hero-modal-content">
+            <p class="meta-data" style="color: var(--accent-gold);">OBRA EM DESTAQUE</p>
+            <h2 class="hero-title serif" id="hero-modal-title" style="font-size: 3rem; margin-bottom: 2rem;">Título</h2>
+            <p style="line-height: 1.8; color: #ccc; font-size: 1.1rem;">
+                Esta área é dedicada à imersão total na obra. A estrutura foi pensada para isolar o observador do restante do site, permitindo uma conexão profunda com os detalhes, a luz e a intenção da fotografia.
+            </p>
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <p class="meta-data">GENNOZ • PERNAMBUCO • BRASIL</p>
             </div>
         </div>
     </div>
 
-    <div class="section-separator"></div>
-
-    <section class="carousel-container">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 class="serif section-title">Acervo</h2>
-            <p class="meta-data">Clique no centro para detalhes</p>
+    <section class="section-wrapper" id="section-acervo">
+        <div class="section-header-row">
+            <div>
+                <h2 class="serif section-title">Acervo</h2>
+                <p class="meta-data">Clique 1x para info • 2x para obra</p>
+            </div>
+            <a href="colecoes.html" class="collection-link">VER TODAS AS COLEÇÕES →</a>
         </div>
         
-        <div class="track" id="track-img">
+        <div class="carousel-track" id="acervo-track">
             </div>
     </section>
 
-    <div class="section-separator"></div>
-
-    <section class="carousel-container">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 class="serif section-title">Memórias</h2>
-            <p class="meta-data">Pernambuco</p>
+    <section class="section-wrapper" id="section-memorias">
+        <div class="section-header-row center">
+            <div>
+                <h2 class="serif section-title">Memórias</h2>
+                <p class="meta-data">Fragmentos de Pernambuco</p>
+            </div>
         </div>
         
-        <div class="track" id="track-vid">
+        <div class="carousel-track" id="memorias-track">
             </div>
     </section>
-    
-    <div class="video-modal" id="video-modal">
-        <video id="main-video-player" controls playsinline></video>
-        <div class="video-modal-info">
-            <h3 class="serif" id="vid-mod-title">Título</h3>
-            <button class="cta-btn" onclick="closeVideo()">Fechar</button>
-        </div>
-    </div>
 
     <footer>
-        <div style="text-align: center; padding: 3rem; color: #444; font-size: 0.8rem; letter-spacing: 0.1em;">
+        <div style="text-align: center; padding: 4rem; opacity: 0.4; font-size: 0.8rem; letter-spacing: 0.2em;">
             GENNOZ © 2025
         </div>
     </footer>
 
     <script>
-        /* === DADOS (Com Orientação de Vídeo) === */
-        const heroData = [
-            { src: "familia02.jpg", title: "Família", meta: "2025 • GENNOZ" },
-            { src: "imagem01.jpg", title: "Raízes", meta: "2024 • PERNAMBUCO" },
-            { src: "imagem07.jpg", title: "Horizonte", meta: "2024 • SERRAMBI" }
+        // === DADOS ===
+        const dataHero = [
+            { src: "familia02.jpg", title: "Família", meta: "2025 • AFETO" },
+            { src: "imagem01.jpg", title: "Raízes", meta: "2024 • TERRA" },
+            { src: "imagem07.jpg", title: "Maré", meta: "2024 • SERRAMBI" }
         ];
 
-        const imgData = [
-            { src: "imagem01.jpg", title: "Calhetas", meta: "2024 • CABO" },
-            { src: "imagem02.jpg", title: "Piedade", meta: "2025 • JABOATÃO" },
-            { src: "imagem03.jpg", title: "Prazeres", meta: "2025 • JABOATÃO" },
-            { src: "imagem04.jpg", title: "Prazeres II", meta: "2025 • JABOATÃO" },
-            { src: "imagem05.jpg", title: "Prazeres III", meta: "2025 • JABOATÃO" },
-            { src: "imagem12.jpg", title: "Carpina", meta: "2024 • ZONA DA MATA" }
+        const dataAcervo = [
+            { src: "imagem01.jpg", title: "Calhetas", meta: "CABO", link: "obra.html" },
+            { src: "imagem02.jpg", title: "Piedade", meta: "JABOATÃO", link: "obra.html" },
+            { src: "imagem03.jpg", title: "Prazeres", meta: "URBANO", link: "obra.html" },
+            { src: "imagem04.jpg", title: "Detalhe", meta: "MACRO", link: "obra.html" },
+            { src: "imagem12.jpg", title: "Carpina", meta: "MATA", link: "obra.html" }
         ];
 
-        // orientation: 'landscape' (horizontal) ou 'portrait' (vertical)
-        const vidData = [
-            { src: "video01.mp4", title: "Estudo de Cor", orientation: "landscape" },
-            { src: "video06.mp4", title: "Foco", orientation: "portrait" }, // Exemplo Vertical
-            { src: "video02.mp4", title: "Loop", orientation: "landscape" },
-            { src: "video03.mp4", title: "Noturno", orientation: "landscape" },
-            { src: "video04.mp4", title: "Transição", orientation: "portrait" },
-            { src: "video05.mp4", title: "Pixel", orientation: "landscape" }
+        const dataMemorias = [
+            // orientation ajuda a ajustar o CSS se necessário, mas o object-fit cover resolve a maioria
+            { src: "video01.mp4", title: "Cores", type: "vid" },
+            { src: "video06.mp4", title: "Foco", type: "vid" }, 
+            { src: "video02.mp4", title: "Loop", type: "vid" },
+            { src: "video03.mp4", title: "Noite", type: "vid" }
         ];
 
-        /* === ESTADO GLOBAL === */
-        let state = {
-            hero: 0,
-            img: 0,
-            vid: 0
-        };
+        // Estados
+        let idxHero = 0;
+        let idxAcervo = 0;
+        let idxMemo = 0;
 
-        /* === 1. LÓGICA DA LOGO (EFEITO ONDA) === */
-        const logo = document.getElementById('logo');
-        const separators = document.querySelectorAll('.section-separator');
-        
-        logo.addEventListener('click', () => {
-            // Efeito Visual na Logo
-            logo.classList.add('pulse-active');
-            
-            // Onda de Luz (Body Class)
-            document.body.classList.add('light-wave');
-            
-            // Remove classes após animação
-            setTimeout(() => {
-                logo.classList.remove('pulse-active');
-                document.body.classList.remove('light-wave');
-            }, 1500);
-        });
 
-        /* === 2. HERO LÓGICA === */
-        function renderHero() {
-            const track = document.getElementById('hero-track');
-            track.innerHTML = '';
+        // === FUNÇÃO CORE: RENDERIZAR CARROSSEL (Lógica de 3 Slots) ===
+        function renderCarousel(containerId, data, currentIndex, type, callbackState) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
             
-            heroData.forEach((item, index) => {
-                const el = document.createElement('div');
+            // Define índices: Anterior, Atual, Próximo
+            const prevIdx = (currentIndex - 1 + data.length) % data.length;
+            const nextIdx = (currentIndex + 1) % data.length;
+
+            data.forEach((item, i) => {
+                // Cria elemento apenas se for um dos 3 visíveis (Otimização)
+                // Na verdade, para animação suave, precisamos que os elementos existam.
+                // Vamos criar todos, mas classificar apenas os 3.
                 
-                // Define classes: Active, Prev, Next
-                let className = 'hero-slide';
-                if (index === state.hero) className += ' active';
-                else if (index === (state.hero - 1 + heroData.length) % heroData.length) className += ' prev';
-                else if (index === (state.hero + 1) % heroData.length) className += ' next';
-                else className += ' hidden'; // Esconde os outros
+                const slot = document.createElement('div');
+                let className = 'slot';
                 
-                if (className.includes('hidden')) {
-                    el.style.opacity = '0'; 
-                    el.style.pointerEvents = 'none';
+                if (i === currentIndex) className += ' center';
+                else if (i === prevIdx) className += ' left';
+                else if (i === nextIdx) className += ' right';
+                else className += ' hidden';
+
+                slot.className = className;
+                
+                // Conteúdo Interno
+                let innerHTML = '';
+                if (type === 'vid') {
+                    innerHTML = `<video src="${item.src}" muted loop playsinline></video>`;
+                } else {
+                    innerHTML = `<img src="${item.src}">`;
                 }
 
-                el.className = className;
-                el.innerHTML = `<img src="${item.src}" alt="${item.title}">`;
+                // Camada de Info (Acervo/Memórias)
+                if (type !== 'hero') {
+                    innerHTML += `
+                        <div class="slot-info-layer">
+                            <h3 class="serif" style="font-size: 1.5rem; color: #fff;">${item.title}</h3>
+                            <p class="meta-data" style="margin-bottom: 1.5rem;">${item.meta || 'PERNAMBUCO'}</p>
+                            ${type === 'img' ? '<span style="border:1px solid #fff; padding: 5px 15px; font-size: 0.7rem;">VER OBRA</span>' : '<span style="font-size: 2rem;">▶</span>'}
+                        </div>
+                    `;
+                }
                 
-                // Click Logic
-                el.onclick = () => {
-                    if (el.classList.contains('prev')) {
-                        state.hero = (state.hero - 1 + heroData.length) % heroData.length;
-                        renderHero();
-                    } else if (el.classList.contains('next')) {
-                        state.hero = (state.hero + 1) % heroData.length;
-                        renderHero();
-                    } else if (el.classList.contains('active')) {
-                        openHeroExpanded(item);
+                slot.innerHTML = innerHTML;
+
+                // Eventos de Clique
+                slot.onclick = (e) => {
+                    // Se clicar nas laterais, navega
+                    if (slot.classList.contains('left')) {
+                        updateState(callbackState, -1, data.length);
+                    } else if (slot.classList.contains('right')) {
+                        updateState(callbackState, 1, data.length);
+                    } else if (slot.classList.contains('center')) {
+                        // Ação do Centro
+                        handleCenterClick(slot, item, type);
                     }
                 };
-                
-                track.appendChild(el);
-            });
 
-            // Atualiza Texto
-            const info = document.getElementById('hero-info');
-            info.classList.remove('visible');
+                // Play on Hover (Video)
+                if (type === 'vid') {
+                    slot.onmouseenter = () => { if(slot.querySelector('video')) slot.querySelector('video').play(); };
+                    slot.onmouseleave = () => { if(slot.querySelector('video')) slot.querySelector('video').pause(); };
+                }
+
+                container.appendChild(slot);
+            });
+        }
+
+        // Atualizador de Estado Genérico
+        function updateState(target, direction, length) {
+            if (target === 'hero') {
+                idxHero = (idxHero + direction + length) % length;
+                renderAll();
+                updateHeroText();
+            } else if (target === 'acervo') {
+                idxAcervo = (idxAcervo + direction + length) % length;
+                renderAll();
+            } else if (target === 'memo') {
+                idxMemo = (idxMemo + direction + length) % length;
+                renderAll();
+            }
+        }
+
+        // Lógica de Clique Central
+        function handleCenterClick(slot, item, type) {
+            if (type === 'hero') {
+                // Abre Modal Hero
+                document.getElementById('hero-modal-img').src = item.src;
+                document.getElementById('hero-modal-title').innerText = item.title;
+                toggleHeroModal(true);
+            } else if (type === 'img') {
+                // 1º Clique: Info, 2º Clique: Link
+                if (!slot.classList.contains('show-info')) {
+                    slot.classList.add('show-info');
+                } else {
+                    window.location.href = item.link;
+                }
+            } else if (type === 'vid') {
+                // Expandir Video (Simples Play/Pause no centro com som)
+                const vid = slot.querySelector('video');
+                if (vid.muted) {
+                    vid.muted = false;
+                    vid.currentTime = 0;
+                    vid.play();
+                } else {
+                    vid.muted = true;
+                }
+            }
+        }
+
+        function updateHeroText() {
+            const textBox = document.getElementById('hero-text-box');
+            textBox.classList.remove('visible');
             setTimeout(() => {
-                document.getElementById('hero-title-text').innerText = heroData[state.hero].title;
-                document.getElementById('hero-meta-text').innerText = heroData[state.hero].meta;
-                info.classList.add('visible');
+                document.getElementById('hero-title-el').innerText = dataHero[idxHero].title;
+                document.getElementById('hero-meta-el').innerText = dataHero[idxHero].meta;
+                textBox.classList.add('visible');
             }, 300);
         }
 
-        // Hero Expansão
-        const heroOverlay = document.getElementById('hero-overlay');
-        function openHeroExpanded(item) {
-            document.getElementById('exp-hero-img').src = item.src;
-            document.getElementById('exp-hero-title').innerText = item.title;
-            document.getElementById('exp-hero-meta').innerText = item.meta;
-            heroOverlay.classList.add('active');
+        function toggleHeroModal(show) {
+            const modal = document.getElementById('hero-modal');
+            if (show) modal.classList.add('active');
+            else modal.classList.remove('active');
         }
-        
-        heroOverlay.addEventListener('click', (e) => {
-            if (e.target === heroOverlay || e.target.classList.contains('expanded-container')) {
-                heroOverlay.classList.remove('active');
-            }
+
+        function renderAll() {
+            renderCarousel('hero-track', dataHero, idxHero, 'hero', 'hero');
+            renderCarousel('acervo-track', dataAcervo, idxAcervo, 'img', 'acervo');
+            renderCarousel('memorias-track', dataMemorias, idxMemo, 'vid', 'memo');
+        }
+
+        // === EFEITO "SOUL PULSE" (LOGO INTERACTION) ===
+        const logoBtn = document.getElementById('logo-trigger');
+        const pulse = document.getElementById('soul-pulse');
+        const nodes = [document.getElementById('node-1'), document.getElementById('node-2'), document.getElementById('node-3')];
+        const sections = [document.getElementById('section-hero'), document.getElementById('section-acervo'), document.getElementById('section-memorias')];
+
+        logoBtn.addEventListener('click', () => {
+            // Ativa Logo
+            logoBtn.classList.add('active');
+            
+            // Reseta animação do pulso
+            pulse.style.transition = 'none';
+            pulse.style.transform = 'translateX(-50%) translateY(-200px)';
+            pulse.style.opacity = '1';
+            
+            // Força reflow
+            void pulse.offsetWidth;
+            
+            // Dispara Pulso descendo
+            pulse.style.transition = 'transform 2.5s linear, opacity 2.5s ease-in';
+            pulse.style.transform = 'translateX(-50%) translateY(300vh)'; // Vai até o fim da página
+            
+            // Timers para acender os nós conforme o pulso passa (Sincronia visual)
+            setTimeout(() => { nodes[0].classList.add('lit'); }, 500); // Hero Node
+            setTimeout(() => { nodes[1].classList.add('lit'); }, 1200); // Acervo Node
+            setTimeout(() => { nodes[2].classList.add('lit'); }, 1900); // Memórias Node
+            
+            // Apaga o pulso no final
+            setTimeout(() => { 
+                pulse.style.opacity = '0'; 
+                logoBtn.classList.remove('active');
+                nodes.forEach(n => n.classList.remove('lit'));
+            }, 2500);
         });
 
-        /* === 3. CARROSSEL GENÉRICO (Imagens e Vídeos) === */
-        function updateCarousel(type) {
-            const data = type === 'img' ? imgData : vidData;
-            const current = state[type];
-            const track = document.getElementById(`track-${type}`);
-            
-            track.innerHTML = '';
-            
-            // Centralização: Calcula o deslocamento para que o item ATIVO fique no centro da tela
-            // A lógica aqui é simplificada renderizando todos e usando transform no container seria ideal,
-            // mas para manter a lógica de slots anterior, vamos renderizar vizinhos.
-            
-            // Abordagem "Fila Infinita Virtual": Renderizamos 5 itens ao redor do atual
-            const indices = [-2, -1, 0, 1, 2];
-            
-            indices.forEach(offset => {
-                const idx = (current + offset + data.length) % data.length;
-                const item = data[idx];
-                
-                const card = document.createElement('div');
-                let classList = `card type-${type === 'img' ? 'img' : ''}`; // Base class
-                
-                // Add Video specific classes
-                if (type === 'vid') {
-                    classList += ` ${item.orientation || 'landscape'}`;
-                }
-                
-                if (offset === 0) classList += ' active';
-                
-                card.className = classList;
-                
-                // Content
-                if (type === 'img') {
-                    card.innerHTML = `
-                        <img src="${item.src}">
-                        <div class="card-info-overlay">
-                            <h3 class="serif">${item.title}</h3>
-                            <p class="meta-data">${item.meta}</p>
-                            <a href="obra.html" class="cta-btn">Ver Obra</a>
-                        </div>
-                    `;
-                } else {
-                    card.innerHTML = `
-                        <video src="${item.src}" muted loop playsinline></video>
-                        <div class="card-info-overlay">
-                            <h3 class="serif">${item.title}</h3>
-                            <p class="meta-data">Clique para Reproduzir</p>
-                        </div>
-                    `;
-                }
-
-                // Click Logic
-                card.onclick = () => {
-                    if (offset === 0) {
-                        // Click no Centro
-                        if (type === 'img') {
-                            if (!card.classList.contains('show-info')) {
-                                card.classList.add('show-info'); // 1º Clique: Mostra Info
-                            } else {
-                                // 2º Clique: Poderia navegar, mas o botão "Ver Obra" já faz isso
-                            }
-                        } else {
-                            // Vídeo: Expandir Player
-                            openVideo(item);
-                        }
-                    } else {
-                        // Navegar Lateral
-                        state[type] = idx;
-                        updateCarousel(type);
-                    }
-                };
-
-                // Mouse over video (play preview)
-                if (type === 'vid') {
-                    card.onmouseenter = () => { if(offset !== 0) card.querySelector('video').play(); }
-                    card.onmouseleave = () => { card.querySelector('video').pause(); }
-                }
-
-                track.appendChild(card);
-            });
-            
-            // Reset Info States
-            document.querySelectorAll('.card.show-info').forEach(c => c.classList.remove('show-info'));
-        }
-
-        /* === 4. PLAYER DE VÍDEO === */
-        const vidModal = document.getElementById('video-modal');
-        const mainPlayer = document.getElementById('main-video-player');
+        // Inicializa
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+            updateHeroText();
+        });
         
-        function openVideo(item) {
-            mainPlayer.src = item.src;
-            document.getElementById('vid-mod-title').innerText = item.title;
-            vidModal.classList.add('active');
-            mainPlayer.play();
-        }
-        
-        function closeVideo() {
-            vidModal.classList.remove('active');
-            mainPlayer.pause();
-        }
-        
-        // Pause click on video toggle
-        mainPlayer.onclick = () => {
-            if (mainPlayer.paused) mainPlayer.play();
-            else mainPlayer.pause();
-        };
-
-        /* === INICIALIZAÇÃO === */
-        function init() {
-            renderHero();
-            updateCarousel('img');
-            updateCarousel('vid');
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-        
-        // Atalho Teclado
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                heroOverlay.classList.remove('active');
-                closeVideo();
-            }
+            if(e.key === 'Escape') toggleHeroModal(false);
         });
 
     </script>
