@@ -21,8 +21,8 @@
             --slot-std-height: 300px;
             
             /* Curvas de Animação - "Luxo Dinâmico" */
-            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1); /* Suavidade na saída */
-            --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -47,7 +47,7 @@
         .thread-vertical {
             position: absolute; left: 50%; 
             top: 25vh; /* Inicia atrás do Hero */
-            height: 220vh;
+            height: 220vh; /* Termina após vídeos (ajustável) */
             width: 1px;
             background: linear-gradient(to bottom, transparent, var(--thread-color) 10%, var(--thread-color) 90%, transparent);
             transform: translateX(-50%);
@@ -75,8 +75,8 @@
             transition: width 0.8s var(--ease-out-expo), opacity 0.5s ease;
         }
         /* Posições dos Cruzamentos */
-        .sw-1 { top: 110vh; } 
-        .sw-2 { top: 190vh; } 
+        .sw-1 { top: 110vh; } /* Entre Hero e Acervo */
+        .sw-2 { top: 190vh; } /* Entre Acervo e Memórias */
 
 
         /* === TIPOGRAFIA === */
@@ -98,8 +98,8 @@
 
         /* === 1. LOGO & HEADER === */
         .logo-section {
-            height: 20vh; 
-            display: flex; justify-content: center; align-items: flex-end;
+            height: 20vh; /* Compacto para aproximar do Hero */
+            display: flex; justify-content: center; align-items: flex-end; /* Alinha logo mais perto do fundo da seção */
             padding-bottom: 2rem;
             position: relative; z-index: 20;
         }
@@ -112,9 +112,10 @@
             filter: grayscale(1);
         }
         
+        /* Efeito de Clique/Hover na Logo */
         .brand-logo:hover, .brand-logo.active { 
             opacity: 1; 
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.6));
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.6)); /* Explosão de luz */
             transform: scale(1.08);
         }
 
@@ -131,6 +132,7 @@
             position: relative;
             perspective: 1200px;
         }
+
         .hero-info-wrapper {
             margin-top: 2rem; text-align: center; height: 100px;
             opacity: 0; transform: translateY(30px); transition: 0.8s var(--ease-out-expo);
@@ -155,22 +157,25 @@
             background: #000;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
             cursor: pointer;
-            /* APERFEIÇOAMENTO: Transição suave em 0.8s para o clique/navegação */
-            transition: all 0.8s var(--ease-out-expo); 
+            transition: all 0.8s var(--ease-out-expo); /* Movimento Suave e Premium */
         }
         
-        /* Imagem/Vídeo: O cover é o padrão, exceto para vídeo vertical central */
         .slot img, .slot video { width: 100%; height: 100%; object-fit: cover; }
 
         /* ESTADOS DE POSIÇÃO */
+        
+        /* -- CENTRAL -- */
         .slot.center {
-            z-index: 10; opacity: 1; filter: grayscale(0);
+            z-index: 10;
+            opacity: 1; filter: grayscale(0);
             box-shadow: 0 25px 60px rgba(0,0,0,0.9);
             transform: translateX(0) scale(1);
         }
+        
+        /* -- LATERAIS -- */
         .slot.left {
             z-index: 5;
-            width: var(--slot-std-width) !important; 
+            width: var(--slot-std-width) !important; /* Força tamanho padrão nas laterais */
             height: var(--slot-std-height) !important;
             transform: translateX(-100%) scale(0.85);
             opacity: 0.2; filter: grayscale(1);
@@ -182,59 +187,74 @@
             transform: translateX(100%) scale(0.85);
             opacity: 0.2; filter: grayscale(1);
         }
+        /* Hover nas laterais */
+        .slot.left:hover, .slot.right:hover { opacity: 0.6; filter: grayscale(0.5); transform: translateX(-100%) scale(0.88); }
+        .slot.right:hover { transform: translateX(100%) scale(0.88); }
+
         .slot.hidden { z-index: 0; opacity: 0; transform: scale(0); pointer-events: none; }
 
-        .slot.left:hover, .slot.right:hover { filter: grayscale(0.5); opacity: 0.6; }
 
         /* === VARIAÇÕES DE TAMANHO (SMART RATIO) === */
+        
+        /* Hero Sizes */
         .hero-track-container .slot.center { width: 650px; height: 100%; }
         .hero-track-container .slot.left { transform: translateX(-85%) scale(0.8); }
         .hero-track-container .slot.right { transform: translateX(85%) scale(0.8); }
+
+        /* Acervo Sizes */
         #acervo-track .slot.center { width: var(--slot-std-width); height: 100%; }
         
-        /* CORREÇÃO DO VÍDEO VERTICAL (MEMÓRIAS) */
-        #memorias-track .slot.center.v-portrait { 
-            width: 280px; /* Largura estreita de retrato */
-            height: 110%; 
-        }
-        /* A CORREÇÃO REAL: Usar 'contain' para vídeos verticais centrais */
-        #memorias-track .slot.center.v-portrait video {
-            object-fit: contain; /* Garante que o vídeo vertical seja exibido inteiro, sem cortes */
-            background: #000; /* Preenche barras pretas, se houver */
-        }
+        /* Video Sizes (Dinâmico) */
+        /* A classe .v-land ou .v-port é adicionada via JS no slot central */
         #memorias-track .slot.center.v-landscape { width: 600px; height: 100%; }
+        #memorias-track .slot.center.v-portrait { width: 280px; height: 110%; } /* Levemente mais alto */
 
 
-        /* === MODAL HERO (EXPANSÃO) - ANIMAÇÃO SUAVE === */
+        /* === LAYERS DE INFO E INTERAÇÃO === */
+        .slot-info-layer {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: 0.4s ease;
+        }
+        .slot.center:hover .slot-info-layer.video-hint { opacity: 1; } /* Play hint */
+        .slot.center.show-info .slot-info-layer { opacity: 1; pointer-events: auto; }
+
+
+        /* === SEÇÕES === */
+        .section-wrapper { 
+            position: relative; z-index: 10; padding: 4rem 0; width: 100%; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
+        .section-header-flex {
+            width: 85%; max-width: 1200px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 2rem; padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .section-header-flex.center { justify-content: center; text-align: center; border-bottom: none; }
+
+
+        /* === MODAL HERO (EXPANSÃO) === */
         .hero-modal {
             position: fixed; inset: 0; background: #080808; z-index: 100;
             display: grid; grid-template-columns: 1.5fr 1fr;
-            opacity: 0; visibility: hidden; 
-            /* APERFEIÇOAMENTO: Transição suave de expansão/retração */
-            transition: all 0.8s var(--ease-out-expo); 
-            transform: scale(0.95); 
+            opacity: 0; visibility: hidden; transition: 0.6s var(--ease-out-expo);
         }
-        .hero-modal.active { 
-            opacity: 1; 
-            visibility: visible; 
-            transform: scale(1); 
-        }
+        .hero-modal.active { opacity: 1; visibility: visible; }
         
         .hero-modal-img-box {
             width: 100%; height: 100%; background: #000;
             display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
-        .hero-modal-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .hero-modal-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         
         .hero-modal-content { 
             padding: 5rem; display: flex; flex-direction: column; justify-content: center;
             border-left: 1px solid rgba(255,255,255,0.05);
         }
-        .close-btn { 
-             margin-top: 3rem; background: transparent; border: 1px solid #444; color: #fff; padding: 1rem 2rem; cursor: pointer; align-self: flex-start;
-             transition: 0.4s;
-        }
-        .close-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
 
         /* === MOBILE === */
@@ -245,11 +265,14 @@
             }
             .hero-title { font-size: 2.8rem; }
             .hero-track-container .slot.center { width: 85vw; }
+            .hero-track-container .slot.left { transform: translateX(-15%) scale(0.9); opacity: 0; }
+            .hero-track-container .slot.right { transform: translateX(15%) scale(0.9); opacity: 0; }
 
+            /* Mobile Video logic: Fixar largura para caber na tela */
             #memorias-track .slot.center.v-landscape { width: 90vw; }
             #memorias-track .slot.center.v-portrait { width: 60vw; }
             
-            .slot.left, .slot.right { opacity: 0; pointer-events: none; }
+            .slot.left, .slot.right { opacity: 0; pointer-events: none; } /* Esconde laterais no mobile para foco */
 
             .hero-modal { grid-template-columns: 1fr; grid-template-rows: 50% 50%; }
             .hero-modal-content { padding: 2rem; border-left: none; }
@@ -294,7 +317,7 @@
             <p style="color: #bbb; line-height: 1.8; font-size: 1.1rem;">
                 Imersão total na obra selecionada. Este espaço isolado permite a contemplação dos detalhes sem distrações. A luz, a sombra e a composição são os protagonistas aqui.
             </p>
-            <button onclick="toggleHeroModal(false)" class="close-btn">FECHAR</button>
+            <button onclick="toggleHeroModal(false)" style="margin-top: 3rem; background: transparent; border: 1px solid #444; color: #fff; padding: 1rem 2rem; cursor: pointer; align-self: flex-start;">FECHAR</button>
         </div>
     </div>
 
@@ -344,8 +367,8 @@
             { src: "imagem12.jpg", title: "Carpina", meta: "MATA", link: "obra.html" }
         ];
 
+        // orientation: define o formato para o Smart Ratio
         const dataMemorias = [
-            // O vídeo vertical é o 'video06.mp4'
             { src: "video01.mp4", title: "Cores", orientation: "landscape" },
             { src: "video06.mp4", title: "Foco", orientation: "portrait" },
             { src: "video02.mp4", title: "Loop", orientation: "landscape" },
@@ -365,6 +388,7 @@
             const nextIdx = (currentIdx + 1) % data.length;
 
             data.forEach((item, i) => {
+                // Cria todos os slots, mas apenas posiciona os 3 relevantes
                 const slot = document.createElement('div');
                 let classes = 'slot';
                 let isCenter = false;
@@ -372,6 +396,7 @@
                 if (i === currentIdx) { 
                     classes += ' center'; 
                     isCenter = true;
+                    // Smart Ratio para Vídeos
                     if (type === 'vid') classes += item.orientation === 'portrait' ? ' v-portrait' : ' v-landscape';
                 } 
                 else if (i === prevIdx) classes += ' left'; 
@@ -382,7 +407,7 @@
 
                 // CONTEÚDO
                 if (type === 'vid') {
-                    // Autoplay APENAS se for o slot central
+                    // Autoplay apenas se for o central
                     slot.innerHTML = `
                         <video src="${item.src}" loop playsinline muted ${isCenter ? 'autoplay' : ''}></video>
                         <div class="slot-info-layer video-hint">
@@ -430,7 +455,6 @@
             if (key === 'acervo') state.acervo = (state.acervo + dir + dataAcervo.length) % dataAcervo.length;
             if (key === 'memo') state.memo = (state.memo + dir + dataMemorias.length) % dataMemorias.length;
             
-            // Re-renderiza para animação suave
             renderAll();
         }
 
@@ -479,31 +503,39 @@
         const sw2 = document.getElementById('sw-2');
 
         logo.addEventListener('click', () => {
+            // 1. Ativa Logo
             logo.classList.add('active');
             setTimeout(() => logo.classList.remove('active'), 1000);
 
+            // 2. Reseta Pulso
             pulse.style.transition = 'none';
             pulse.style.transform = 'translateX(-50%) translateY(-200px)';
             pulse.style.opacity = '1';
-            void pulse.offsetWidth;
+            void pulse.offsetWidth; // Force Reflow
 
+            // 3. Dispara Pulso Vertical
             pulse.style.transition = 'transform 2s linear, opacity 2s ease-in';
             pulse.style.transform = 'translateX(-50%) translateY(250vh)';
 
+            // 4. Dispara Shockwaves Horizontais (Timings calculados para a descida)
+            // Assumindo viewport height média, a onda leva ~2s para descer.
+            // Cruzamento 1 (~40%) -> 800ms
             setTimeout(() => triggerShockwave(sw1), 600);
+            // Cruzamento 2 (~70%) -> 1400ms
             setTimeout(() => triggerShockwave(sw2), 1200);
 
+            // Limpeza Final
             setTimeout(() => { pulse.style.opacity = '0'; }, 2000);
         });
 
         function triggerShockwave(el) {
             el.style.opacity = '1';
-            el.style.width = '100%';
+            el.style.width = '100%'; // Expand
             setTimeout(() => {
-                el.style.opacity = '0';
+                el.style.opacity = '0'; // Fade out
             }, 300);
             setTimeout(() => {
-                el.style.width = '0%';
+                el.style.width = '0%'; // Reset
             }, 800);
         }
 
