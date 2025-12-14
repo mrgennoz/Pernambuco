@@ -155,7 +155,8 @@
             background: #000;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
             cursor: pointer;
-            transition: all 0.8s var(--ease-out-expo); /* Transição Suave */
+            /* APERFEIÇOAMENTO: Transição suave em 0.8s para o clique/navegação */
+            transition: all 0.8s var(--ease-out-expo); 
         }
         
         /* Imagem/Vídeo: O cover é o padrão, exceto para vídeo vertical central */
@@ -191,14 +192,15 @@
         .hero-track-container .slot.right { transform: translateX(85%) scale(0.8); }
         #acervo-track .slot.center { width: var(--slot-std-width); height: 100%; }
         
-        /* CORREÇÃO DO VÍDEO VERTICAL */
+        /* CORREÇÃO DO VÍDEO VERTICAL (MEMÓRIAS) */
         #memorias-track .slot.center.v-portrait { 
-            width: 280px; 
-            height: 110%; /* Mais alto para parecer mais imponente */
+            width: 280px; /* Largura estreita de retrato */
+            height: 110%; 
         }
-        /* O CRUCIAL: Mudar o object-fit para VÍDEO vertical central */
+        /* A CORREÇÃO REAL: Usar 'contain' para vídeos verticais centrais */
         #memorias-track .slot.center.v-portrait video {
             object-fit: contain; /* Garante que o vídeo vertical seja exibido inteiro, sem cortes */
+            background: #000; /* Preenche barras pretas, se houver */
         }
         #memorias-track .slot.center.v-landscape { width: 600px; height: 100%; }
 
@@ -208,13 +210,14 @@
             position: fixed; inset: 0; background: #080808; z-index: 100;
             display: grid; grid-template-columns: 1.5fr 1fr;
             opacity: 0; visibility: hidden; 
-            transition: all 0.8s var(--ease-out-expo); /* Animação suave */
-            transform: scale(0.95); /* Começa um pouco menor */
+            /* APERFEIÇOAMENTO: Transição suave de expansão/retração */
+            transition: all 0.8s var(--ease-out-expo); 
+            transform: scale(0.95); 
         }
         .hero-modal.active { 
             opacity: 1; 
             visibility: visible; 
-            transform: scale(1); /* Expande suavemente */
+            transform: scale(1); 
         }
         
         .hero-modal-img-box {
@@ -342,7 +345,7 @@
         ];
 
         const dataMemorias = [
-            // NOTE: O 'video06.mp4' é o exemplo vertical que deve ser corrigido
+            // O vídeo vertical é o 'video06.mp4'
             { src: "video01.mp4", title: "Cores", orientation: "landscape" },
             { src: "video06.mp4", title: "Foco", orientation: "portrait" },
             { src: "video02.mp4", title: "Loop", orientation: "landscape" },
