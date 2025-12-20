@@ -350,24 +350,27 @@
         // === BASE DE DADOS (EDITE AQUI) ===
         // Formato Imagens: "Titulo-Ano-Local.jpg"
         const dataHero = [
-            parseFilename("Familia-2025-Pernambuco.jpg", 'hero'),
-            parseFilename("Raizes-2024-Terra.jpg", 'hero'),
-            parseFilename("Mare-2024-Serrambi.jpg", 'hero')
+            parseFilename("familia01.jpg", 'hero'),
+            parseFilename("familia02.jpg", 'hero'),
+            parseFilename("familia03-Serrambi.jpg", 'hero')
         ];
 
         const dataAcervo = [
-            parseFilename("Calhetas-2024-Cabo.jpg", 'acervo'),
-            parseFilename("Piedade-2024-Jaboatao.jpg", 'acervo'),
-            parseFilename("Prazeres-2024-Urbano.jpg", 'acervo'),
-            parseFilename("Carpina-2023-Mata.jpg", 'acervo')
+            parseFilename("imagem01.jpg", 'acervo'),
+            parseFilename("imagem02.jpg", 'acervo'),
+            parseFilename("imagem03.jpg", 'acervo'),
+            parseFilename("imagem04.jpg", 'acervo'),
+            parseFilename("imagem05.jpg", 'acervo'),
+            parseFilename("imagem06.jpg", 'acervo')
         ];
 
         // Para vídeos, mantenha a orientation manual
         const dataMemorias = [
-            { ...parseFilename("Cores-2024-Recife.mp4", 'memo'), orientation: "landscape" },
-            { ...parseFilename("Foco-2025-Studio.mp4", 'memo'), orientation: "portrait" },
-            { ...parseFilename("Loop-2024-Olinda.mp4", 'memo'), orientation: "landscape" },
-            { ...parseFilename("Noite-2024-Cais.mp4", 'memo'), orientation: "portrait" }
+            { ...parseFilename("video01.mp4", 'memo'), orientation: "portrait" },
+            { ...parseFilename("video02.mp4", 'memo'), orientation: "portrait" },
+            { ...parseFilename("video03.mp4", 'memo'), orientation: "landscape" },
+            { ...parseFilename("video04.mp4", 'memo'), orientation: "landscape" },
+            { ...parseFilename("video05.mp4", 'memo'), orientation: "portrait" }
         ];
 
         let state = { hero: 0, acervo: 0, memo: 0 };
