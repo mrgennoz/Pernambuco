@@ -6,7 +6,7 @@
     <title>Gennoz | Acervo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -14,15 +14,12 @@
             --text-main: #Eaeaea;
             --text-muted: #888;
             --accent-gold: #D4AF37; 
+            --accent-gold-dim: rgba(212, 175, 55, 0.3);
             --thread-color: rgba(255, 255, 255, 0.05);
             
-            /* Dimensões Desktop */
-            --slot-std-width: 450px;
-            --slot-std-height: 300px;
-            
-            /* Curvas de Animação - "Luxo Dinâmico" */
+            /* Curvas de Animação - "Cinematic Feel" */
             --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-            --ease-touch: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-fluid: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -32,227 +29,220 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            padding-bottom: 5rem;
             position: relative;
+            transition: background 1s ease;
         }
 
-        /* === SISTEMA DE ENERGIA === */
+        /* === ESTADO DE ENERGIA GLOBAL (SURGE) === */
+        body.surge-active {
+            background-color: #0a0a0a; /* Leve clareamento no fundo */
+        }
+        body.surge-active .slot {
+            box-shadow: 0 0 30px var(--accent-gold-dim);
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        body.surge-active .meta-data {
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        /* === SISTEMA DE FUNDO === */
         .energy-system {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0; overflow: hidden;
+            position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; height: 100%;
         }
-
         .thread-vertical {
             position: absolute; left: 50%; top: 0; height: 100%; width: 1px;
-            background: linear-gradient(to bottom, transparent, var(--thread-color) 10%, var(--thread-color) 90%, transparent);
+            background: linear-gradient(to bottom, transparent, var(--thread-color) 20%, var(--thread-color) 80%, transparent);
             transform: translateX(-50%); opacity: 0.5;
         }
 
-        .pulse-vertical {
-            position: absolute; left: 50%; top: 20vh; width: 2px; height: 150px;
-            background: linear-gradient(to bottom, transparent, #fff, var(--accent-gold), transparent);
-            transform: translateX(-50%) translateY(-200px);
-            opacity: 0; box-shadow: 0 0 25px var(--accent-gold); z-index: 1;
-        }
-
-        .shockwave-line {
-            position: absolute; left: 50%; transform: translateX(-50%); width: 0%; height: 1px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 90%);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); opacity: 0;
-            transition: width 0.8s var(--ease-out-expo), opacity 0.5s ease;
-        }
-        .sw-1 { top: 110vh; } 
-        .sw-2 { top: 190vh; } 
-
         /* === TIPOGRAFIA === */
-        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; font-weight: 400; letter-spacing: 0.02em; }
-        .section-title { font-size: clamp(2rem, 4vw, 3rem); color: var(--text-main); text-align: center; }
-        .meta-data { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 0.8rem; }
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; font-weight: 400; letter-spacing: 0.01em; }
+        .meta-data { 
+            font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.2em; 
+            transition: color 0.5s ease;
+        }
         
-        .collection-link { 
-            color: var(--text-muted); text-decoration: none; font-size: 0.75rem; 
-            letter-spacing: 0.15em; transition: 0.4s; position: relative; padding-bottom: 5px;
-        }
-        .collection-link::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 1px; 
-            background: var(--accent-gold); transition: width 0.4s;
-        }
-        .collection-link:hover { color: #fff; }
-        .collection-link:hover::after { width: 100%; }
-
-        /* === HEADER === */
+        /* === HEADER & LOGO === */
         .logo-section {
-            height: 18vh; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 2rem; position: relative; z-index: 20;
+            height: 15vh; display: flex; justify-content: center; align-items: flex-end; 
+            padding-bottom: 1.5rem; position: relative; z-index: 20;
         }
-        .brand-logo { width: 90px; opacity: 0.3; transition: all 0.6s var(--ease-out-expo); cursor: pointer; filter: grayscale(1); }
-        .brand-logo:hover, .brand-logo.active { opacity: 1; filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.5)); transform: scale(1.1); }
+        .brand-logo { 
+            width: 85px; opacity: 0.6; cursor: pointer; filter: grayscale(1) brightness(0.8);
+            animation: breathe-logo 4s infinite ease-in-out;
+            transition: transform 0.3s var(--ease-out-expo), filter 0.3s;
+        }
+        /* Logo State: Constant Breathing */
+        @keyframes breathe-logo {
+            0%, 100% { opacity: 0.4; transform: scale(1); filter: grayscale(1) drop-shadow(0 0 0 transparent); }
+            50% { opacity: 0.7; transform: scale(1.02); filter: grayscale(1) drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+        }
+        .brand-logo:active, .brand-logo.active { 
+            animation: none; opacity: 1; filter: drop-shadow(0 0 30px var(--accent-gold)) grayscale(0); transform: scale(1.1);
+        }
 
-        /* === HERO CAROUSEL === */
+        /* === HERO SECTION === */
         .hero-section {
-            min-height: 75vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            position: relative; z-index: 10; margin-bottom: 4rem;
+            height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            position: relative; z-index: 10; margin-bottom: 2rem;
         }
-
         .hero-track-container {
-            width: 100%; height: 50vh; display: flex; justify-content: center; align-items: center;
-            position: relative; perspective: 1200px; touch-action: pan-y; /* Permite scroll vertical, bloqueia horizontal nativo */
+            width: 100%; height: 60%; display: flex; justify-content: center; align-items: center;
+            position: relative; perspective: 1000px; touch-action: pan-y;
         }
-        
         .hero-info-wrapper {
-            margin-top: 2rem; text-align: center; height: 100px; padding: 0 1rem;
-            opacity: 0; transform: translateY(20px); transition: 0.8s var(--ease-out-expo);
+            margin-top: 1.5rem; text-align: center; height: 100px; padding: 0 1rem;
+            opacity: 0; transform: translateY(15px); transition: 0.6s var(--ease-out-expo);
         }
         .hero-info-wrapper.visible { opacity: 1; transform: translateY(0); }
-        .hero-title { 
-            font-size: clamp(2.5rem, 8vw, 4.5rem); /* Fonte Responsiva Dinâmica */
-            text-shadow: 0 30px 60px rgba(0,0,0,0.8); line-height: 1.1; 
-        }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1; margin-bottom: 0.5rem; }
 
-        /* === CARROSSEL CORE === */
+        /* === CAROUSEL STRUCTURE === */
         .carousel-track {
-            position: relative; width: 100%; max-width: 100vw; height: var(--slot-std-height);
-            display: flex; justify-content: center; align-items: center; margin-top: 2rem;
+            position: relative; width: 100%; height: 350px;
+            display: flex; justify-content: center; align-items: center; margin-top: 1rem;
             touch-action: pan-y;
         }
 
         .slot {
-            position: absolute; border-radius: 4px; overflow: hidden; background: #080808;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6); cursor: pointer;
-            transition: all 0.8s var(--ease-out-expo);
-            will-change: transform, opacity; /* Otimização de GPU */
+            position: absolute; border-radius: 2px; overflow: hidden; background: #111;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); cursor: pointer;
+            transition: all 0.7s var(--ease-out-expo);
+            will-change: transform, opacity, width;
+            border: 1px solid transparent; /* Prepare for surge effect */
         }
         
-        .slot img, .slot video { width: 100%; height: 100%; object-fit: cover; }
+        /* CORREÇÃO HERO: Preenchimento total sem bordas pretas */
+        .slot img, .slot video { 
+            width: 100%; height: 100%; object-fit: cover; display: block; 
+            transition: transform 1.2s var(--ease-out-expo);
+        }
 
-        /* ESTADOS */
-        .slot.center { z-index: 10; opacity: 1; filter: grayscale(0); box-shadow: 0 25px 60px rgba(0,0,0,0.9); transform: translateX(0) scale(1); }
-        
+        /* Estados de Posição */
+        .slot.center { 
+            z-index: 10; opacity: 1; filter: grayscale(0); 
+            transform: translateX(0) scale(1); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
         .slot.left {
-            z-index: 5; width: var(--slot-std-width) !important; height: var(--slot-std-height) !important;
-            transform: translateX(-100%) scale(0.85); opacity: 0.2; filter: grayscale(1);
+            z-index: 5; width: 300px; height: 200px;
+            transform: translateX(-120%) scale(0.85); opacity: 0.3; filter: grayscale(1) brightness(0.5);
         }
         .slot.right {
-            z-index: 5; width: var(--slot-std-width) !important; height: var(--slot-std-height) !important;
-            transform: translateX(100%) scale(0.85); opacity: 0.2; filter: grayscale(1);
+            z-index: 5; width: 300px; height: 200px;
+            transform: translateX(120%) scale(0.85); opacity: 0.3; filter: grayscale(1) brightness(0.5);
         }
-        .slot.hidden { z-index: 0; opacity: 0; transform: scale(0); pointer-events: none; }
+        .slot.hidden { opacity: 0; transform: scale(0); pointer-events: none; }
 
-        .slot.left:hover, .slot.right:hover { opacity: 0.5; transform: translateX(-100%) scale(0.88); }
-        .slot.right:hover { transform: translateX(100%) scale(0.88); }
-
-        /* === SMART RATIO (DESKTOP) === */
-        .hero-track-container .slot.center { width: 650px; height: 100%; }
-        .hero-track-container .slot.left { transform: translateX(-85%) scale(0.8); }
-        .hero-track-container .slot.right { transform: translateX(85%) scale(0.8); }
-
-        #acervo-track .slot.center { width: var(--slot-std-width); height: 100%; }
+        /* === HERO SIZING === */
+        #hero-track .slot.center { width: 600px; height: 100%; }
         
-        /* Video Desktop */
-        #memorias-track .slot.center.v-landscape { width: 600px; height: 100%; }
-        #memorias-track .slot.center.v-portrait { width: 280px; height: 110%; }
-        /* CORREÇÃO IMPORTANTE: Object Fit Contain para não cortar vídeos verticais */
-        #memorias-track .slot.center.v-portrait video { object-fit: contain; background: #000; }
-
-        /* === INFO LAYERS === */
-        .slot-info-layer {
-            position: absolute; inset: 0;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; transition: 0.4s ease; padding: 1rem; text-align: center;
+        /* === ACERVO SIZING & INTERACTION === */
+        #acervo-track .slot.center { width: 400px; height: 100%; }
+        
+        /* Efeito de expansão no clique (Mobile) ou Hover (Desktop) */
+        .slot.expanded img { transform: scale(1.05); filter: brightness(1.1); }
+        
+        /* INFO REVEAL (Sem escurecer a imagem) */
+        .acervo-info-panel {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 2rem 1rem 1rem 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+            transform: translateY(100%); opacity: 0;
+            transition: transform 0.5s var(--ease-out-expo), opacity 0.4s ease;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
         }
-        .slot.center:hover .slot-info-layer.video-hint { opacity: 1; }
-        /* A classe .active-mobile simula o hover no toque */
-        .slot.center.show-info .slot-info-layer, 
-        .slot.center.active-mobile .slot-info-layer { opacity: 1; pointer-events: auto; }
+        .slot.expanded .acervo-info-panel { transform: translateY(0); opacity: 1; }
 
-        /* === SEÇÕES === */
-        .section-wrapper { 
-            position: relative; z-index: 10; padding: 4rem 0; width: 100%; 
-            display: flex; flex-direction: column; align-items: center; 
+        /* === VIDEO SECTION (MEMÓRIAS) === */
+        #memorias-track .slot.center.v-landscape { width: 550px; height: 100%; }
+        #memorias-track .slot.center.v-portrait { width: 300px; height: 110%; }
+        
+        /* Ícone de Som (Feedback visual limpo) */
+        .sound-icon-feedback {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+            font-size: 3rem; color: #fff; opacity: 0; pointer-events: none;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
         }
-        .section-header-flex {
-            width: 85%; max-width: 1200px; display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+        .slot.sound-active .sound-icon-feedback {
+            animation: flash-icon 1s forwards;
         }
-        .section-header-flex.center { justify-content: center; text-align: center; border-bottom: none; }
+        @keyframes flash-icon {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
 
-        /* === MODAL HERO (RESPONSIVO TOTAL) === */
+        /* === INDICADORES DE NAVEGAÇÃO === */
+        .nav-indicators {
+            display: flex; justify-content: center; gap: 8px; margin-top: 1.5rem;
+        }
+        .nav-dot {
+            width: 4px; height: 4px; background: #333; border-radius: 50%;
+            transition: all 0.3s;
+        }
+        .nav-dot.active { width: 20px; background: var(--accent-gold); border-radius: 4px; }
+
+        /* === MODAL HERO (FIXED) === */
         .hero-modal {
-            position: fixed; inset: 0; background: #050505; z-index: 1000;
-            display: grid; grid-template-columns: 1.5fr 1fr;
-            opacity: 0; visibility: hidden; transition: 0.6s var(--ease-out-expo);
+            position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.5s var(--ease-out-expo);
+            padding: 2rem;
         }
         .hero-modal.active { opacity: 1; visibility: visible; }
         
-        .hero-modal-img-box {
-            width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center;
+        .hero-modal-img-wrapper {
+            width: 100%; max-width: 1000px; height: 70vh; 
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 2rem;
         }
-        .hero-modal-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        .hero-modal-content { 
-            padding: 4rem; display: flex; flex-direction: column; justify-content: center;
-            border-left: 1px solid rgba(255,255,255,0.05); overflow-y: auto;
+        /* Correção: Imagem contida, nunca cortada, respeitando aspect ratio */
+        .hero-modal-img-wrapper img {
+            max-width: 100%; max-height: 100%; width: auto; height: auto;
+            object-fit: contain; box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
         
+        .hero-modal-text { text-align: center; max-width: 500px; animation: slideUp 0.6s 0.2s backwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .close-btn {
-            background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; 
-            padding: 1rem 2rem; cursor: pointer; margin-top: 2rem; align-self: flex-start;
-            transition: 0.3s;
-        }
-        .close-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
-
-        /* === FOOTER === */
-        footer {
-            text-align: center; padding: 5rem 0; opacity: 0.4; 
-            font-size: 0.7rem; letter-spacing: 0.3em;
-            padding-bottom: calc(5rem + env(safe-area-inset-bottom)); /* iPhone X fix */
+            margin-top: 1rem; background: transparent; border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; padding: 0.8rem 2rem; font-size: 0.8rem; letter-spacing: 0.2em; cursor: pointer;
         }
 
-        /* === MOBILE OTIMIZADO (O CORAÇÃO DA SOLUÇÃO) === */
+        /* === MOBILE OTIMIZADO (ABSOLUTO) === */
         @media (max-width: 768px) {
-            :root {
-                --slot-std-width: 75vw; /* Largura fluida baseada na tela */
-                --slot-std-height: 250px;
-            }
+            .hero-section { height: 65vh; }
+            .hero-track-container { height: 70%; perspective: 500px; }
             
-            .hero-section { min-height: 65vh; margin-bottom: 2rem; }
-            .hero-track-container { height: 40vh; }
-            .section-wrapper { padding: 3rem 0; }
-            
-            /* HERO Mobile Layout */
-            .hero-track-container .slot.center { width: 85vw; height: 100%; }
-            /* Laterais visíveis minimamente para indicar swipe */
-            .hero-track-container .slot.left { transform: translateX(-15%) scale(0.9) translateZ(-50px); opacity: 0; pointer-events: none; }
-            .hero-track-container .slot.right { transform: translateX(15%) scale(0.9) translateZ(-50px); opacity: 0; pointer-events: none; }
+            /* HERO: Preenche a tela de forma imponente */
+            #hero-track .slot.center { width: 88vw; height: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+            /* Laterais visíveis para dar "dica" de carrossel */
+            #hero-track .slot.left { transform: translateX(-15%) scale(0.9) translateZ(-50px); opacity: 0.5; width: 88vw; height: 100%; }
+            #hero-track .slot.right { transform: translateX(15%) scale(0.9) translateZ(-50px); opacity: 0.5; width: 88vw; height: 100%; }
 
-            /* Acervo Mobile */
-            #acervo-track .slot.center { width: 80vw; }
-            .slot.left, .slot.right { opacity: 0; pointer-events: none; } /* Limpa a visão lateral no mobile */
+            /* ACERVO */
+            #acervo-track { height: 380px; }
+            #acervo-track .slot.center { width: 82vw; height: 100%; }
+            /* "Peek" effect para mostrar que tem mais */
+            #acervo-track .slot.left { transform: translateX(-105%) scale(0.85); opacity: 0.3; display: block; }
+            #acervo-track .slot.right { transform: translateX(105%) scale(0.85); opacity: 0.3; display: block; }
 
-            /* Videos Smart Ratio Mobile - CÁLCULO PRECISO */
-            /* Landscape: ocupa quase toda a largura */
-            #memorias-track .slot.center.v-landscape { width: 90vw; height: 220px; }
-            /* Portrait: ocupa menos largura para não ficar gigante verticalmente */
-            #memorias-track .slot.center.v-portrait { width: 70vw; height: 350px; }
+            /* VIDEO MOBILE */
+            #memorias-track { height: 300px; }
+            #memorias-track .slot.center.v-landscape { width: 92vw; height: 220px; }
+            #memorias-track .slot.center.v-portrait { width: 70vw; height: 100%; }
 
-            /* Header Flex Stack */
-            .section-header-flex { flex-direction: column; gap: 1.5rem; align-items: center; text-align: center; }
-            
-            /* MODAL MOBILE */
-            .hero-modal { 
-                grid-template-columns: 1fr; 
-                grid-template-rows: 40% 60%; /* Imagem em cima, texto embaixo */
-                height: 100vh; height: 100dvh; /* Dynamic Viewport Height */
-            }
-            .hero-modal-img-box { padding: 1rem; background: #050505; }
-            .hero-modal-content { 
-                padding: 2rem; border-left: none; border-top: 1px solid #222; 
-                justify-content: flex-start; /* Permite scroll do conteúdo */
-            }
-            .hero-modal h2 { font-size: 2rem !important; }
+            /* Painel de Info Mobile - Texto grande e claro */
+            .acervo-info-panel h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+            .acervo-info-panel .meta-data { font-size: 0.8rem; opacity: 0.9; }
 
-            /* UX Improvements */
-            .slot-info-layer span { padding: 10px 20px; font-weight: 500; background: rgba(0,0,0,0.5); }
+            .hero-modal { padding: 1rem; justify-content: flex-start; padding-top: 3rem; }
+            .hero-modal-img-wrapper { height: 50vh; }
         }
 
     </style>
@@ -261,9 +251,6 @@
 
     <div class="energy-system">
         <div class="thread-vertical"></div>
-        <div class="shockwave-line sw-1" id="sw-1"></div>
-        <div class="shockwave-line sw-2" id="sw-2"></div>
-        <div class="pulse-vertical" id="main-pulse"></div>
     </div>
 
     <header class="logo-section">
@@ -272,6 +259,7 @@
 
     <section class="hero-section" id="section-hero">
         <div class="hero-track-container" id="hero-track"></div>
+        <div class="nav-indicators" id="hero-indicators"></div>
         
         <div class="hero-info-wrapper" id="hero-text-box">
             <h1 class="hero-title serif" id="hero-title-el">Carregando...</h1>
@@ -280,164 +268,189 @@
     </section>
 
     <div class="hero-modal" id="hero-modal">
-        <div class="hero-modal-img-box">
+        <div class="hero-modal-img-wrapper">
             <img src="" id="hero-modal-img">
         </div>
-        <div class="hero-modal-content">
-            <p class="meta-data" style="color: var(--accent-gold); margin-bottom: 0.5rem;">Arquivo Detalhado</p>
-            <h2 class="serif" id="hero-modal-title" style="font-size: 3rem; margin-bottom: 1.5rem; color: #fff; line-height: 1.1;">Título</h2>
-            <p style="color: #bbb; line-height: 1.6; font-size: 1rem; margin-bottom: 2rem;">
-                Imersão total na obra selecionada. Este espaço isolado permite a contemplação dos detalhes sem distrações. A luz, a sombra e a composição são os protagonistas aqui.
-            </p>
-            <button onclick="toggleHeroModal(false)" class="close-btn">FECHAR VISUALIZAÇÃO</button>
+        <div class="hero-modal-text">
+            <h2 class="serif" id="hero-modal-title" style="font-size: 2rem; color: #fff;">Título</h2>
+            <p class="meta-data" id="hero-modal-meta" style="margin-bottom: 1rem; color: var(--accent-gold);">...</p>
+            <button onclick="toggleHeroModal(false)" class="close-btn">FECHAR</button>
         </div>
     </div>
 
-    <section class="section-wrapper" id="section-acervo">
-        <div class="section-header-flex">
-            <div>
-                <h2 class="serif section-title">Acervo</h2>
-                <p class="meta-data">Recentes</p>
-            </div>
-            <a href="colecoes.html" class="collection-link">EXPLORAR TODAS</a>
+    <section style="padding: 4rem 0;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 class="serif section-title" style="font-size: 2rem;">Acervo</h2>
+            <p class="meta-data">Coleção Recente</p>
         </div>
-        
         <div class="carousel-track" id="acervo-track"></div>
+        <div class="nav-indicators" id="acervo-indicators"></div>
     </section>
 
-    <section class="section-wrapper" id="section-memorias">
-        <div class="section-header-flex center">
-            <div>
-                <h2 class="serif section-title">Memórias</h2>
-                <p class="meta-data">Fragmentos Audiovisuais</p>
-            </div>
+    <section style="padding: 4rem 0;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 class="serif section-title" style="font-size: 2rem;">Memórias</h2>
+            <p class="meta-data">Fragmentos</p>
         </div>
-        
         <div class="carousel-track" id="memorias-track"></div>
+        <div class="nav-indicators" id="memo-indicators"></div>
     </section>
 
-    <footer>
-        <div>GENNOZ © 2025 • PERNAMBUCO</div>
+    <footer style="text-align: center; padding: 4rem 0; opacity: 0.4;">
+        <p class="meta-data">GENNOZ © 2025 • PERNAMBUCO</p>
     </footer>
 
     <script>
-        // === PARSER AUTOMÁTICO DE METADADOS ===
-        // Isso permite que você apenas jogue o arquivo com o nome certo e ele cria os dados
+        // === PARSER INTELIGENTE ===
         function parseFilename(filename, type) {
-            const nameWithoutExt = filename.split('.').slice(0, -1).join('.');
-            const parts = nameWithoutExt.split('-');
-
-            let title = parts[0] || "Sem Título";
-            let meta = "";
-            let link = (type === 'acervo') ? "obra.html" : "...";
+            const clean = filename.split('.').slice(0, -1).join('');
+            const parts = clean.split('-');
+            const title = parts[0] ? parts[0].replace(/_/g, ' ') : "Sem Título";
+            let meta = "GENNOZ • ACERVO";
             
-            if (parts.length >= 3) {
-                meta = `${parts[1]} • ${parts[2].toUpperCase()}`;
-            } else if (parts.length === 2) {
-                meta = parts[1].toUpperCase();
-            } else {
-                meta = "GENNOZ • ACERVO";
-            }
+            if (parts.length >= 3) meta = `${parts[1]} • ${parts[2].toUpperCase()}`;
+            else if (parts.length === 2) meta = parts[1].toUpperCase();
 
-            return { 
-                src: filename, 
-                title: title.replace(/_/g, ' '), 
-                meta: meta, 
-                link: link 
-            };
+            return { src: filename, title, meta, link: 'obra.html' };
         }
 
-        // === BASE DE DADOS (EDITE AQUI) ===
-        // Formato Imagens: "Titulo-Ano-Local.jpg"
+        // === BASES DE DADOS ===
         const dataHero = [
-            parseFilename("familia01.jpg", 'hero'),
-            parseFilename("familia02.jpg", 'hero'),
-            parseFilename("familia03-Serrambi.jpg", 'hero')
+            parseFilename("Eu e Nuz-2025-Prazeres.jpg", 'hero'),
+            parseFilename("Família-2025-Prazeres.jpg", 'hero'),
+            parseFilename("Eu, Ela e os Bebês-2025-Prazeres.jpg", 'hero')
         ];
 
         const dataAcervo = [
-            parseFilename("imagem01.jpg", 'acervo'),
-            parseFilename("imagem02.jpg", 'acervo'),
-            parseFilename("imagem03.jpg", 'acervo'),
-            parseFilename("imagem04.jpg", 'acervo'),
-            parseFilename("imagem05.jpg", 'acervo'),
-            parseFilename("imagem06.jpg", 'acervo')
+            parseFilename("Praia de Serrambi-2024-Ipojuca.jpg", 'acervo'),
+            parseFilename("Orgulho em Calhetas-2024-Cabo.jpg", 'acervo'),
+            parseFilename("Praia de Piedade-2024-Jaboatao.jpg", 'acervo'),
+            parseFilename("Dia Azul em Prazeres-2024-Jaboatao.jpg", 'acervo'),
+            parseFilename("Engrenagens do Interior-2023-Carpina.jpg", 'acervo'),
+            parseFilename("Caramelos em Serrambi-2024-Ipojuca.jpg", 'acervo'),
+            parseFilename("Crias de Prazeres-2024-Jaboatao.jpg", 'acervo'),
+            parseFilename("Gato em Brasília Teimosa-2024-Recife.jpg", 'acervo'),
+            parseFilename("Vista do Interior-2023-Carpina.jpg", 'acervo'),
+            parseFilename("Sotave-2024-Jaboatao.jpg", 'acervo'),
+            parseFilename("Jaboatão Nublado-2024-Jaboatao.jpg", 'acervo'),
+            parseFilename("Vibe Prazeres-2024-Jaboatao.jpg", 'acervo'),
+            parseFilename("Linha Férrea em Prazeres-2024-Jaboatao.jpg", 'acervo')
         ];
 
-        // Para vídeos, mantenha a orientation manual
+        // Vídeos com Orientation Manual Obrigatória
         const dataMemorias = [
-            { ...parseFilename("video01.mp4", 'memo'), orientation: "portrait" },
-            { ...parseFilename("video02.mp4", 'memo'), orientation: "portrait" },
-            { ...parseFilename("video03.mp4", 'memo'), orientation: "landscape" },
-            { ...parseFilename("video04.mp4", 'memo'), orientation: "landscape" },
-            { ...parseFilename("video05.mp4", 'memo'), orientation: "portrait" }
+            { ...parseFilename("De Boinha-2023-Jaboatao.mp4", 'memo'), orientation: "portrait" },
+            { ...parseFilename("Túnel do Tempo-2023-Recife.mp4", 'memo'), orientation: "portrait" },
+            { ...parseFilename("Passeio em Recife-2023-Recife.mp4", 'memo'), orientation: "portrait" },
+            { ...parseFilename("Aventura em Enseadas-2022-Cabo.mp4", 'memo'), orientation: "landscape" },
+            { ...parseFilename("Patins e Itapuama-2022-Cabo.mp4", 'memo'), orientation: "landscape" },
         ];
 
         let state = { hero: 0, acervo: 0, memo: 0 };
 
-
-        // === ENGINE AVANÇADA ===
-        function renderCarousel(trackId, data, currentIdx, type, stateKey) {
+        // === RENDER ENGINE MASTERPIECE ===
+        function renderCarousel(trackId, data, currentIdx, type, stateKey, indicatorId) {
             const container = document.getElementById(trackId);
+            const indicators = document.getElementById(indicatorId);
             container.innerHTML = '';
+            
+            // Render Indicators (Dots)
+            if(indicators) {
+                indicators.innerHTML = data.map((_, i) => 
+                    `<div class="nav-dot ${i === currentIdx ? 'active' : ''}"></div>`
+                ).join('');
+            }
 
             const prevIdx = (currentIdx - 1 + data.length) % data.length;
             const nextIdx = (currentIdx + 1) % data.length;
 
             data.forEach((item, i) => {
+                // Criação apenas dos itens visíveis (Otimização)
+                // No mobile, queremos ver as bordas dos laterais, então renderizamos eles
+                if (i !== currentIdx && i !== prevIdx && i !== nextIdx) return;
+
                 const slot = document.createElement('div');
                 let classes = 'slot';
                 let isCenter = false;
 
                 if (i === currentIdx) { 
-                    classes += ' center'; isCenter = true;
-                    if (type === 'vid') classes += item.orientation === 'portrait' ? ' v-portrait' : ' v-landscape';
-                } 
-                else if (i === prevIdx) classes += ' left'; 
-                else if (i === nextIdx) classes += ' right'; 
-                else classes += ' hidden';
+                    classes += ' center'; isCenter = true; 
+                    if(type === 'vid') classes += item.orientation === 'portrait' ? ' v-portrait' : ' v-landscape';
+                }
+                else if (i === prevIdx) classes += ' left';
+                else if (i === nextIdx) classes += ' right';
 
                 slot.className = classes;
 
-                // CONTEÚDO
+                // CONTEÚDO HTML
                 if (type === 'vid') {
+                    // Sem overlay escuro fixo, apenas vídeo limpo
                     slot.innerHTML = `
                         <video src="${item.src}" loop playsinline muted ${isCenter ? 'autoplay' : ''}></video>
-                        <div class="slot-info-layer video-hint">
-                            <span style="font-size: 2rem; color: #fff;">${isCenter ? '🔊' : '▶'}</span>
-                        </div>
+                        <div class="sound-icon-feedback">🔊</div>
                     `;
                 } else {
                     slot.innerHTML = `<img src="${item.src}">`;
                     if (type !== 'hero') {
+                        // Painel de info que desliza de baixo
                         slot.innerHTML += `
-                            <div class="slot-info-layer">
-                                <h3 class="serif" style="color:#fff; font-size:1.5rem; margin-bottom:0.5rem;">${item.title}</h3>
-                                <p class="meta-data" style="margin-bottom:1.5rem;">${item.meta}</p>
-                                <span style="border:1px solid rgba(255,255,255,0.5); padding:8px 20px; font-size:0.7rem; letter-spacing: 0.1em; background: rgba(0,0,0,0.3);">DETALHES</span>
+                            <div class="acervo-info-panel">
+                                <h3 class="serif" style="color:#fff;">${item.title}</h3>
+                                <p class="meta-data" style="margin-bottom:1rem; color:#ccc;">${item.meta}</p>
+                                <span style="font-size:0.6rem; letter-spacing:0.2em; border-bottom:1px solid #666; padding-bottom:3px;">VER OBRA</span>
                             </div>
                         `;
                     }
                 }
 
-                // INTERAÇÃO INTELIGENTE (Clique & Mobile Tap)
+                // === EVENTOS DE CLICK INTELIGENTE ===
                 slot.onclick = (e) => {
-                    // Prevenir comportamento padrão se for mobile double-tap logic
+                    // Se clicar nas laterais, navega
                     if (slot.classList.contains('left')) updateState(stateKey, -1);
                     else if (slot.classList.contains('right')) updateState(stateKey, 1);
-                    else if (slot.classList.contains('center')) handleCenterClick(slot, item, type);
+                    
+                    // Se clicar no centro (Lógica Principal)
+                    else if (slot.classList.contains('center')) {
+                        
+                        // Lógica HERO (Abre Modal)
+                        if (type === 'hero') {
+                            openHeroModal(item);
+                        }
+                        
+                        // Lógica ACERVO (2 Passos: Expandir -> Navegar)
+                        else if (type === 'img') {
+                            // Verifica se já está expandido (classe .expanded)
+                            if (slot.classList.contains('expanded')) {
+                                // Segundo clique: vai para o link
+                                window.location.href = item.link;
+                            } else {
+                                // Primeiro clique: expande e mostra info
+                                // Remove expanded de outros primeiro
+                                document.querySelectorAll('#' + trackId + ' .slot').forEach(s => s.classList.remove('expanded'));
+                                slot.classList.add('expanded');
+                            }
+                        }
+                        
+                        // Lógica VIDEO (Mute Toggle com Feedback Visual)
+                        else if (type === 'vid') {
+                            const vid = slot.querySelector('video');
+                            vid.muted = !vid.muted;
+                            // Feedback Visual
+                            const icon = slot.querySelector('.sound-icon-feedback');
+                            icon.innerText = vid.muted ? '🔇' : '🔊';
+                            
+                            // Reinicia animação CSS
+                            slot.classList.remove('sound-active');
+                            void slot.offsetWidth; // Force reflow
+                            slot.classList.add('sound-active');
+                        }
+                    }
                 };
-
-                // Video Hover (Desktop Only)
-                if (type === 'vid' && !isCenter && window.matchMedia("(hover: hover)").matches) {
-                    slot.onmouseenter = () => { slot.querySelector('video').play(); };
-                    slot.onmouseleave = () => { const v = slot.querySelector('video'); v.pause(); v.currentTime = 0; };
-                }
 
                 container.appendChild(slot);
             });
-            
-            // Reaplica os listeners de Swipe após renderizar
+
+            // Re-bind Swipe
             setupSwipe(container, stateKey);
         }
 
@@ -452,32 +465,7 @@
             renderAll();
         }
 
-        // LÓGICA DE INTERAÇÃO HÍBRIDA (Desktop vs Mobile)
-        function handleCenterClick(slot, item, type) {
-            const isMobile = window.matchMedia("(hover: none)").matches;
-
-            // Se for mobile e a info layer ainda NÃO estiver visível, mostra ela primeiro
-            if (isMobile && type !== 'hero' && !slot.classList.contains('active-mobile') && type !== 'vid') {
-                // Remove active de outros slots
-                document.querySelectorAll('.slot.active-mobile').forEach(el => el.classList.remove('active-mobile'));
-                slot.classList.add('active-mobile');
-                return; // Para aqui, não abre o link ainda
-            }
-
-            // Ação Real (Segundo toque ou Clique Desktop)
-            if (type === 'hero') {
-                document.getElementById('hero-modal-img').src = item.src;
-                document.getElementById('hero-modal-title').innerText = item.title;
-                toggleHeroModal(true);
-            } else if (type === 'img') {
-                window.location.href = item.link;
-            } else if (type === 'vid') {
-                const v = slot.querySelector('video');
-                v.muted = !v.muted;
-                slot.querySelector('span').innerText = v.muted ? '🔊' : '🔈';
-            }
-        }
-
+        // === INTERFACE HELPERS ===
         function renderHeroText() {
             const box = document.getElementById('hero-text-box');
             box.classList.remove('visible');
@@ -488,77 +476,50 @@
             }, 300);
         }
 
-        function renderAll() {
-            // Renderiza apenas se os elementos existirem (segurança)
-            if(document.getElementById('hero-track')) renderCarousel('hero-track', dataHero, state.hero, 'hero', 'hero');
-            if(document.getElementById('acervo-track')) renderCarousel('acervo-track', dataAcervo, state.acervo, 'img', 'acervo');
-            if(document.getElementById('memorias-track')) renderCarousel('memorias-track', dataMemorias, state.memo, 'vid', 'memo');
+        function openHeroModal(item) {
+            document.getElementById('hero-modal-img').src = item.src;
+            document.getElementById('hero-modal-title').innerText = item.title;
+            document.getElementById('hero-modal-meta').innerText = item.meta;
+            toggleHeroModal(true);
         }
 
         function toggleHeroModal(show) {
             const m = document.getElementById('hero-modal');
             m.classList.toggle('active', show);
-            // Bloqueia scroll do body quando modal está aberto
-            document.body.style.overflow = show ? 'hidden' : '';
+            document.body.style.overflow = show ? 'hidden' : ''; // Trava scroll da página
         }
 
-        // === ENGINE DE TOQUE (SWIPE) ===
+        function renderAll() {
+            if(document.getElementById('hero-track')) renderCarousel('hero-track', dataHero, state.hero, 'hero', 'hero', 'hero-indicators');
+            if(document.getElementById('acervo-track')) renderCarousel('acervo-track', dataAcervo, state.acervo, 'img', 'acervo', 'acervo-indicators');
+            if(document.getElementById('memorias-track')) renderCarousel('memorias-track', dataMemorias, state.memo, 'vid', 'memo', 'memo-indicators');
+        }
+
+        // === GESTURE CONTROL (SWIPE) ===
         function setupSwipe(element, stateKey) {
             let touchStartX = 0;
-            let touchEndX = 0;
-
-            element.ontouchstart = (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            };
-
+            element.ontouchstart = (e) => touchStartX = e.changedTouches[0].screenX;
             element.ontouchend = (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
+                const touchEndX = e.changedTouches[0].screenX;
+                if (touchEndX < touchStartX - 40) updateState(stateKey, 1);
+                if (touchEndX > touchStartX + 40) updateState(stateKey, -1);
             };
-
-            function handleSwipe() {
-                const threshold = 50; // Mínimo de pixels para considerar swipe
-                if (touchEndX < touchStartX - threshold) {
-                    updateState(stateKey, 1); // Swipe Left -> Next
-                }
-                if (touchEndX > touchStartX + threshold) {
-                    updateState(stateKey, -1); // Swipe Right -> Prev
-                }
-            }
         }
 
-        // === ENERGIA & ANIMAÇÕES ===
+        // === GLOBAL ENERGY EVENT ===
         const logo = document.getElementById('logo-trigger');
-        const pulse = document.getElementById('main-pulse');
-        const sw1 = document.getElementById('sw-1');
-        const sw2 = document.getElementById('sw-2');
-
         if(logo) {
             logo.addEventListener('click', () => {
+                // Ativa estado global no Body
+                document.body.classList.add('surge-active');
                 logo.classList.add('active');
-                setTimeout(() => logo.classList.remove('active'), 1000);
-
-                pulse.style.transition = 'none';
-                pulse.style.transform = 'translateX(-50%) translateY(-200px)';
-                pulse.style.opacity = '1';
-                void pulse.offsetWidth;
-
-                pulse.style.transition = 'transform 2s linear, opacity 2s ease-in';
-                pulse.style.transform = 'translateX(-50%) translateY(250vh)';
-
-                setTimeout(() => triggerShockwave(sw1), 600);
-                setTimeout(() => triggerShockwave(sw2), 1200);
-
-                setTimeout(() => { pulse.style.opacity = '0'; }, 2000);
+                
+                // Remove após 2s
+                setTimeout(() => {
+                    document.body.classList.remove('surge-active');
+                    logo.classList.remove('active');
+                }, 2000);
             });
-        }
-
-        function triggerShockwave(el) {
-            if(!el) return;
-            el.style.opacity = '1';
-            el.style.width = '100%';
-            setTimeout(() => { el.style.opacity = '0'; }, 300);
-            setTimeout(() => { el.style.width = '0%'; }, 800);
         }
 
         // Init
