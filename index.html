@@ -38,8 +38,15 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
+        /* === 2. SURGE EFFECT (ONDA DE CHOQUE) === */
+        .surge-overlay {
+            position: fixed; inset: 0; z-index: 8000; pointer-events: none;
+            background: radial-gradient(circle, var(--accent-gold-glow) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        body.surge-active .surge-overlay { opacity: 0.15; animation: pulseScreen 2s infinite; }
+        @keyframes pulseScreen { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-    
         /* === TYPOGRAPHY === */
         .serif { font-family: 'Playfair Display', serif; font-weight: 400; }
         .meta { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
@@ -431,8 +438,6 @@
             }
         };
 
-      
-
             // Hover triggers
             document.querySelectorAll('a, .logo-container, .lb-close').forEach(el => {
                 el.onmouseenter = () => document.body.classList.add('hovering');
@@ -450,7 +455,13 @@
 
             if (window.matchMedia("(pointer: fine)").matches) initCursor();
 
-           
+            // Logo Surge Event
+            document.getElementById('logo-trigger').addEventListener('click', function() {
+                this.classList.add('active');
+                document.body.classList.add('surge-active');
+                setTimeout(() => {
+                    this.classList.remove('active');
+                    document.body.classList.remove('surge-active');
                 }, 2000);
             });
         };
