@@ -2,233 +2,276 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>GENNOZ — Acervo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gennoz | Acervo</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-    --bg:#050505;
-    --fg:#eaeaea;
-    --muted:#777;
-    --gold:#d4af37;
-    --ease:cubic-bezier(.19,1,.22,1);
+--bg:#050505;
+--fg:#eaeaea;
+--muted:#777;
+--gold:#d4af37;
+--ease:cubic-bezier(.4,0,.2,1);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
-    background:var(--bg);
-    color:var(--fg);
-    font-family:Manrope,sans-serif;
-    overflow:hidden;
+background:var(--bg);
+color:var(--fg);
+font-family:Manrope,sans-serif;
+overflow-x:hidden;
 }
 
-/* Noise */
-body::after{
-    content:"";
-    position:fixed;inset:0;
-    pointer-events:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity:.035;
-    z-index:999;
-}
+.serif{font-family:Playfair Display,serif}
+.meta{font-size:.7rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
 
-/* Header */
 header{
-    height:14vh;
-    display:flex;
-    justify-content:center;
-    align-items:flex-end;
+height:14vh;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+padding-bottom:1rem;
 }
 
 .logo{
-    width:70px;height:70px;
-    border:1px solid var(--gold);
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    transition:.6s var(--ease);
+width:64px;
+opacity:.85;
+transition:.4s var(--ease);
 }
-.logo.active{
-    box-shadow:0 0 30px rgba(212,175,55,.4);
-}
+.logo:hover{opacity:1}
 
-/* Acervo */
-main{
-    height:86vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.section{
+padding:3rem 0;
 }
 
 .track{
-    position:relative;
-    width:100%;
-    max-width:900px;
-    height:60vh;
-    perspective:1000px;
+position:relative;
+height:420px;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
 }
 
-.item{
-    position:absolute;
-    inset:0;
-    margin:auto;
-    width:70%;
-    height:100%;
-    background:#111;
-    opacity:0;
-    transform:scale(.9);
-    transition:.8s var(--ease);
-    box-shadow:0 30px 80px rgba(0,0,0,.8);
-    cursor:pointer;
+.slot{
+position:absolute;
+background:#111;
+border-radius:4px;
+overflow:hidden;
+transition:.7s var(--ease);
+box-shadow:0 20px 60px rgba(0,0,0,.7);
 }
 
-.item.active{
-    opacity:1;
-    transform:scale(1);
-    z-index:3;
+.slot img,
+.slot video{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
 }
 
-.item.left,
-.item.right{
-    opacity:.25;
-    z-index:1;
-}
+.center{z-index:3;opacity:1}
+.left,.right{opacity:.25;filter:grayscale(1)}
 
-.item.left{
-    transform:translateX(-60%) scale(.85) rotateY(6deg);
-}
-.item.right{
-    transform:translateX(60%) scale(.85) rotateY(-6deg);
-}
+.left{transform:translateX(-110%) scale(.85)}
+.right{transform:translateX(110%) scale(.85)}
 
-.item img,
-.item video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
+.center{transform:translateX(0) scale(1)}
 
-/* Registro */
+#hero .center{width:720px;height:100%}
+#acervo .center{width:640px;height:100%}
+#memorias .center.landscape{width:640px;height:100%}
+#memorias .center.portrait{width:340px;height:100%}
+
 .info{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    padding:2rem 1rem;
-    background:linear-gradient(to top, rgba(0,0,0,.95), transparent);
-    text-align:center;
-    opacity:0;
-    transition:.6s var(--ease);
+position:absolute;
+bottom:0;
+width:100%;
+padding:2.5rem 1rem 1.5rem;
+background:linear-gradient(to top,rgba(0,0,0,.95),transparent);
+opacity:0;
+transform:translateY(100%);
+transition:.5s var(--ease);
+pointer-events:none;
+text-align:center;
 }
 
-.item.active .info{
-    opacity:1;
+.slot.expanded .info{
+opacity:1;
+transform:translateY(0);
 }
 
-.info h3{
-    font-family:Playfair Display,serif;
-    font-size:1.4rem;
-}
-.info p{
-    font-size:.7rem;
-    letter-spacing:.2em;
-    color:var(--gold);
-    margin-top:.3rem;
+nav{
+text-align:center;
+margin-top:1.5rem;
 }
 
-/* Estado latente */
-body.latent main{
-    opacity:.1;
-    pointer-events:none;
+.dot{
+display:inline-block;
+width:4px;
+height:4px;
+border-radius:2px;
+background:#333;
+margin:0 4px;
+transition:.3s;
+}
+.dot.active{width:18px;background:var(--gold)}
+
+.lightbox{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.97);
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+pointer-events:none;
+transition:.4s;
+z-index:999;
+}
+.lightbox.active{
+opacity:1;
+pointer-events:auto;
+}
+.lightbox img{
+max-width:90%;
+max-height:85vh;
 }
 
-/* Mobile */
 @media(max-width:768px){
-    .item{width:90%}
-    .item.left{transform:translateX(-20%) scale(.9)}
-    .item.right{transform:translateX(20%) scale(.9)}
+.track{height:260px}
+#hero .center{width:92vw}
+#acervo .center{width:88vw}
+#memorias .center.landscape{width:90vw;height:220px}
+#memorias .center.portrait{width:60vw}
 }
 </style>
 </head>
 
-<body class="latent">
+<body>
 
 <header>
-    <div class="logo" id="toggle"></div>
+<img src="logo.png" class="logo" alt="Gennoz">
 </header>
 
-<main>
-    <div class="track" id="track"></div>
-</main>
+<section class="section" id="hero">
+<div class="track"></div>
+<nav id="hero-dots"></nav>
+</section>
+
+<section class="section" id="acervo">
+<div class="track"></div>
+<nav id="acervo-dots"></nav>
+</section>
+
+<section class="section" id="memorias">
+<div class="track"></div>
+<nav id="memorias-dots"></nav>
+</section>
+
+<div class="lightbox" id="lightbox">
+<img id="lightbox-img">
+</div>
 
 <script>
-const DATA=[
- {src:"Praia_de_Piedade-2024-Jaboatao.jpg",type:"img"},
- {src:"Orgulho_em_Calhetas-2024-Cabo.jpg",type:"img"},
- {src:"Patins_e_Itapuama-2022-Cabo.mp4",type:"vid"}
-];
-
-let index=0;
-const track=document.getElementById("track");
+const DB={
+hero:[
+"Eu_e_Nuz-2025-Prazeres.jpg",
+"Familia-2025-Prazeres.jpg",
+"Eu_Ela_e_os_Bebes-2025-Prazeres.jpg"
+],
+acervo:[
+"Praia_de_Serrambi-2024-Ipojuca.jpg",
+"Orgulho_em_Calhetas-2024-Cabo.jpg",
+"Praia_de_Piedade-2024-Jaboatao.jpg"
+],
+memorias:[
+{src:"De_Boinha-2023-Jaboatao.mp4",o:"portrait"},
+{src:"Aventura_em_Enseadas-2022-Cabo.mp4",o:"landscape"}
+]
+};
 
 function parse(name){
-    const n=name.split(".")[0].split("-");
-    return{
-        title:n[0].replace(/_/g," "),
-        meta:`${n[1]} • ${n[2].toUpperCase()}`
-    }
-}
-
-function render(){
-    track.innerHTML="";
-    const prev=(index-1+DATA.length)%DATA.length;
-    const next=(index+1)%DATA.length;
-
-    [prev,index,next].forEach(i=>{
-        const d=DATA[i];
-        const info=parse(d.src);
-        const el=document.createElement("div");
-        el.className="item "+(i===index?"active":i===prev?"left":"right");
-
-        el.innerHTML=
-        d.type==="vid"
-        ?`<video src="${d.src}" playsinline muted></video>`
-        :`<img src="${d.src}">`;
-
-        el.innerHTML+=`
-        <div class="info">
-            <h3>${info.title}</h3>
-            <p>${info.meta}</p>
-        </div>`;
-
-        el.onclick=()=>{
-            if(i===prev) index=prev;
-            else if(i===next) index=next;
-            else if(d.type==="vid"){
-                const v=el.querySelector("video");
-                v.muted=!v.muted;
-                v.play();
-            }
-            render();
-        };
-
-        track.appendChild(el);
-    });
-}
-
-render();
-
-/* Estado do acervo */
-const toggle=document.getElementById("toggle");
-toggle.onclick=()=>{
-    document.body.classList.toggle("latent");
-    toggle.classList.toggle("active");
+const n=name.split('.')[0].split('-');
+return{
+t:n[0].replace(/_/g,' '),
+m:n[1]?`${n[1]} • ${n[2]||''}`:''
 };
+}
+
+class Carousel{
+constructor(id,data,type){
+this.el=document.querySelector(`#${id} .track`);
+this.dots=document.querySelector(`#${id}-dots`);
+this.data=data;
+this.type=type;
+this.i=0;
+this.render();
+}
+render(){
+this.el.innerHTML='';
+this.dots.innerHTML='';
+const p=(this.i-1+this.data.length)%this.data.length;
+const n=(this.i+1)%this.data.length;
+[this.i,p,n].forEach((idx,pos)=>{
+const d=this.data[idx];
+const s=document.createElement('div');
+s.className='slot '+(idx===this.i?'center':idx===p?'left':'right');
+if(this.type==='video') s.classList.add(d.o);
+if(this.type==='video'){
+const v=document.createElement('video');
+v.src=d.src;
+v.muted=true;
+v.playsInline=true;
+if(idx===this.i) v.play();
+s.appendChild(v);
+}else{
+const i=document.createElement('img');
+i.src=d;
+s.appendChild(i);
+}
+if(idx===this.i && this.type!=='hero'){
+const info=parse(this.type==='video'?d.src:d);
+s.innerHTML+=`<div class="info"><div class="serif">${info.t}</div><div class="meta">${info.m}</div></div>`;
+}
+s.onclick=()=>this.click(idx,s,d);
+this.el.appendChild(s);
+});
+this.data.forEach((_,i)=>{
+const d=document.createElement('span');
+d.className='dot'+(i===this.i?' active':'');
+this.dots.appendChild(d);
+});
+}
+click(idx,slot,data){
+if(idx!==this.i){
+this.i=idx;
+this.render();
+return;
+}
+if(this.type==='video'){
+const v=slot.querySelector('video');
+v.muted=!v.muted;
+}else{
+if(slot.classList.contains('expanded')){
+document.getElementById('lightbox-img').src=data;
+document.getElementById('lightbox').classList.add('active');
+}else{
+document.querySelectorAll('.slot.expanded').forEach(e=>e.classList.remove('expanded'));
+slot.classList.add('expanded');
+}
+}
+}
+}
+
+document.getElementById('lightbox').onclick=()=>document.getElementById('lightbox').classList.remove('active');
+
+new Carousel('hero',DB.hero,'hero');
+new Carousel('acervo',DB.acervo,'img');
+new Carousel('memorias',DB.memorias,'video');
 </script>
 
 </body>
