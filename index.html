@@ -1,505 +1,235 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Gennoz | Portfolio</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>GENNOZ — Acervo</title>
 
-    <style>
-        :root {
-            --bg-deep: #050505;
-            --text-primary: #Eaeaea;
-            --text-secondary: #888;
-            --accent-gold: #D4AF37;
-            --accent-gold-glow: rgba(212, 175, 55, 0.4);
-            --ease-elastic: cubic-bezier(0.19, 1, 0.22, 1);
-            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-primary);
-            font-family: 'Manrope', sans-serif;
-            overflow-x: hidden;
-            opacity: 0; animation: fadeInPage 1.5s var(--ease-smooth) forwards;
-            position: relative;
-        }
-        @keyframes fadeInPage { to { opacity: 1; } }
+<style>
+:root{
+    --bg:#050505;
+    --fg:#eaeaea;
+    --muted:#777;
+    --gold:#d4af37;
+    --ease:cubic-bezier(.19,1,.22,1);
+}
 
-        /* === 1. TEXTURA CINEMATOGRÁFICA (NOISE) === */
-        .noise-layer {
-            position: fixed; inset: 0; pointer-events: none; z-index: 9000;
-            opacity: 0.04;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
+*{margin:0;padding:0;box-sizing:border-box}
 
-        /* === 2. SURGE EFFECT (ONDA DE CHOQUE) === */
-        .surge-overlay {
-            position: fixed; inset: 0; z-index: 8000; pointer-events: none;
-            background: radial-gradient(circle, var(--accent-gold-glow) 0%, transparent 70%);
-            opacity: 0; transition: opacity 0.5s ease;
-        }
-        body.surge-active .surge-overlay { opacity: 0.15; animation: pulseScreen 2s infinite; }
-        @keyframes pulseScreen { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:Manrope,sans-serif;
+    overflow:hidden;
+}
 
-        /* === 3. CURSOR MAGNÉTICO (APENAS DESKTOP) === */
-        @media (pointer: fine) {
-            body { cursor: none; }
-            .cursor-dot {
-                position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: white;
-                border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%);
-            }
-            .cursor-circle {
-                position: fixed; top: 0; left: 0; width: 40px; height: 40px; 
-                border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; 
-                pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
-                transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
-            }
-            body.hovering .cursor-circle {
-                width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.1);
-                border-color: var(--accent-gold); mix-blend-mode: difference;
-            }
-        }
+/* Noise */
+body::after{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity:.035;
+    z-index:999;
+}
 
-        /* === TYPOGRAPHY === */
-        .serif { font-family: 'Playfair Display', serif; font-weight: 400; }
-        .meta { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
-        .section-title { font-size: 2rem; color: #fff; margin-bottom: 0.5rem; }
+/* Header */
+header{
+    height:14vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+}
 
-        /* === HEADER & LOGO === */
-        .header {
-            height: 14vh; display: flex; justify-content: center; align-items: flex-end;
-            padding-bottom: 1rem; position: relative; z-index: 50;
-        }
-        .logo-container {
-            position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; cursor: pointer;
-        }
-        .logo-pulse {
-            position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 1px solid var(--accent-gold);
-            opacity: 0; transform: scale(0.8); animation: ripple-idle 3s infinite var(--ease-smooth);
-        }
-        @keyframes ripple-idle { 0% { transform: scale(0.8); opacity: 0; } 50% { transform: scale(1.1); opacity: 0.2; } 100% { transform: scale(1.2); opacity: 0; } }
-        
-        .brand-logo { width: 60px; filter: grayscale(1) brightness(0.9); transition: 0.5s; position: relative; z-index: 2; }
-        .logo-container.active .brand-logo { filter: grayscale(0) drop-shadow(0 0 15px var(--accent-gold)); transform: scale(1.1); }
-        .logo-container.active .logo-pulse { animation: ripple-burst 0.8s var(--ease-elastic); border-width: 2px; }
-        @keyframes ripple-burst { 0% { transform: scale(1); opacity: 1; border-color: #fff; } 100% { transform: scale(3); opacity: 0; border-color: var(--accent-gold); } }
+.logo{
+    width:70px;height:70px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition:.6s var(--ease);
+}
+.logo.active{
+    box-shadow:0 0 30px rgba(212,175,55,.4);
+}
 
-        /* === CAROUSEL STRUCTURE === */
-        .section-wrapper { padding: 3rem 0; position: relative; }
-        .track-container {
-            width: 100%; height: 450px; /* Altura Desktop */
-            position: relative; display: flex; justify-content: center; align-items: center;
-            perspective: 1000px; touch-action: pan-y;
-        }
+/* Acervo */
+main{
+    height:86vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
-        .slot {
-            position: absolute; border-radius: 4px; background: #111; overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            transition: all 0.8s var(--ease-elastic);
-            will-change: transform, opacity; transform-origin: center center; cursor: pointer;
-        }
-        .slot img, .slot video { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-elastic); display: block;}
+.track{
+    position:relative;
+    width:100%;
+    max-width:900px;
+    height:60vh;
+    perspective:1000px;
+}
 
-        /* Desktop States */
-        .slot.center { z-index: 10; opacity: 1; transform: translateX(0) scale(1); box-shadow: 0 30px 80px rgba(0,0,0,0.8); }
-        .slot.left { z-index: 5; opacity: 0.4; transform: translateX(-110%) scale(0.85) rotateY(5deg) translateZ(-50px); filter: grayscale(1); }
-        .slot.right { z-index: 5; opacity: 0.4; transform: translateX(110%) scale(0.85) rotateY(-5deg) translateZ(-50px); filter: grayscale(1); }
+.item{
+    position:absolute;
+    inset:0;
+    margin:auto;
+    width:70%;
+    height:100%;
+    background:#111;
+    opacity:0;
+    transform:scale(.9);
+    transition:.8s var(--ease);
+    box-shadow:0 30px 80px rgba(0,0,0,.8);
+    cursor:pointer;
+}
 
-        /* Sizing Desktop */
-        #hero-track .slot.center { width: 750px; height: 100%; }
-        #hero-track .slot { width: 450px; height: 80%; }
-        
-        #acervo-track .slot.center { width: 650px; height: 100%; }
-        #acervo-track .slot { width: 400px; height: 80%; }
-        
-        #memorias-track .slot.center.v-landscape { width: 650px; height: 100%; }
-        #memorias-track .slot.center.v-portrait { width: 340px; height: 105%; }
+.item.active{
+    opacity:1;
+    transform:scale(1);
+    z-index:3;
+}
 
-        /* === INFO PANEL === */
-        .info-panel {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 3rem 1rem 1.5rem 1rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 15%, rgba(0,0,0,0.5) 60%, transparent 100%);
-            transform: translateY(105%); opacity: 0; transition: 0.5s var(--ease-elastic);
-            text-align: center; pointer-events: none; /* Permite clique no slot */
-        }
-        .slot.expanded .info-panel { transform: translateY(0); opacity: 1; }
-        .slot.expanded img { transform: scale(1.03); filter: brightness(1.1); }
-        
-        .btn-expand-hint {
-            display: inline-block; margin-top: 8px; font-size: 0.65rem; color: var(--accent-gold);
-            border: 1px solid var(--accent-gold); padding: 4px 12px; border-radius: 20px;
-            letter-spacing: 0.1em; opacity: 0.8;
-        }
+.item.left,
+.item.right{
+    opacity:.25;
+    z-index:1;
+}
 
-        /* === NAV UI === */
-        .nav-ui { text-align: center; margin-top: 1.5rem; opacity: 0; animation: fadeInPage 1s 0.5s forwards; }
-        .dots { display: inline-flex; gap: 8px; margin-bottom: 1rem; }
-        .dot { width: 4px; height: 4px; background: #333; border-radius: 50%; transition: 0.3s; }
-        .dot.active { width: 20px; background: var(--accent-gold); border-radius: 4px; }
-        
-        .btn-gallery {
-            text-decoration: none; font-size: 0.7rem; color: var(--text-secondary); 
-            border-bottom: 1px solid #333; padding-bottom: 2px; letter-spacing: 0.2em; transition: 0.3s;
-        }
-        .btn-gallery:hover { color: var(--accent-gold); border-color: var(--accent-gold); }
+.item.left{
+    transform:translateX(-60%) scale(.85) rotateY(6deg);
+}
+.item.right{
+    transform:translateX(60%) scale(.85) rotateY(-6deg);
+}
 
-        /* === LIGHTBOX FULLSCREEN === */
-        .lightbox {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: 0.4s ease; backdrop-filter: blur(10px);
-        }
-        .lightbox.active { opacity: 1; visibility: visible; }
-        .lightbox img { max-width: 95%; max-height: 80vh; object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.5); transform: scale(0.9); transition: 0.5s; }
-        .lightbox.active img { transform: scale(1); }
-        .lb-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2rem; padding: 10px; cursor: pointer; }
+.item img,
+.item video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 
-        /* === MOBILE REFINEMENT (CRITICAL) === */
-        @media (max-width: 768px) {
-            .header { height: 12vh; align-items: center; }
-            .section-wrapper { padding: 2rem 0; }
-            
-            /* Ajuste de Altura do Container Mobile */
-            .track-container { height: 260px; } /* Altura reduzida para aspecto horizontal */
-            
-            /* HERO Mobile */
-            #hero-track { height: 320px; }
-            #hero-track .slot.center { width: 92vw; height: 100%; }
-            #hero-track .slot.left { transform: translateX(-15%) scale(0.9) translateZ(-20px); width: 92vw; height: 100%; opacity: 0.5; }
-            #hero-track .slot.right { transform: translateX(15%) scale(0.9) translateZ(-20px); width: 92vw; height: 100%; opacity: 0.5; }
+/* Registro */
+.info{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding:2rem 1rem;
+    background:linear-gradient(to top, rgba(0,0,0,.95), transparent);
+    text-align:center;
+    opacity:0;
+    transition:.6s var(--ease);
+}
 
-            /* ACERVO Mobile - Horizontal Completo (Sem cortes) */
-            #acervo-track { height: 240px; } /* Proporção mais wide */
-            #acervo-track .slot.center { 
-                width: 88vw; /* Ocupa quase a largura toda */
-                height: 100%; 
-            }
-            #acervo-track .slot.left { transform: translateX(-95%) scale(0.9); opacity: 0.4; display: block; width: 88vw; height: 100%; }
-            #acervo-track .slot.right { transform: translateX(95%) scale(0.9); opacity: 0.4; display: block; width: 88vw; height: 100%; }
+.item.active .info{
+    opacity:1;
+}
 
-            /* VÍDEOS Mobile - Correção de Aspecto */
-            #memorias-track { height: 280px; }
-            /* Vídeo Paisagem: Largo e Baixo */
-            #memorias-track .slot.center.v-landscape { width: 90vw; height: 220px; } 
-            /* Vídeo Retrato: Estreito e Alto (respeitando container) */
-            #memorias-track .slot.center.v-portrait { width: 60vw; height: 100%; }
+.info h3{
+    font-family:Playfair Display,serif;
+    font-size:1.4rem;
+}
+.info p{
+    font-size:.7rem;
+    letter-spacing:.2em;
+    color:var(--gold);
+    margin-top:.3rem;
+}
 
-            /* Info Panel Mobile - Legibilidade */
-            .info-panel { padding-bottom: 2rem; background: linear-gradient(to top, rgba(0,0,0,0.98) 20%, transparent 100%); }
-            .info-panel h3 { font-size: 1.4rem; }
-            
-            /* Footer */
-            footer { margin-top: 2rem; }
-        }
+/* Estado latente */
+body.latent main{
+    opacity:.1;
+    pointer-events:none;
+}
 
-        footer { text-align: center; padding: 4rem 0 2rem 0; border-top: 1px solid rgba(255,255,255,0.05); }
-        .footer-sig { font-family: 'Manrope', sans-serif; font-size: 0.7rem; color: #555; letter-spacing: 0.2em; }
-    </style>
+/* Mobile */
+@media(max-width:768px){
+    .item{width:90%}
+    .item.left{transform:translateX(-20%) scale(.9)}
+    .item.right{transform:translateX(20%) scale(.9)}
+}
+</style>
 </head>
-<body>
 
-    <div class="noise-layer"></div>
-    <div class="surge-overlay"></div>
-    
-    <div class="cursor-dot" id="c-dot"></div>
-    <div class="cursor-circle" id="c-circle"></div>
+<body class="latent">
 
-    <header class="header">
-        <div class="logo-container" id="logo-trigger">
-            <div class="logo-pulse"></div>
-            <img src="logo.png" alt="G" class="brand-logo">
-        </div>
-    </header>
+<header>
+    <div class="logo" id="toggle"></div>
+</header>
 
-    <section class="section-wrapper">
-        <div class="track-container" id="hero-track"></div>
-        <div class="nav-ui">
-            <div class="dots" id="hero-dots"></div>
-            <div style="height: 15px;"></div>
-            <h2 id="hero-title" class="serif section-title" style="font-size: 1.8rem;">Carregando...</h2>
-            <p id="hero-meta" class="meta">...</p>
-        </div>
-    </section>
+<main>
+    <div class="track" id="track"></div>
+</main>
 
-    <section class="section-wrapper">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 class="serif section-title">Acervo</h2>
-            <p class="meta" style="color: var(--accent-gold);">Coleção Recente</p>
-        </div>
-        <div class="track-container" id="acervo-track"></div>
-        <div class="nav-ui">
-            <div class="dots" id="acervo-dots"></div>
-            <div style="margin-top: 10px;">
-                <a href="obras.html" class="btn-gallery">ABRIR ACERVO COMPLETO</a>
-            </div>
-        </div>
-    </section>
+<script>
+const DATA=[
+ {src:"Praia_de_Piedade-2024-Jaboatao.jpg",type:"img"},
+ {src:"Orgulho_em_Calhetas-2024-Cabo.jpg",type:"img"},
+ {src:"Patins_e_Itapuama-2022-Cabo.mp4",type:"vid"}
+];
 
-    <section class="section-wrapper">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 class="serif section-title">Memórias</h2>
-            <p class="meta">Fragmentos</p>
-        </div>
-        <div class="track-container" id="memorias-track"></div>
-        <div class="nav-ui">
-            <div class="dots" id="memo-dots"></div>
-        </div>
-    </section>
+let index=0;
+const track=document.getElementById("track");
 
-    <div class="lightbox" id="lightbox">
-        <div class="lb-close">×</div>
-        <img src="" id="lightbox-img">
-        <div style="text-align: center; margin-top: 1rem;">
-            <h3 id="lightbox-title" class="serif" style="color: #fff; font-size: 1.5rem;"></h3>
-            <p id="lightbox-meta" class="meta" style="color: var(--accent-gold);"></p>
-        </div>
-    </div>
+function parse(name){
+    const n=name.split(".")[0].split("-");
+    return{
+        title:n[0].replace(/_/g," "),
+        meta:`${n[1]} • ${n[2].toUpperCase()}`
+    }
+}
 
-    <footer>
-        <p class="footer-sig">GENNOZ © 2000</p>
-    </footer>
+function render(){
+    track.innerHTML="";
+    const prev=(index-1+DATA.length)%DATA.length;
+    const next=(index+1)%DATA.length;
 
-    <script>
-        // === DADOS (CONFIGURAÇÃO) ===
-        // Certifique-se que os nomes dos arquivos estão exatos
-        const DB = {
-            hero: [
-                { src: "Eu_e_Nuz-2025-Prazeres.jpg", type: 'hero' },
-                { src: "Familia-2025-Prazeres.jpg", type: 'hero' },
-                { src: "Eu_Ela_e_os_Bebes-2025-Prazeres.jpg", type: 'hero' }
-            ],
-            acervo: [
-                { src: "Praia_de_Serrambi-2024-Ipojuca.jpg", type: 'img' },
-                { src: "Orgulho_em_Calhetas-2024-Cabo.jpg", type: 'img' },
-                { src: "Praia_de_Piedade-2024-Jaboatao.jpg", type: 'img' },
-                { src: "Dia_Azul_em_Prazeres-2024-Jaboatao.jpg", type: 'img' },
-                { src: "Engrenagens_do_Interior-2023-Carpina.jpg", type: 'img' },
-                { src: "Crias_de_Prazeres-2024-Jaboatao.jpg", type: 'img' }
-            ],
-            memorias: [
-                // Defina explicitamente se é portrait ou landscape para corrigir o mobile
-                { src: "De_Boinha-2023-Jaboatao.mp4", type: 'vid', orient: 'portrait' },
-                { src: "Tunel_do_Tempo-2023-Recife.mp4", type: 'vid', orient: 'portrait' },
-                { src: "Aventura_em_Enseadas-2022-Cabo.mp4", type: 'vid', orient: 'landscape' },
-                { src: "Patins_e_Itapuama-2022-Cabo.mp4", type: 'vid', orient: 'landscape' }
-            ]
+    [prev,index,next].forEach(i=>{
+        const d=DATA[i];
+        const info=parse(d.src);
+        const el=document.createElement("div");
+        el.className="item "+(i===index?"active":i===prev?"left":"right");
+
+        el.innerHTML=
+        d.type==="vid"
+        ?`<video src="${d.src}" playsinline muted></video>`
+        :`<img src="${d.src}">`;
+
+        el.innerHTML+=`
+        <div class="info">
+            <h3>${info.title}</h3>
+            <p>${info.meta}</p>
+        </div>`;
+
+        el.onclick=()=>{
+            if(i===prev) index=prev;
+            else if(i===next) index=next;
+            else if(d.type==="vid"){
+                const v=el.querySelector("video");
+                v.muted=!v.muted;
+                v.play();
+            }
+            render();
         };
 
-        // === PARSER (Tratamento de Nomes) ===
-        const Parser = {
-            process: (filename) => {
-                const clean = filename.split('.').slice(0, -1).join('');
-                const parts = clean.split('-');
-                const title = parts[0] ? parts[0].replace(/_/g, ' ') : "Sem Título";
-                let meta = "GENNOZ • ACERVO";
-                if (parts.length >= 3) meta = `${parts[1]} • ${parts[2].toUpperCase().replace(/_/g, ' ')}`;
-                else if (parts.length === 2) meta = parts[1].toUpperCase();
-                return { title, meta };
-            }
-        };
+        track.appendChild(el);
+    });
+}
 
-        // === ENGINE: CARROSSEL ===
-        class Carousel {
-            constructor(trackId, data, options = {}) {
-                this.track = document.getElementById(trackId);
-                this.dotsContainer = document.getElementById(options.dotsId);
-                this.data = data;
-                this.index = 0;
-                this.type = options.type || 'img'; 
-                if (this.track) this.init();
-            }
+render();
 
-            init() {
-                this.render();
-                this.setupGestures();
-            }
+/* Estado do acervo */
+const toggle=document.getElementById("toggle");
+toggle.onclick=()=>{
+    document.body.classList.toggle("latent");
+    toggle.classList.toggle("active");
+};
+</script>
 
-            render() {
-                this.track.innerHTML = '';
-                
-                // Dots
-                if(this.dotsContainer) {
-                    this.dotsContainer.innerHTML = this.data.map((_, i) => 
-                        `<div class="dot ${i === this.index ? 'active' : ''}"></div>`
-                    ).join('');
-                }
-
-                // Indices (Circular)
-                const prevIdx = (this.index - 1 + this.data.length) % this.data.length;
-                const nextIdx = (this.index + 1) % this.data.length;
-                const indices = [prevIdx, this.index, nextIdx];
-
-                indices.forEach(i => {
-                    const itemRaw = this.data[i];
-                    const info = Parser.process(itemRaw.src);
-                    const slot = document.createElement('div');
-                    
-                    let cls = 'slot';
-                    if(i === this.index) cls += ' center';
-                    else if(i === prevIdx) cls += ' left';
-                    else if(i === nextIdx) cls += ' right';
-                    
-                    if(this.type === 'vid') cls += itemRaw.orient === 'portrait' ? ' v-portrait' : ' v-landscape';
-                    
-                    slot.className = cls;
-
-                    let innerHTML = '';
-                    if (this.type === 'vid') {
-                        innerHTML = `<video src="${itemRaw.src}" loop playsinline muted ${i === this.index ? 'autoplay' : ''}></video>`;
-                    } else {
-                        innerHTML = `<img src="${itemRaw.src}" loading="lazy">`;
-                    }
-
-                    // Info Panel
-                    if (this.type !== 'hero') {
-                        innerHTML += `
-                            <div class="info-panel">
-                                <h3 class="serif" style="color:#fff;">${info.title}</h3>
-                                <p class="meta">${info.meta}</p>
-                                <span class="btn-expand-hint">VER MAIS</span>
-                            </div>`;
-                    }
-
-                    slot.innerHTML = innerHTML;
-                    
-                    // Click Logic
-                    slot.onclick = () => this.handleClick(slot, i, itemRaw, info);
-                    
-                    // Hover Cursor Effect
-                    slot.onmouseenter = () => document.body.classList.add('hovering');
-                    slot.onmouseleave = () => document.body.classList.remove('hovering');
-
-                    this.track.appendChild(slot);
-                });
-
-                // Update Hero Text
-                if(this.type === 'hero') {
-                    const current = this.data[this.index];
-                    const info = Parser.process(current.src);
-                    const tEl = document.getElementById('hero-title');
-                    const mEl = document.getElementById('hero-meta');
-                    if(tEl) {
-                        tEl.innerText = info.title;
-                        mEl.innerText = info.meta;
-                    }
-                }
-            }
-
-            handleClick(slot, i, itemRaw, info) {
-                // Navegação Lateral
-                if (slot.classList.contains('left')) this.navigate(-1);
-                else if (slot.classList.contains('right')) this.navigate(1);
-                
-                // Interação Central
-                else if (slot.classList.contains('center')) {
-                    if(this.type === 'vid') {
-                        // Toggle Mute
-                        const v = slot.querySelector('video');
-                        v.muted = !v.muted;
-                    } else if (this.type === 'img' || this.type === 'hero') {
-                        // Lógica Duplo Clique (Expandir -> Lightbox)
-                        if(slot.classList.contains('expanded')) {
-                            // Se já está expandido, abre o Lightbox
-                            Lightbox.open(itemRaw.src, info.title, info.meta);
-                        } else {
-                            // Se não, expande primeiro
-                            document.querySelectorAll(`#${this.track.id} .slot.expanded`).forEach(el => el.classList.remove('expanded'));
-                            slot.classList.add('expanded');
-                        }
-                    }
-                }
-            }
-
-            navigate(dir) {
-                this.index = (this.index + dir + this.data.length) % this.data.length;
-                this.render();
-            }
-
-            setupGestures() {
-                let startX = 0;
-                this.track.ontouchstart = e => startX = e.changedTouches[0].screenX;
-                this.track.ontouchend = e => {
-                    const diff = e.changedTouches[0].screenX - startX;
-                    if (Math.abs(diff) > 40) this.navigate(diff > 0 ? -1 : 1);
-                };
-            }
-        }
-
-        // === MANAGER: LIGHTBOX ===
-        const Lightbox = {
-            el: document.getElementById('lightbox'),
-            img: document.getElementById('lightbox-img'),
-            tEl: document.getElementById('lightbox-title'),
-            mEl: document.getElementById('lightbox-meta'),
-            
-            init() {
-                this.el.onclick = (e) => {
-                    if(e.target === this.el || e.target.classList.contains('lb-close')) this.close();
-                };
-            },
-            open(src, title, meta) {
-                this.img.src = src;
-                this.tEl.innerText = title;
-                this.mEl.innerText = meta;
-                this.el.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            },
-            close() {
-                this.el.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        };
-
-        // === CURSOR PHYSICS (DESKTOP) ===
-        function initCursor() {
-            const dot = document.getElementById('c-dot');
-            const circle = document.getElementById('c-circle');
-            let mx = 0, my = 0; // Mouse coords
-            let cx = 0, cy = 0; // Circle coords
-
-            document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(${mx}px, ${my}px)`; });
-
-            function animate() {
-                cx += (mx - cx) * 0.15; cy += (my - cy) * 0.15;
-                circle.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-                requestAnimationFrame(animate);
-            }
-            animate();
-
-            // Hover triggers
-            document.querySelectorAll('a, .logo-container, .lb-close').forEach(el => {
-                el.onmouseenter = () => document.body.classList.add('hovering');
-                el.onmouseleave = () => document.body.classList.remove('hovering');
-            });
-        }
-
-        // === INICIALIZAÇÃO ===
-        window.onload = () => {
-            Lightbox.init();
-            
-            new Carousel('hero-track', DB.hero, { type: 'hero', dotsId: 'hero-dots' });
-            new Carousel('acervo-track', DB.acervo, { type: 'img', dotsId: 'acervo-dots' });
-            new Carousel('memorias-track', DB.memorias, { type: 'vid', dotsId: 'memo-dots' });
-
-            if (window.matchMedia("(pointer: fine)").matches) initCursor();
-
-            // Logo Surge Event
-            document.getElementById('logo-trigger').addEventListener('click', function() {
-                this.classList.add('active');
-                document.body.classList.add('surge-active');
-                setTimeout(() => {
-                    this.classList.remove('active');
-                    document.body.classList.remove('surge-active');
-                }, 2000);
-            });
-        };
-    </script>
 </body>
 </html>
