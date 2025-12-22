@@ -47,6 +47,25 @@
         body.surge-active .surge-overlay { opacity: 0.15; animation: pulseScreen 2s infinite; }
         @keyframes pulseScreen { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
+        /* === 3. CURSOR MAGNÉTICO (APENAS DESKTOP) === */
+        @media (pointer: fine) {
+            body { cursor: none; }
+            .cursor-dot {
+                position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: white;
+                border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%);
+            }
+            .cursor-circle {
+                position: fixed; top: 0; left: 0; width: 40px; height: 40px; 
+                border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; 
+                pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+            }
+            body.hovering .cursor-circle {
+                width: 60px; height: 60px; background-color: rgba(212, 175, 55, 0.1);
+                border-color: var(--accent-gold); mix-blend-mode: difference;
+            }
+        }
+
         /* === TYPOGRAPHY === */
         .serif { font-family: 'Playfair Display', serif; font-weight: 400; }
         .meta { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
@@ -437,6 +456,22 @@
                 document.body.style.overflow = '';
             }
         };
+
+        // === CURSOR PHYSICS (DESKTOP) ===
+        function initCursor() {
+            const dot = document.getElementById('c-dot');
+            const circle = document.getElementById('c-circle');
+            let mx = 0, my = 0; // Mouse coords
+            let cx = 0, cy = 0; // Circle coords
+
+            document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(${mx}px, ${my}px)`; });
+
+            function animate() {
+                cx += (mx - cx) * 0.15; cy += (my - cy) * 0.15;
+                circle.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+                requestAnimationFrame(animate);
+            }
+            animate();
 
             // Hover triggers
             document.querySelectorAll('a, .logo-container, .lb-close').forEach(el => {
