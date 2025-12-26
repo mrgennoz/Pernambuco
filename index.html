@@ -2,536 +2,471 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Gennoz | Acervo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>gnnz | acervo</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
+        /* === 1. AXIOMAS (Design System) === */
         :root {
-            /* Palette Premium */
-            --bg-deep: #050505;
-            --bg-surface: #0a0a0a;
-            --text-primary: #Eaeaea;
-            --text-secondary: #888;
-            --accent-gold: #D4AF37; 
-            --accent-gold-glow: rgba(212, 175, 55, 0.4);
+            /* Palette: Dark Luxury */
+            --void: #050505;
+            --surface: #0a0a0a;
+            --text-high: #EAEAEA;
+            --text-med: #888888;
+            --gold: #D4AF37;
+            --gold-dim: rgba(212, 175, 55, 0.3);
             
-            /* Physics (Motion Design) */
-            --ease-elastic: cubic-bezier(0.19, 1, 0.22, 1); /* Apple-like feel */
-            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            /* Physics */
+            --ease-cine: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-snap: cubic-bezier(0.19, 1, 0.22, 1);
             
-            /* Dimensions */
-            --slot-radius: 4px;
+            /* Layout */
+            --header-h: 120px;
+            --max-w: 1400px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        /* === 2. RESET & BASE (Noise & Atmosphere) === */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-primary);
-            font-family: 'Manrope', sans-serif; /* Fonte mais moderna para UI */
+            background-color: var(--void);
+            color: var(--text-high);
+            font-family: 'Manrope', sans-serif;
             overflow-x: hidden;
-            opacity: 0; animation: fadeInPage 1.5s var(--ease-smooth) forwards;
+            opacity: 0; animation: genesis 1.5s var(--ease-cine) forwards;
         }
 
-        @keyframes fadeInPage { to { opacity: 1; } }
-
-        /* === GLOBAL SURGE EFFECT (A Onda de Choque) === */
-        .surge-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, var(--accent-gold-glow) 0%, transparent 70%);
-            opacity: 0; pointer-events: none; z-index: 9999;
-            transition: opacity 0.8s ease;
-        }
-        .surge-active .surge-overlay { opacity: 0.2; animation: pulseScreen 2s infinite; }
-
-        @keyframes pulseScreen {
-            0% { transform: scale(1); opacity: 0.1; }
-            50% { transform: scale(1.05); opacity: 0.2; }
-            100% { transform: scale(1); opacity: 0.1; }
+        /* Textura Granulada (Film Grain) */
+        body::before {
+            content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.07;
         }
 
-        /* === TYPOGRAPHY === */
-        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; font-weight: 400; letter-spacing: -0.02em; }
-        .meta { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+        @keyframes genesis { to { opacity: 1; } }
 
-        /* === HEADER & LOGO (ENGINEERED MOTION) === */
-        .header {
-            height: 14vh; display: flex; justify-content: center; align-items: flex-end;
-            padding-bottom: 1rem; position: relative; z-index: 50;
+        /* Typography Classes */
+        .serif { font-family: 'Playfair Display', serif; }
+        .sans { font-family: 'Manrope', sans-serif; }
+        .meta { font-size: 0.75rem; color: var(--text-med); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+
+        /* === 3. HEADER (The Reactor) === */
+        header {
+            height: var(--header-h); display: flex; justify-content: center; align-items: center;
+            position: relative; z-index: 50; mix-blend-mode: exclusion;
         }
         
-        .logo-container {
-            position: relative; width: 80px; height: 80px;
+        .reactor-core {
+            width: 60px; height: 60px; position: relative; cursor: pointer;
             display: flex; justify-content: center; align-items: center;
-            cursor: pointer;
+            transition: transform 0.3s var(--ease-snap);
         }
-
-        /* O "Coração" da Logo - Pulso Constante */
-        .logo-pulse {
+        .reactor-core:hover { transform: scale(1.1); }
+        
+        /* O Efeito de Pulso */
+        .reactor-ring {
             position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 1px solid var(--accent-gold);
-            opacity: 0; transform: scale(0.8);
-            animation: ripple-idle 3s infinite var(--ease-smooth);
+            border: 1px solid var(--gold); opacity: 0; transform: scale(0.8);
+            animation: pulse-idle 4s infinite var(--ease-cine);
         }
-        @keyframes ripple-idle {
+        .reactor-logo { width: 40px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+
+        @keyframes pulse-idle {
             0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.1); opacity: 0.15; }
-            100% { transform: scale(1.2); opacity: 0; }
+            50% { transform: scale(1.4); opacity: 0.3; border-width: 1px; }
+            100% { transform: scale(1.8); opacity: 0; border-width: 0px; }
         }
 
-        .brand-logo { 
-            width: 60px; filter: grayscale(1) brightness(0.9); transition: all 0.5s var(--ease-elastic);
-            position: relative; z-index: 2;
+        /* O Flash (Shockwave) */
+        .flash-overlay {
+            position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 10000;
+            transition: opacity 0.1s ease-out;
+        }
+        .flash-active { opacity: 0.15; transition: opacity 0.05s ease-in; }
+
+        /* === 4. HERO SECTION (The Stage - 16:9) === */
+        .stage-wrapper {
+            width: 100%; max-width: var(--max-w); margin: 0 auto;
+            position: relative; overflow: hidden; padding-bottom: 2rem;
         }
         
-        /* Estado Ativo (Clique) */
-        .logo-container.active .brand-logo { 
-            filter: grayscale(0) drop-shadow(0 0 15px var(--accent-gold)); transform: scale(1.1); 
-        }
-        .logo-container.active .logo-pulse {
-            border-width: 2px; animation: ripple-burst 0.8s var(--ease-elastic);
-        }
-        @keyframes ripple-burst {
-            0% { transform: scale(1); opacity: 0.8; border-color: #fff; }
-            100% { transform: scale(3); opacity: 0; border-color: var(--accent-gold); }
+        /* Aspect Ratio Hack 16:9 Responsive */
+        .cinema-viewport {
+            width: 100%; position: relative;
+            aspect-ratio: 16 / 9;
+            background: #080808; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* === CAROUSEL ENGINE (CORE) === */
-        .section-wrapper { padding: 3rem 0; position: relative; }
+        .slide-layer {
+            position: absolute; inset: 0; 
+            opacity: 0; transform: scale(1.05); transition: opacity 1.2s var(--ease-cine), transform 1.5s var(--ease-cine);
+            will-change: opacity, transform;
+        }
+        .slide-layer.active { opacity: 1; transform: scale(1); z-index: 10; }
         
-        .track-container {
-            width: 100%; height: 400px; /* Altura Desktop Padrão */
-            position: relative; display: flex; justify-content: center; align-items: center;
-            perspective: 1000px; overflow: visible;
-        }
-
-        .slot {
-            position: absolute; border-radius: var(--slot-radius);
-            background: #111; overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            transition: all 0.8s var(--ease-elastic);
-            will-change: transform, width, height, opacity;
-            transform-origin: center center;
-            cursor: pointer;
-        }
-
-        .slot img, .slot video {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 1.2s var(--ease-elastic), filter 0.5s;
-        }
-
-        /* States Logic */
-        .slot.center { 
-            z-index: 10; opacity: 1; transform: translateX(0) scale(1); 
-            box-shadow: 0 30px 70px rgba(0,0,0,0.8);
-        }
-        .slot.left { 
-            z-index: 5; opacity: 0.3; transform: translateX(-110%) scale(0.85) rotateY(5deg); 
-            filter: grayscale(1); pointer-events: auto; /* Permite clique para navegar */
-        }
-        .slot.right { 
-            z-index: 5; opacity: 0.3; transform: translateX(110%) scale(0.85) rotateY(-5deg); 
-            filter: grayscale(1); pointer-events: auto;
-        }
-        .slot.hidden { opacity: 0; transform: scale(0); pointer-events: none; }
-
-        /* === INFO PANEL (REVELATION UI) === */
-        .info-panel {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 4rem 1.5rem 1.5rem 1.5rem; /* Gradiente maior para leitura */
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.6) 50%, transparent 100%);
-            transform: translateY(105%); opacity: 0;
-            transition: transform 0.6s var(--ease-elastic), opacity 0.4s;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            pointer-events: none; /* Deixa o clique passar para a imagem se precisar */
-        }
+        .slide-img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.9) contrast(1.1); }
         
-        .slot.expanded .info-panel { transform: translateY(0); opacity: 1; }
-        .slot.expanded img { transform: scale(1.05); }
-
-        .btn-expand {
-            margin-top: 10px; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--accent-gold);
-            border: 1px solid var(--accent-gold); padding: 5px 15px; border-radius: 20px;
-            opacity: 0.8; text-transform: uppercase;
+        /* Overlay de Texto Hero */
+        .hero-caption {
+            position: absolute; bottom: 8%; left: 5%; z-index: 20;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transform: translateY(20px); opacity: 0; transition: all 0.8s 0.2s var(--ease-cine);
         }
-
-        /* === DESKTOP SIZING === */
-        #hero-track .slot.center { width: 700px; height: 100%; }
-        #hero-track .slot.left, #hero-track .slot.right { width: 400px; height: 80%; }
-
-        #acervo-track .slot.center { width: 600px; height: 100%; }
-        #acervo-track .slot.left, #acervo-track .slot.right { width: 350px; height: 80%; }
-
-        #memorias-track .slot.center.v-landscape { width: 600px; height: 100%; }
-        #memorias-track .slot.center.v-portrait { width: 320px; height: 105%; }
-
-        /* === INDICATORS & ACTIONS === */
-        .nav-ui { text-align: center; margin-top: 1.5rem; opacity: 0; animation: fadeInPage 1s 1s forwards; }
-        .dots { display: inline-flex; gap: 8px; margin-bottom: 1rem; }
-        .dot { width: 4px; height: 4px; background: #333; border-radius: 50%; transition: 0.3s; }
-        .dot.active { width: 20px; background: var(--accent-gold); border-radius: 4px; }
+        .slide-layer.active .hero-caption { transform: translateY(0); opacity: 1; }
         
-        .btn-gallery {
-            display: inline-block; font-family: 'Manrope', sans-serif; font-size: 0.75rem;
-            color: var(--text-secondary); text-decoration: none; border-bottom: 1px solid #333;
-            padding-bottom: 2px; transition: 0.3s; letter-spacing: 0.1em; cursor: pointer;
-        }
-        .btn-gallery:hover { color: var(--accent-gold); border-color: var(--accent-gold); }
+        .hero-title { font-size: clamp(2rem, 5vw, 4rem); color: #fff; margin-bottom: 0.5rem; line-height: 1; }
 
-        /* === LIGHTBOX IMMERSIVE (FULLSCREEN) === */
-        .lightbox {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000;
+        /* Dots Navigation */
+        .nav-dots {
+            position: absolute; bottom: 8%; right: 5%; z-index: 20; display: flex; gap: 8px;
+        }
+        .dot { 
+            width: 4px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; transition: 0.4s var(--ease-snap); 
+        }
+        .dot.active { background: var(--gold); transform: scale(1.5); box-shadow: 0 0 10px var(--gold-dim); }
+
+        /* === 5. ACERVO (The Strip) === */
+        .strip-section { padding: 4rem 0; overflow: hidden; }
+        .strip-header { padding: 0 5%; margin-bottom: 2rem; border-left: 2px solid var(--gold); padding-left: 1.5rem; }
+        
+        .strip-track {
+            display: flex; gap: 2rem; padding: 0 5%; overflow-x: auto; scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            padding-bottom: 2rem;
+        }
+        .strip-track::-webkit-scrollbar { display: none; }
+
+        .art-card {
+            min-width: 280px; height: 380px; position: relative; cursor: pointer;
+            transition: transform 0.4s var(--ease-snap), filter 0.4s;
+            filter: grayscale(0.8);
+        }
+        .art-card:hover { transform: translateY(-10px); filter: grayscale(0); }
+        .art-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+        
+        .art-info {
+            position: absolute; bottom: -30px; left: 0; width: 100%;
+            opacity: 0; transition: 0.3s;
+        }
+        .art-card:hover .art-info { opacity: 1; bottom: -40px; }
+
+        /* === 6. MEMORIAS (Cinema Mode Entry) === */
+        .memory-block {
+            margin: 4rem 5%; background: #080808; border: 1px solid #111;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: 0.4s ease;
-            backdrop-filter: blur(10px);
+            padding: 4rem 2rem; text-align: center; cursor: pointer;
+            transition: border-color 0.3s; position: relative; overflow: hidden;
         }
-        .lightbox.active { opacity: 1; visibility: visible; }
+        .memory-block:hover { border-color: var(--gold); }
         
-        .lightbox-content {
-            width: 100%; height: 80vh; display: flex; justify-content: center; align-items: center;
-            position: relative;
+        .play-icon {
+            width: 60px; height: 60px; border: 1px solid #fff; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;
+            transition: all 0.3s var(--ease-snap);
         }
-        .lightbox img {
-            max-width: 95%; max-height: 95%; width: auto; height: auto;
-            object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            transform: scale(0.9); transition: transform 0.5s var(--ease-elastic);
+        .memory-block:hover .play-icon { background: var(--gold); border-color: var(--gold); color: #000; transform: scale(1.1); }
+
+        /* === 7. MODAL & CINEMA THEATER (State of Art) === */
+        .theater-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 2000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.5s var(--ease-cine);
         }
-        .lightbox.active img { transform: scale(1); }
+        .theater-overlay.active { opacity: 1; visibility: visible; }
         
-        .lightbox-close {
-            position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2rem;
-            cursor: pointer; opacity: 0.7; padding: 10px; z-index: 2001;
+        .theater-stage { width: 90vw; height: 80vh; position: relative; display: flex; justify-content: center; align-items: center; }
+        
+        /* Media Containers */
+        .theater-img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        .theater-video { width: 80%; aspect-ratio: 16/9; background: #000; }
+        
+        /* Custom Controls UI */
+        .player-controls {
+            position: absolute; bottom: -60px; display: flex; gap: 20px; align-items: center;
+            opacity: 0; transform: translateY(10px); transition: 0.3s;
         }
-
-        /* === MOBILE OTTIMIZZAZIONE (A OBRA PRIMA) === */
-        @media (max-width: 768px) {
-            .header { height: 12vh; align-items: center; padding-bottom: 0; }
-            
-            /* Ajuste de Proporção para HORIZONTAL (16:9 like) */
-            .track-container { height: 260px; } /* Altura reduzida para formato paisagem */
-            
-            /* HERO Mobile */
-            #hero-track { height: 350px; } /* Hero pode ser mais alto */
-            #hero-track .slot.center { width: 90vw; height: 100%; } 
-            
-            /* ACERVO Mobile - Horizontal e Panorâmico */
-            #acervo-track { height: 250px; }
-            #acervo-track .slot.center { 
-                width: 88vw; /* Bem largo */
-                height: 100%; /* Respeita a altura container */
-            }
-            /* Laterais "Espiando" (Peek Effect) */
-            #acervo-track .slot.left { transform: translateX(-94%) scale(0.9); opacity: 0.4; display: block; }
-            #acervo-track .slot.right { transform: translateX(94%) scale(0.9); opacity: 0.4; display: block; }
-
-            /* VÍDEOS Mobile - Inteligente */
-            #memorias-track { height: 280px; }
-            #memorias-track .slot.center.v-landscape { width: 90vw; height: 220px; } /* Vídeo Wide */
-            #memorias-track .slot.center.v-portrait { width: 65vw; height: 100%; } /* Vídeo Vertical */
-
-            /* Ajuste Info Panel Mobile */
-            .info-panel { padding-bottom: 2rem; }
-            .info-panel h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-            
-            /* Lightbox Mobile */
-            .lightbox-content { height: 70vh; }
+        .theater-overlay.video-mode .player-controls { opacity: 1; transform: translateY(0); }
+        
+        .ctrl-btn {
+            background: transparent; border: 1px solid #333; color: #fff; padding: 10px 20px;
+            font-family: 'Manrope', sans-serif; font-size: 0.8rem; letter-spacing: 0.1em;
+            cursor: pointer; border-radius: 30px; transition: 0.2s;
         }
+        .ctrl-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .ctrl-btn.main-play { border-color: #fff; padding: 15px 30px; }
 
-        /* === FOOTER === */
+        .close-theater {
+            position: absolute; top: 30px; right: 30px; font-size: 2rem; cursor: pointer; color: #fff; opacity: 0.5;
+            transition: opacity 0.3s; z-index: 2010; font-family: 'Manrope';
+        }
+        .close-theater:hover { opacity: 1; }
+
+        /* === 8. FOOTER === */
         footer {
-            text-align: center; padding: 4rem 0 2rem 0;
-            border-top: 1px solid rgba(255,255,255,0.05); margin-top: 4rem;
-        }
-        .footer-sig {
-            font-family: 'Manrope', sans-serif; font-size: 0.7rem; color: #444; letter-spacing: 0.2em;
+            text-align: center; padding: 3rem 0; margin-top: 4rem;
+            border-top: 1px solid #111; color: #333; font-size: 0.7rem; letter-spacing: 0.2rem;
         }
 
+        /* Responsive Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2rem; }
+            .cinema-viewport { aspect-ratio: 4 / 5; /* Retrato no mobile para não cortar */ }
+            .theater-video { width: 100%; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="surge-overlay" id="surge-layer"></div>
+    <div class="flash-overlay" id="flash-fx"></div>
 
-    <header class="header">
-        <div class="logo-container" id="logo-trigger">
-            <div class="logo-pulse"></div>
-            <img src="logo.png" alt="G" class="brand-logo">
+    <header>
+        <div class="reactor-core" onclick="App.triggerFlash()">
+            <div class="reactor-ring"></div>
+            <svg class="reactor-logo" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="3">
+                <path d="M50 20 C20 20 10 50 10 50 C10 50 20 80 50 80 C80 80 90 50 90 50 C90 50 80 20 50 20 Z" />
+                <circle cx="50" cy="50" r="12" fill="#fff" />
+            </svg>
         </div>
     </header>
 
-    <section class="section-wrapper">
-        <div class="track-container" id="hero-track"></div>
-        <div class="nav-ui">
-            <div class="dots" id="hero-dots"></div>
-            <div style="height: 20px;"></div> <h2 id="hero-title" class="serif" style="font-size: 1.8rem; margin-bottom: 0.5rem;">Carregando...</h2>
-            <p id="hero-meta" class="meta">...</p>
-        </div>
-    </section>
+    <main>
+        <section class="stage-wrapper">
+            <div class="cinema-viewport" id="hero-stage">
+                </div>
+            <div class="nav-dots" id="hero-dots"></div>
+        </section>
 
-    <section class="section-wrapper">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 class="serif" style="font-size: 2rem; color: #fff;">Acervo</h2>
-            <p class="meta" style="color: var(--accent-gold);">Coleção Recente</p>
-        </div>
-
-        <div class="track-container" id="acervo-track"></div>
-        
-        <div class="nav-ui">
-            <div class="dots" id="acervo-dots"></div>
-            <div>
-                <a href="obras.html" class="btn-gallery">ABRIR ACERVO COMPLETO</a>
+        <section class="strip-section">
+            <div class="strip-header">
+                <h2 class="serif" style="font-size: 2rem; color: #fff;">Acervo</h2>
+                <p class="meta" style="color: var(--gold);">Coleção 2024</p>
             </div>
-        </div>
-    </section>
+            <div class="strip-track" id="gallery-strip">
+                </div>
+        </section>
 
-    <section class="section-wrapper">
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 class="serif" style="font-size: 2rem;">Memórias</h2>
-            <p class="meta">Fragmentos do Tempo</p>
-        </div>
+        <section>
+            <div class="strip-header" style="padding-top: 2rem;">
+                <h2 class="serif" style="font-size: 2rem; color: #fff;">Memórias</h2>
+                <p class="meta">Cinema Vérité</p>
+            </div>
+            
+            <div class="memory-block" onclick="Cinema.openVideo(DB.memories[0])">
+                <div class="play-icon">▶</div>
+                <h3 class="serif" style="font-size: 1.5rem; color: #fff;">Patins e Itapuama</h3>
+                <p class="meta" style="margin-top: 10px;">CABO DE SANTO AGOSTINHO • 2022</p>
+            </div>
+        </section>
+    </main>
 
-        <div class="track-container" id="memorias-track"></div>
-        <div class="nav-ui">
-            <div class="dots" id="memo-dots"></div>
-        </div>
-    </section>
+    <div class="theater-overlay" id="theater">
+        <div class="close-theater" onclick="Cinema.close()">✕</div>
+        
+        <div class="theater-stage" id="theater-stage">
+            </div>
 
-    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-        <div class="lightbox-close" onclick="toggleLightbox(false)">×</div>
-        <div class="lightbox-content">
-            <img src="" id="lightbox-img" onclick="event.stopPropagation()">
-        </div>
-        <div style="text-align: center; z-index: 2002;">
-            <h3 id="lightbox-title" class="serif" style="font-size: 1.5rem;"></h3>
-            <p id="lightbox-meta" class="meta" style="color: var(--accent-gold); margin-top: 0.5rem;"></p>
+        <div class="player-controls" id="video-ctrls">
+            <button class="ctrl-btn" onclick="Cinema.rewind()">-10s</button>
+            <button class="ctrl-btn main-play" onclick="Cinema.togglePlay()" id="btn-play-state">PAUSE</button>
+            <button class="ctrl-btn" onclick="Cinema.forward()">+10s</button>
         </div>
     </div>
 
-    <footer>
-        <p class="footer-sig">GENNOZ © 2000</p>
-    </footer>
+    <footer>GENNOZ © 2000</footer>
 
     <script>
-        // === 1. PARSER ENGINE (Tratamento de Strings) ===
-        // Garante que nomes de arquivos virem títulos bonitos
-        function parseFilename(filename, type) {
-            const clean = filename.split('.').slice(0, -1).join('');
-            const parts = clean.split('-');
-            
-            // Tratamento especial: remove "_" e troca por espaço
-            const title = parts[0] ? parts[0].replace(/_/g, ' ') : "Sem Título";
-            
-            let meta = "";
-            let place = "";
-            
-            if (parts.length >= 3) {
-                place = parts[2].toUpperCase().replace(/_/g, ' ');
-                meta = `${parts[1]} • ${place}`;
-            } else if (parts.length === 2) {
-                meta = parts[1].toUpperCase();
+        /**
+         * GENNOZ | COGNITIVE CORE
+         * Architecture: Monolith Optimized (Namespaced)
+         */
+
+        // 1. DATA STORE (Single Source of Truth)
+        const DB = {
+            hero: [
+                { id: 1, src: "Eu_e_Nuz-2025-Prazeres.jpg", title: "Nós em Síntese", meta: "PRAZERES • 2025" },
+                { id: 2, src: "Familia-2025-Prazeres.jpg", title: "Raízes", meta: "PRAZERES • 2025" },
+                { id: 3, src: "Eu_Ela_e_os_Bebes-2025-Prazeres.jpg", title: "Legado", meta: "PRAZERES • 2025" }
+            ],
+            gallery: [
+                { id: 10, src: "Praia_de_Serrambi-2024-Ipojuca.jpg", title: "Serrambi", meta: "IPOJUCA" },
+                { id: 11, src: "Orgulho_em_Calhetas-2024-Cabo.jpg", title: "Calhetas", meta: "CABO" },
+                { id: 12, src: "Praia_de_Piedade-2024-Jaboatao.jpg", title: "Piedade", meta: "JABOATÃO" },
+                { id: 13, src: "Engrenagens_do_Interior-2023-Carpina.jpg", title: "Engrenagens", meta: "CARPINA" }
+            ],
+            memories: [
+                { id: 20, src: "Patins_e_Itapuama-2022-Cabo.mp4", title: "Patins em Itapuama", type: "video" }
+            ]
+        };
+
+        // 2. HELPER UTILS
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+        // Fallback image para evitar quebra de layout
+        const safeSrc = (src) => `placeholder.jpg`; // Em produção, aponte para o arquivo real
+
+        // 3. APP CONTROLLER
+        const App = {
+            init() {
+                console.log("GENNOZ OS: Initializing...");
+                Carousel.build();
+                Gallery.build();
+                
+                // Keyboard Listeners (Acessibilidade)
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') Cinema.close();
+                });
+            },
+
+            triggerFlash() {
+                const flash = $('#flash-fx');
+                flash.classList.add('flash-active');
+                setTimeout(() => flash.classList.remove('flash-active'), 150);
+                
+                // Opcional: Vibração em mobile
+                if(navigator.vibrate) navigator.vibrate(50);
             }
+        };
 
-            return { src: filename, title, meta, place, type };
-        }
-
-        // === 2. BANCO DE DADOS (Arquivos renomeados com "_" e sem acentos) ===
-        const dataHero = [
-            parseFilename("Eu_e_Nuz-2025-Prazeres.jpg", 'hero'),
-            parseFilename("Familia-2025-Prazeres.jpg", 'hero'),
-            parseFilename("Eu_Ela_e_os_Bebes-2025-Prazeres.jpg", 'hero')
-        ];
-
-        const dataAcervo = [
-            parseFilename("Praia_de_Serrambi-2024-Ipojuca.jpg", 'img'),
-            parseFilename("Orgulho_em_Calhetas-2024-Cabo.jpg", 'img'),
-            parseFilename("Praia_de_Piedade-2024-Jaboatao.jpg", 'img'),
-            parseFilename("Dia_Azul_em_Prazeres-2024-Jaboatao.jpg", 'img'),
-            parseFilename("Engrenagens_do_Interior-2023-Carpina.jpg", 'img'),
-            parseFilename("Crias_de_Prazeres-2024-Jaboatao.jpg", 'img')
-        ];
-
-        const dataMemorias = [
-            { ...parseFilename("De_Boinha-2023-Jaboatao.mp4", 'vid'), orientation: "portrait" },
-            { ...parseFilename("Tunel_do_Tempo-2023-Recife.mp4", 'vid'), orientation: "portrait" },
-            { ...parseFilename("Aventura_em_Enseadas-2022-Cabo.mp4", 'vid'), orientation: "landscape" },
-            { ...parseFilename("Patins_e_Itapuama-2022-Cabo.mp4", 'vid'), orientation: "landscape" }
-        ];
-
-        let state = { hero: 0, acervo: 0, memo: 0 };
-
-        // === 3. RENDER ENGINE (Core do Carrossel) ===
-        function renderCarousel(trackId, data, currentIdx, stateKey, dotsId) {
-            const track = document.getElementById(trackId);
-            const dotsContainer = document.getElementById(dotsId);
+        // 4. CAROUSEL ENGINE (Hero Logic)
+        const Carousel = {
+            index: 0,
+            timer: null,
             
-            if(!track) return;
-            track.innerHTML = '';
-
-            // Atualiza Dots
-            if(dotsContainer) {
-                dotsContainer.innerHTML = data.map((_, i) => 
-                    `<div class="dot ${i === currentIdx ? 'active' : ''}"></div>`
-                ).join('');
-            }
-
-            // Atualiza Texto Hero (se for o caso)
-            if(trackId === 'hero-track') {
-                const titleEl = document.getElementById('hero-title');
-                const metaEl = document.getElementById('hero-meta');
-                if(titleEl) {
-                    titleEl.style.opacity = 0;
-                    setTimeout(() => {
-                        titleEl.innerText = data[currentIdx].title;
-                        metaEl.innerText = data[currentIdx].meta;
-                        titleEl.style.opacity = 1;
-                    }, 200);
-                }
-            }
-
-            // Lógica de Renderização Otimizada (Apenas Prev, Current, Next)
-            const prevIdx = (currentIdx - 1 + data.length) % data.length;
-            const nextIdx = (currentIdx + 1) % data.length;
-
-            data.forEach((item, i) => {
-                // Filtro de Performance: Renderiza apenas os necessários
-                if (i !== currentIdx && i !== prevIdx && i !== nextIdx) return;
-
-                const slot = document.createElement('div');
-                let classes = 'slot';
-                let isCenter = false;
-
-                if (i === currentIdx) { 
-                    classes += ' center'; 
-                    isCenter = true;
-                    // Vídeo Orientation Logic
-                    if(item.type === 'vid') classes += item.orientation === 'portrait' ? ' v-portrait' : ' v-landscape';
-                }
-                else if (i === prevIdx) classes += ' left';
-                else if (i === nextIdx) classes += ' right';
-
-                slot.className = classes;
-
-                // Montagem do HTML Interno
-                let content = '';
-                if (item.type === 'vid') {
-                    content = `<video src="${item.src}" loop playsinline muted ${isCenter ? 'autoplay' : ''}></video>`;
-                } else {
-                    content = `<img src="${item.src}" alt="${item.title}" loading="eager">`;
-                }
-
-                // Adiciona Painel de Info (Apenas se não for Hero, para evitar duplicidade)
-                if (item.type !== 'hero') {
-                    content += `
-                        <div class="info-panel">
-                            <h3 class="serif" style="color:#fff; margin-bottom:5px;">${item.title}</h3>
-                            <p class="meta" style="margin-bottom:1rem;">${item.meta}</p>
-                            <div class="btn-expand">EXPANDIR</div>
+            build() {
+                const stage = $('#hero-stage');
+                const dots = $('#hero-dots');
+                
+                // Render Slides
+                DB.hero.forEach((item, i) => {
+                    // Slide
+                    const slide = document.createElement('div');
+                    slide.className = `slide-layer ${i === 0 ? 'active' : ''}`;
+                    slide.innerHTML = `
+                        <img src="${item.src}" class="slide-img" onerror="this.style.display='none'">
+                        <div class="hero-caption">
+                            <h2 class="serif hero-title">${item.title}</h2>
+                            <p class="meta" style="color:var(--gold)">${item.meta}</p>
                         </div>
                     `;
-                }
+                    slide.onclick = () => Cinema.openImage(item); // 2º clique lógica simplificada para UX direta
+                    stage.appendChild(slide);
 
-                slot.innerHTML = content;
+                    // Dot
+                    const dot = document.createElement('div');
+                    dot.className = `dot ${i === 0 ? 'active' : ''}`;
+                    dot.onclick = () => Carousel.goto(i);
+                    dots.appendChild(dot);
+                });
 
-                // === LOGICA DE INTERAÇÃO (TOUCH/CLICK) ===
-                slot.onclick = () => {
-                    // 1. Navegação Lateral
-                    if (slot.classList.contains('left')) changeSlide(stateKey, -1);
-                    else if (slot.classList.contains('right')) changeSlide(stateKey, 1);
-                    
-                    // 2. Clique no Centro (Lógica Inteligente)
-                    else if (slot.classList.contains('center')) {
-                        if (item.type === 'vid') {
-                            // Vídeo: Toggle Som
-                            const v = slot.querySelector('video');
-                            v.muted = !v.muted;
-                        } else {
-                            // Imagem: 1º Clique Expande Info, 2º Clique Abre Lightbox
-                            if (slot.classList.contains('expanded')) {
-                                toggleLightbox(true, item); // Abre Modal Fullscreen
-                            } else {
-                                // Reseta outros
-                                document.querySelectorAll(`#${trackId} .slot`).forEach(s => s.classList.remove('expanded'));
-                                slot.classList.add('expanded'); // Mostra Info
-                            }
-                        }
-                    }
-                };
+                this.startAuto();
+            },
 
-                track.appendChild(slot);
-            });
+            goto(n) {
+                const slides = $$('.slide-layer');
+                const dots = $$('.dot');
+                
+                // Reset Current
+                slides[this.index].classList.remove('active');
+                dots[this.index].classList.remove('active');
+                
+                // Update Index
+                this.index = n;
+                
+                // Activate New
+                slides[this.index].classList.add('active');
+                dots[this.index].classList.add('active');
+                
+                this.resetTimer();
+            },
 
-            // Re-aplicar Swipe Logic
-            setupSwipe(track, stateKey);
-        }
+            next() {
+                let nextIndex = (this.index + 1) % DB.hero.length;
+                this.goto(nextIndex);
+            },
 
-        function changeSlide(key, dir) {
-            if (key === 'hero') state.hero = (state.hero + dir + dataHero.length) % dataHero.length;
-            if (key === 'acervo') state.acervo = (state.acervo + dir + dataAcervo.length) % dataAcervo.length;
-            if (key === 'memo') state.memo = (state.memo + dir + dataMemorias.length) % dataMemorias.length;
-            renderAll();
-        }
+            startAuto() { this.timer = setInterval(() => this.next(), 6000); },
+            stopAuto() { clearInterval(this.timer); },
+            resetTimer() { this.stopAuto(); this.startAuto(); }
+        };
 
-        // === 4. LIGHTBOX SYSTEM (Visualização Completa) ===
-        function toggleLightbox(show, item = null) {
-            const lb = document.getElementById('lightbox');
-            if (show && item) {
-                document.getElementById('lightbox-img').src = item.src;
-                document.getElementById('lightbox-title').innerText = item.title;
-                document.getElementById('lightbox-meta').innerText = item.meta;
-                lb.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Trava scroll fundo
-            } else {
-                lb.classList.remove('active');
-                document.body.style.overflow = '';
+        // 5. GALLERY ENGINE (Strip Logic)
+        const Gallery = {
+            build() {
+                const track = $('#gallery-strip');
+                DB.gallery.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'art-card';
+                    card.innerHTML = `
+                        <img src="${item.src}" loading="lazy" onerror="this.src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='">
+                        <div class="art-info">
+                            <p class="serif" style="color:#fff; font-size:1.2rem">${item.title}</p>
+                            <p class="meta" style="font-size:0.6rem">${item.meta}</p>
+                        </div>
+                    `;
+                    card.onclick = () => Cinema.openImage(item);
+                    track.appendChild(card);
+                });
             }
-        }
-        
-        function closeLightbox(e) {
-            if (e.target.id === 'lightbox') toggleLightbox(false);
-        }
+        };
 
-        // === 5. GESTURE CONTROL (Swipe Fluido) ===
-        function setupSwipe(element, key) {
-            let startX = 0;
-            element.ontouchstart = e => startX = e.changedTouches[0].screenX;
-            element.ontouchend = e => {
-                const endX = e.changedTouches[0].screenX;
-                const diff = endX - startX;
-                if (Math.abs(diff) > 40) { // Sensibilidade
-                    changeSlide(key, diff > 0 ? -1 : 1); // Invertido para natural feel
+        // 6. CINEMA THEATER (Polymorphic Modal)
+        const Cinema = {
+            el: $('#theater'),
+            stage: $('#theater-stage'),
+            videoEl: null, // Referência ao elemento de vídeo ativo
+
+            openImage(item) {
+                this.el.classList.remove('video-mode');
+                this.stage.innerHTML = `<img src="${item.src}" class="theater-img">`;
+                this.el.classList.add('active');
+            },
+
+            openVideo(item) {
+                this.el.classList.add('video-mode');
+                // Criar player HTML5
+                this.stage.innerHTML = `
+                    <video class="theater-video" id="active-video" src="${item.src}" playsinline></video>
+                `;
+                this.videoEl = document.getElementById('active-video');
+                
+                // Auto-play ao abrir
+                this.videoEl.play();
+                $('#btn-play-state').innerText = "PAUSE";
+                
+                this.el.classList.add('active');
+            },
+
+            close() {
+                this.el.classList.remove('active');
+                // Limpar stage para parar vídeos e liberar memória
+                setTimeout(() => {
+                    this.stage.innerHTML = '';
+                    this.videoEl = null;
+                }, 500);
+            },
+
+            // Controles de Vídeo Personalizados
+            togglePlay() {
+                if(!this.videoEl) return;
+                const btn = $('#btn-play-state');
+                if(this.videoEl.paused) {
+                    this.videoEl.play();
+                    btn.innerText = "PAUSE";
+                } else {
+                    this.videoEl.pause();
+                    btn.innerText = "PLAY";
                 }
-            };
-        }
+            },
+            rewind() { if(this.videoEl) this.videoEl.currentTime -= 10; },
+            forward() { if(this.videoEl) this.videoEl.currentTime += 10; }
+        };
 
-        // === 6. INTERAÇÃO LOGO (SURGE EFFECT) ===
-        document.getElementById('logo-trigger').addEventListener('click', function() {
-            // Ativa visual da logo
-            this.classList.add('active');
-            
-            // Ativa efeito de onda na tela
-            document.body.classList.add('surge-active');
-
-            // Feedback Tátil (apenas mobile compatível)
-            if (navigator.vibrate) navigator.vibrate(50);
-
-            // Reset após animação
-            setTimeout(() => {
-                this.classList.remove('active');
-                document.body.classList.remove('surge-active');
-            }, 2000);
-        });
-
-        // === INIT ===
-        function renderAll() {
-            renderCarousel('hero-track', dataHero, state.hero, 'hero', 'hero-dots');
-            renderCarousel('acervo-track', dataAcervo, state.acervo, 'acervo', 'acervo-dots');
-            renderCarousel('memorias-track', dataMemorias, state.memo, 'memo', 'memo-dots');
-        }
-
-        window.onload = renderAll;
+        // Initialize
+        document.addEventListener('DOMContentLoaded', App.init);
 
     </script>
 </body>
