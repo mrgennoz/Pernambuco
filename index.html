@@ -30,25 +30,32 @@
             font-family: 'Manrope', sans-serif;
             overflow-x: hidden;
             height: 100%;
-            perspective: 1000px;
+            /* REMOVIDO perspective daqui para corrigir o bug do Viewer */
         }
 
-        /* Trava de rolagem quando o Viewer está aberto */
+        /* Classe que trava a rolagem da página de fundo */
         body.locked { overflow: hidden; height: 100vh; }
 
-        /* Tipografia */
-        .serif { font-family: 'Playfair Display', serif; }
-        .meta { font-size: 0.75rem; color: var(--text-sec); letter-spacing: 0.25em; text-transform: uppercase; font-weight: 500; }
+        /* === O UNIVERSO (Wrapper de Conteúdo) === */
+        /* Movemos a perspectiva para cá para isolar o Viewer */
+        #universe {
+            width: 100%;
+            transition: transform 0.4s;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
 
-        /* === II. HEADER (Fixo e Supremo) === */
+        /* === II. HEADER === */
         header {
             position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
             display: flex; justify-content: center; align-items: center;
-            z-index: 9999; /* Z-index máximo para garantir que segue */
-            pointer-events: none;
-            backdrop-filter: blur(2px); /* Leve blur para separar do fundo */
+            z-index: 4000; pointer-events: none;
+            transition: opacity 0.3s;
         }
         
+        /* Quando o corpo está travado (Viewer aberto), o header some */
+        body.locked header { opacity: 0; pointer-events: none; }
+
         .logo-ghost {
             pointer-events: auto;
             width: 50px; opacity: 0.3; cursor: pointer;
@@ -57,9 +64,11 @@
         }
         .logo-ghost:hover { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
         
-        /* Effect: Reality Bend */
-        .reality-bend { animation: bend-anim 0.6s cubic-bezier(.25, .46, .45, .94) both; }
-        .reality-bend body { filter: invert(1); background: #fff; }
+        /* Effect: Reality Bend (Aplicado no Universe) */
+        .bend-active #universe { animation: bend-anim 0.6s cubic-bezier(.25, .46, .45, .94) both; }
+        .bend-active body { background: #fff; } /* Flash branco no fundo */
+        .bend-active #universe { filter: invert(1); }
+
         @keyframes bend-anim {
             0% { transform: rotateX(0) rotateY(0) scale(1); }
             30% { transform: rotateX(5deg) rotateY(-5deg) scale(0.95); }
@@ -67,7 +76,7 @@
             100% { transform: rotateX(0) rotateY(0) scale(1); }
         }
 
-        /* === III. HERO (Preenchimento Total) === */
+        /* === III. HERO === */
         .hero-screen {
             height: 100dvh; width: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -81,13 +90,13 @@
 
         .frame-mask {
             width: 100%; 
-            aspect-ratio: 16/10; /* Desktop: Paisagem */
+            aspect-ratio: 16/10; /* Desktop Padrao */
             overflow: hidden; position: relative;
             box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
             border: 1px solid #1a1a1a;
             background: #050505;
             cursor: zoom-in;
-            transition: aspect-ratio 0.4s ease; /* Transição suave ao redimensionar */
+            transition: aspect-ratio 0.4s ease;
         }
 
         .h-slide {
@@ -97,13 +106,13 @@
         }
         .h-slide.active { opacity: 1; transform: scale(1); z-index: 2; pointer-events: auto; }
         
-        /* AQUI ESTÁ A MUDANÇA: COVER para preencher tudo */
         .h-slide img { 
             width: 100%; height: 100%; 
-            object-fit: cover; 
-            object-position: center top; /* Foco no rosto/topo da imagem */
+            object-fit: cover; /* Preenchimento total */
+            object-position: center center;
         }
 
+        /* Navegação */
         .h-nav-btn {
             position: absolute; top: 40%; transform: translateY(-50%);
             width: 50px; height: 100px; cursor: pointer;
@@ -124,14 +133,16 @@
         .dot { width: 4px; height: 4px; background: #333; border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--text-pri); transform: scale(1.5); }
 
-        /* === AJUSTES MOBILE HERO (O Pulo do Gato) === */
+        /* === MOBILE HERO (Correção Solicitada) === */
         @media (max-width: 900px) {
             .hero-carousel { width: 90%; }
             .h-nav-btn { display: none; }
             
-            /* No mobile, mudamos a proporção para RETRATO (3:4) 
-               Assim a imagem "Faces" preenche a tela verticalmente de forma gloriosa */
-            .frame-mask { aspect-ratio: 3/4; } 
+            /* Retornando ao formato HORIZONTAL no mobile */
+            .frame-mask { aspect-ratio: 16/10; } 
+            
+            /* Ajuste de título mobile */
+            .h-title { font-size: 1.5rem; }
         }
 
         /* === IV. ACERVO === */
@@ -185,144 +196,141 @@
         }
         .copyright span { color: var(--accent); font-size: 1.5rem; vertical-align: sub; margin: 0 5px; line-height: 0; }
 
-        /* === VII. VIEWER ESTABILIZADO & DETALHISTA === */
+        /* === VII. VIEWER (FIXED CONTEXT) === */
         .lightbox {
-            position: fixed; inset: 0; background: #000; z-index: 5000;
+            /* Z-index muito alto e position fixed real */
+            position: fixed; inset: 0; background: #000; z-index: 99999;
             opacity: 0; pointer-events: none; transition: opacity 0.4s;
-            overflow: hidden; /* Garante que nada sai */
-            display: flex; align-items: center; justify-content: center; /* Centralização absoluta */
+            overflow: hidden; /* Garante que a imagem não vaze */
+            display: flex; align-items: center; justify-content: center;
         }
         .lightbox.active { opacity: 1; pointer-events: auto; }
         
         .lb-container {
             position: relative;
-            /* Container interno para segurar a imagem e o detalhe minimalista */
             display: flex; align-items: center; justify-content: center;
+            width: 100vw; height: 100vh;
         }
 
+        /* Imagem centralizada */
         .lb-img {
             max-width: 90vw; max-height: 90vh;
             object-fit: contain;
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.1s linear; /* Resposta rápida no zoom */
             cursor: grab;
             position: relative; z-index: 2;
         }
         .lb-img:active { cursor: grabbing; }
 
-        /* O Detalhe Minimalista (Cantoneiras/Brackets) */
-        .lb-bracket {
-            position: absolute; width: 20px; height: 20px;
-            border-color: rgba(255,255,255,0.4); border-style: solid;
-            pointer-events: none; z-index: 3; transition: 0.4s;
-            opacity: 0; transform: scale(1.2);
-        }
-        .lightbox.active .lb-bracket { opacity: 1; transform: scale(1); }
-        .b-tl { top: -10px; left: -10px; border-width: 1px 0 0 1px; }
-        .b-tr { top: -10px; right: -10px; border-width: 1px 1px 0 0; }
-        .b-bl { bottom: -10px; left: -10px; border-width: 0 0 1px 1px; }
-        .b-br { bottom: -10px; right: -10px; border-width: 0 1px 1px 0; }
-
-        /* UI Controls */
+        /* UI Controls - Refinados e Nítidos */
         .lb-ui {
-            position: absolute; bottom: 30px; display: flex; gap: 20px; z-index: 5002;
+            position: absolute; bottom: 40px; display: flex; gap: 20px; z-index: 5002;
         }
         .lb-btn {
-            width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%;
-            color: #fff; border: none; font-size: 1.2rem; cursor: pointer;
+            width: 50px; height: 50px; 
+            background: #111; /* Fundo sólido para nitidez */
+            border: 1px solid #333;
+            border-radius: 50%;
+            color: #fff; font-size: 1.5rem; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            /* Sem backdrop-filter para evitar borrao */
         }
+        .lb-btn:active { transform: scale(0.95); border-color: var(--accent); }
+
         .lb-close { 
             position: absolute; top: 30px; right: 30px; 
-            cursor: pointer; color: #fff; font-size: 1.5rem; padding: 10px; z-index: 5002; 
+            width: 50px; height: 50px;
+            background: #111; border: 1px solid #333; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #fff; font-size: 1.2rem; z-index: 5002; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* Loader para Vídeo */
-        .video-loader {
-            position: absolute; width: 40px; height: 40px;
-            border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent);
-            border-radius: 50%; animation: spin 1s linear infinite;
-            display: none;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Mobile Rotation */
+        /* Mobile Rotation - Aplicado apenas à imagem, controles ficam fixos */
         @media (max-width: 768px) {
-            .lightbox.rotated .lb-container {
-                width: 100vh; height: 100vw;
+            .lightbox.rotated .lb-img {
+                /* Força rotação e redimensionamento para caber na tela deitada */
+                width: 90vh; height: 90vw; 
+                max-width: none; max-height: none;
                 transform: rotate(90deg);
             }
-            .lightbox.rotated .lb-img {
-                width: 95vh; height: 95vw; max-width: none; max-height: none;
-                object-fit: contain;
-            }
+            /* Ajuste posicional dos controles no modo rotação */
+            .lb-ui { bottom: 30px; }
         }
+
+        /* Loader */
+        .video-loader {
+            position: absolute; width: 40px; height: 40px; z-index: 5001;
+            border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin 1s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-ghost" onclick="Magic.trigger(this)">
-            <img src="logo.png" alt="GENNOZ" style="width: 100%; height: auto;">
-        </div>
-    </header>
+    <div id="universe">
+        
+        <header>
+            <div class="logo-ghost" onclick="Magic.trigger(this)">
+                <img src="logo.png" alt="GENNOZ" style="width: 100%; height: auto;">
+            </div>
+        </header>
 
-    <section class="hero-screen">
-        <div class="hero-carousel" id="hero-module">
-            
-            <div class="frame-mask" id="hero-frame" onclick="Viewer.openFromHero()">
+        <section class="hero-screen">
+            <div class="hero-carousel" id="hero-module">
+                
+                <div class="frame-mask" id="hero-frame" onclick="Viewer.openFromHero()">
+                    </div>
+
+                <div class="h-caption" id="hero-cap">
+                    <h1 class="serif h-title">Carregando...</h1>
+                    <p class="meta">...</p>
                 </div>
 
-            <div class="h-caption" id="hero-cap">
-                <h1 class="serif h-title">Carregando...</h1>
-                <p class="meta">...</p>
+                <div class="h-nav-btn h-prev" onclick="Hero.prev()">&#8249;</div>
+                <div class="h-nav-btn h-next" onclick="Hero.next()">&#8250;</div>
+                <div class="h-dots" id="hero-dots"></div>
             </div>
+        </section>
 
-            <div class="h-nav-btn h-prev" onclick="Hero.prev()">&#8249;</div>
-            <div class="h-nav-btn h-next" onclick="Hero.next()">&#8250;</div>
-            <div class="h-dots" id="hero-dots"></div>
-        </div>
-    </section>
-
-    <section class="acervo-section">
-        <div class="sec-head">
-            <div>
-                <h2 class="serif" style="font-size: 2rem;">Acervo</h2>
-                <p class="meta" style="color: var(--accent)">Seleção Principal</p>
+        <section class="acervo-section">
+            <div class="sec-head">
+                <div>
+                    <h2 class="serif" style="font-size: 2rem;">Acervo</h2>
+                    <p class="meta" style="color: var(--accent)">Seleção Principal</p>
+                </div>
+                <div class="carousel-ctrls">
+                    <div class="c-btn" onclick="Acervo.scroll(-1)">&#8592;</div>
+                    <div class="c-btn" onclick="Acervo.scroll(1)">&#8594;</div>
+                </div>
             </div>
-            <div class="carousel-ctrls">
-                <div class="c-btn" onclick="Acervo.scroll(-1)">&#8592;</div>
-                <div class="c-btn" onclick="Acervo.scroll(1)">&#8594;</div>
+            <div class="carousel-track" id="acervo-track"></div>
+        </section>
+
+        <section class="memory-section">
+            <div class="video-trigger" onclick="Viewer.openVideo()">
+                <div class="play-symbol">▶</div>
+                <h3 class="serif" style="font-size: 2rem; z-index: 2;">Patins & Itapuama</h3>
+                <p class="meta" style="margin-top: 10px; z-index: 2;">ASSISTIR FILME</p>
             </div>
-        </div>
-        <div class="carousel-track" id="acervo-track"></div>
-    </section>
+        </section>
 
-    <section class="memory-section">
-        <div class="video-trigger" onclick="Viewer.openVideo()">
-            <div class="play-symbol">▶</div>
-            <h3 class="serif" style="font-size: 2rem; z-index: 2;">Patins & Itapuama</h3>
-            <p class="meta" style="margin-top: 10px; z-index: 2;">ASSISTIR FILME</p>
-        </div>
-    </section>
+        <footer>
+            <p class="copyright">gnnz <span>&#8226;</span> 2000</p>
+        </footer>
 
-    <footer>
-        <p class="copyright">gnnz <span>&#8226;</span> 2000</p>
-    </footer>
-
-    <div class="lightbox" id="viewer">
+    </div> <div class="lightbox" id="viewer">
+        
         <div class="lb-close" onclick="Viewer.close()">✕</div>
         
         <div class="video-loader" id="v-loader"></div>
 
         <div class="lb-container" id="lb-container">
-            <div class="lb-bracket b-tl"></div>
-            <div class="lb-bracket b-tr"></div>
-            <div class="lb-bracket b-bl"></div>
-            <div class="lb-bracket b-br"></div>
-            
-            <div id="lb-content-wrapper"></div>
+            <div id="lb-content-wrapper" style="display:flex; justify-content:center; align-items:center;">
+                </div>
         </div>
 
         <div class="lb-ui" id="lb-controls">
@@ -332,7 +340,6 @@
     </div>
 
     <script>
-        /* === DATA === */
         const DB = {
             hero: [
                 { src: "Faces_dos_Guararapes-2025-Jaboatao.png", title: "Faces de Jaboatão", meta: "PRAZERES • 2025" },
@@ -352,8 +359,9 @@
         const Magic = {
             trigger(el) {
                 if(navigator.vibrate) navigator.vibrate([20, 30, 20]);
-                document.documentElement.classList.add('reality-bend');
-                setTimeout(() => document.documentElement.classList.remove('reality-bend'), 650);
+                // Aplica a classe no body para controlar o universe
+                document.documentElement.classList.add('bend-active');
+                setTimeout(() => document.documentElement.classList.remove('bend-active'), 650);
             }
         };
 
@@ -441,33 +449,30 @@
                 this.resetState();
                 this.controls.style.display = 'flex';
                 
-                // Rotação Mobile Check
+                // Lógica de Rotação Mobile
                 if (window.innerWidth < 768) this.box.classList.add('rotated');
                 else this.box.classList.remove('rotated');
 
                 this.wrapper.innerHTML = `<img src="${src}" class="lb-img" id="active-img" draggable="false">`;
                 this.box.classList.add('active');
-                document.body.classList.add('locked'); // Trava Scroll
+                document.body.classList.add('locked'); // Trava Scroll e Oculta Header
 
                 const img = document.getElementById('active-img');
-                this.addPanLogic(img);
+                // Pequeno delay para garantir que o elemento existe no DOM antes de atrelar eventos
+                setTimeout(() => this.addPanLogic(img), 50);
             },
 
             openVideo() {
                 this.resetState();
                 this.controls.style.display = 'none';
                 this.box.classList.remove('rotated');
-                this.loader.style.display = 'block'; // Mostra loading
+                this.loader.style.display = 'block';
 
-                // Cria elemento de vídeo
                 const vid = document.createElement('video');
                 vid.src = DB.video;
                 vid.controls = true;
                 vid.style.maxWidth = '90%';
                 vid.style.maxHeight = '80vh';
-                vid.style.boxShadow = '0 0 50px rgba(255,255,255,0.1)';
-                
-                // Listener para quando estiver pronto
                 vid.oncanplay = () => {
                     this.loader.style.display = 'none';
                     vid.play();
@@ -503,17 +508,22 @@
             },
 
             addPanLogic(img) {
+                if(!img) return;
+                
+                // Desktop Mouse
                 img.addEventListener('mousedown', e => {
-                    if(this.scale <= 1) return;
+                    if(this.scale <= 1 && !this.box.classList.contains('rotated')) return;
                     this.isDragging = true;
                     this.startX = e.clientX - this.translateX;
                     this.startY = e.clientY - this.translateY;
                     img.style.cursor = 'grabbing';
                 });
+                
                 window.addEventListener('mouseup', () => {
                     this.isDragging = false;
                     if(img) img.style.cursor = 'grab';
                 });
+                
                 window.addEventListener('mousemove', e => {
                     if (!this.isDragging) return;
                     e.preventDefault();
@@ -521,9 +531,31 @@
                     this.translateY = e.clientY - this.startY;
                     this.updateTransform(img);
                 });
+                
+                // Touch Logic Básico (Para permitir arrastar no mobile com zoom)
+                img.addEventListener('touchstart', e => {
+                    if(this.scale > 1 || this.box.classList.contains('rotated')) {
+                        this.isDragging = true;
+                        this.startX = e.touches[0].clientX - this.translateX;
+                        this.startY = e.touches[0].clientY - this.translateY;
+                    }
+                }, {passive:false});
+
+                img.addEventListener('touchmove', e => {
+                    if(!this.isDragging) return;
+                    e.preventDefault(); // Evita scroll do browser
+                    this.translateX = e.touches[0].clientX - this.startX;
+                    this.translateY = e.touches[0].clientY - this.startY;
+                    this.updateTransform(img);
+                }, {passive:false});
+                
+                img.addEventListener('touchend', () => this.isDragging = false);
             },
+
             updateTransform(img) {
-                img.style.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
+                // Se estiver rotacionado (mobile), mantém a rotação e soma o translate
+                const baseTransform = this.box.classList.contains('rotated') ? 'rotate(90deg)' : '';
+                img.style.transform = `${baseTransform} translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
             }
         };
 
