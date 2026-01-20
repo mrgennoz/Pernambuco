@@ -19,7 +19,7 @@
             
             /* Dimensões */
             --header-h: 100px;
-            --hero-frame-w: 800px; /* Largura controlada */
+            --hero-frame-w: 800px;
             
             /* Easings */
             --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
@@ -34,6 +34,8 @@
             font-family: 'Manrope', sans-serif;
             overflow-x: hidden;
             height: 100%;
+            perspective: 1000px; /* Necessário para o efeito 3D da logo */
+            transition: transform 0.4s;
         }
 
         /* Tipografia */
@@ -44,103 +46,96 @@
         header {
             position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
             display: flex; justify-content: center; align-items: center;
-            z-index: 1000; pointer-events: none; /* Deixa clicar no fundo se precisar */
+            z-index: 1000; pointer-events: none;
         }
         
         .logo-ghost {
-            pointer-events: auto; /* Reativa o clique na logo */
+            pointer-events: auto;
             width: 50px; opacity: 0.3; cursor: pointer;
             transition: opacity 0.4s ease, transform 0.4s var(--ease-lux);
             filter: grayscale(1);
         }
-        
         .logo-ghost:hover { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
         
-        /* O EFEITO "SYSTEM FAILURE" */
-        .system-failure { animation: glitch-anim 0.4s cubic-bezier(.25, .46, .45, .94) both infinite; }
-        .system-failure body { filter: invert(1); background: #fff; }
+        /* O EFEITO "REALITY BEND" (Logo Click) */
+        .reality-bend { animation: bend-anim 0.6s cubic-bezier(.25, .46, .45, .94) both; }
+        .reality-bend body { filter: invert(1); background: #fff; }
         
-        @keyframes glitch-anim {
-            0% { transform: translate(0); }
-            20% { transform: translate(-5px, 5px); }
-            40% { transform: translate(-5px, -5px); }
-            60% { transform: translate(5px, 5px); }
-            80% { transform: translate(5px, -5px); }
-            100% { transform: translate(0); }
+        @keyframes bend-anim {
+            0% { transform: rotateX(0) rotateY(0) scale(1); }
+            30% { transform: rotateX(5deg) rotateY(-5deg) scale(0.95); }
+            50% { transform: rotateX(-5deg) rotateY(5deg) scale(0.98) skewX(2deg); }
+            70% { transform: rotateX(2deg) rotateY(-2deg) scale(1.02); }
+            100% { transform: rotateX(0) rotateY(0) scale(1); }
         }
 
         /* === III. HERO (Full Viewport & Metric) === */
         .hero-screen {
-            height: 100dvh; /* Altura exata da tela */
-            width: 100%;
+            height: 100dvh; width: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             position: relative; padding-top: var(--header-h);
         }
 
-        /* Container do Slider */
         .hero-carousel {
-            position: relative;
-            width: 100%; max-width: var(--hero-frame-w);
+            position: relative; width: 100%; max-width: var(--hero-frame-w);
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* A Moldura */
         .frame-mask {
             width: 100%; aspect-ratio: 16/10;
             overflow: hidden; position: relative;
             box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
             border: 1px solid #1a1a1a;
             background: #050505;
+            cursor: zoom-in; /* Indica que pode expandir */
         }
 
-        /* Slides */
         .h-slide {
             position: absolute; inset: 0; opacity: 0;
             transform: scale(1.1); transition: opacity 1s, transform 1.2s var(--ease-lux);
+            pointer-events: none; /* Deixa o clique passar para o frame */
         }
-        .h-slide.active { opacity: 1; transform: scale(1); z-index: 2; }
-        .h-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .h-slide.active { opacity: 1; transform: scale(1); z-index: 2; pointer-events: auto; }
+        .h-slide img { 
+            width: 100%; height: 100%; 
+            object-fit: contain; /* Mudado para CONTAIN para não cortar no mobile */
+            background: #000;
+        }
 
-        /* Controles do Hero (Setas Laterais) */
+        /* Controles */
         .h-nav-btn {
             position: absolute; top: 40%; transform: translateY(-50%);
             width: 50px; height: 100px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 2rem; opacity: 0; transition: 0.3s;
-            z-index: 10;
+            color: #fff; font-size: 2rem; opacity: 0; transition: 0.3s; z-index: 10;
         }
         .hero-carousel:hover .h-nav-btn { opacity: 0.5; }
         .h-nav-btn:hover { opacity: 1; color: var(--accent); }
         .h-prev { left: -60px; } 
         .h-next { right: -60px; }
 
-        /* Mobile Adjustments for Controls */
+        /* Ajustes Mobile */
         @media (max-width: 900px) {
-            .hero-carousel { width: 90%; }
-            .h-nav-btn { display: none; /* No mobile, swipe é melhor, ou dots */ }
-            .frame-mask { aspect-ratio: 4/5; /* Retrato no mobile */ }
+            .hero-carousel { width: 92%; } /* Mais justo nas bordas */
+            .h-nav-btn { display: none; }
+            /* Ajuste de proporção para ser mais "quadrado/retrato" no mobile e caber melhor */
+            .frame-mask { aspect-ratio: 1/1; } 
         }
 
-        /* Legenda Externa */
         .h-caption {
-            margin-top: 2rem; text-align: center; height: 80px; /* Altura fixa para não pular */
+            margin-top: 2rem; text-align: center; height: 80px;
             opacity: 0; transform: translateY(20px); transition: 0.6s var(--ease-lux);
         }
         .h-caption.visible { opacity: 1; transform: translateY(0); }
         .h-title { font-size: 2.2rem; margin-bottom: 0.5rem; line-height: 1.1; }
-
-        /* Navegação de Pontos (Dots) */
         .h-dots { display: flex; gap: 10px; margin-top: 1rem; }
         .dot { width: 4px; height: 4px; background: #333; border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--text-pri); transform: scale(1.5); }
 
 
-        /* === IV. ACERVO (Carrossel Controlado) === */
+        /* === IV. ACERVO === */
         .acervo-section { padding: 4rem 0; position: relative; }
-        
         .sec-head { padding: 0 5% 2rem 5%; display: flex; justify-content: space-between; align-items: flex-end; }
-        
-        /* Controles do Acervo */
         .carousel-ctrls { display: flex; gap: 15px; }
         .c-btn {
             width: 40px; height: 40px; border: 1px solid #333; border-radius: 50%;
@@ -149,21 +144,17 @@
         }
         .c-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* O Carrossel Real */
         .carousel-track {
             display: flex; gap: 30px; padding: 0 5% 3rem 5%;
-            overflow-x: auto; scroll-behavior: smooth;
-            scrollbar-width: none;
+            overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none;
         }
         .carousel-track::-webkit-scrollbar { display: none; }
 
         .card {
-            flex: 0 0 300px; /* Largura fixa */
-            position: relative; cursor: pointer;
+            flex: 0 0 300px; position: relative; cursor: pointer;
             transition: transform 0.4s var(--ease-lux);
         }
         .card:hover { transform: translateY(-10px); }
-        
         .card-img-box {
             width: 100%; aspect-ratio: 3/4; overflow: hidden; margin-bottom: 1rem;
             background: #111;
@@ -175,7 +166,7 @@
         .card:hover img { filter: saturate(1.1); transform: scale(1.05); }
 
 
-        /* === V. MEMÓRIAS (Video) === */
+        /* === V. MEMÓRIAS === */
         .memory-section { padding: 4rem 5%; display: flex; justify-content: center; }
         .video-trigger {
             width: 100%; max-width: 900px; height: 500px;
@@ -186,7 +177,6 @@
         }
         .video-trigger:hover { border-color: var(--accent); }
         .video-trigger:hover .play-symbol { transform: scale(1.2); color: var(--accent); border-color: var(--accent); }
-        
         .play-symbol {
             width: 70px; height: 70px; border: 2px solid #fff; border-radius: 50%;
             display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
@@ -194,15 +184,74 @@
         }
 
 
-        /* === VI. LIGHTBOX (Modal) === */
+        /* === VI. FOOTER (Minimal) === */
+        footer {
+            padding: 2rem 0 4rem 0; text-align: center;
+            border-top: 1px solid #111; margin-top: 2rem;
+        }
+        .copyright {
+            font-family: 'Manrope', sans-serif; font-size: 0.8rem;
+            color: #333; letter-spacing: 0.2em; text-transform: uppercase;
+        }
+        .copyright span { color: var(--accent); font-size: 1.2rem; vertical-align: middle; margin: 0 5px; }
+
+
+        /* === VII. LIGHTBOX AVANÇADO (The Viewer) === */
         .lightbox {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 5000;
+            position: fixed; inset: 0; background: #000; z-index: 5000;
             opacity: 0; pointer-events: none; transition: opacity 0.4s;
-            display: grid; place-items: center;
+            overflow: hidden; /* Importante para o Pan */
         }
         .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lb-content { max-width: 90vw; max-height: 85vh; }
-        .lb-close { position: absolute; top: 30px; right: 30px; cursor: pointer; color: #fff; font-size: 1.5rem; padding: 10px; }
+        
+        /* Container da Imagem no Lightbox */
+        .lb-container {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s ease-out; /* Suavidade no Pan */
+        }
+
+        .lb-img {
+            max-width: 95%; max-height: 95%;
+            object-fit: contain;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: grab;
+        }
+        .lb-img:active { cursor: grabbing; }
+
+        /* Controles do Lightbox */
+        .lb-ui {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 20px; z-index: 5002;
+        }
+        .lb-btn {
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%;
+            color: #fff; border: none; font-size: 1.2rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px); transition: 0.2s;
+        }
+        .lb-btn:hover { background: rgba(255,255,255,0.3); }
+
+        .lb-close { 
+            position: absolute; top: 30px; right: 30px; 
+            cursor: pointer; color: #fff; font-size: 1.5rem; padding: 10px; z-index: 5002; 
+        }
+
+        /* === MOBILE ROTATION LOGIC === */
+        @media (max-width: 768px) {
+            .lightbox.rotated .lb-container {
+                width: 100vh; height: 100vw; /* Inverte as dimensões */
+                transform: rotate(90deg);
+                transform-origin: center center;
+                /* Centraliza forçadamente após a rotação */
+                position: absolute; top: 50%; left: 50%;
+                margin-left: -50vh; margin-top: -50vw;
+            }
+            .lightbox.rotated .lb-img {
+                max-width: 100%; max-height: 100%;
+            }
+            .lb-ui { bottom: 20px; flex-direction: row; }
+        }
 
     </style>
 </head>
@@ -217,7 +266,7 @@
     <section class="hero-screen">
         <div class="hero-carousel" id="hero-module">
             
-            <div class="frame-mask" id="hero-frame">
+            <div class="frame-mask" id="hero-frame" onclick="Viewer.openFromHero()">
                 </div>
 
             <div class="h-caption" id="hero-cap">
@@ -229,7 +278,6 @@
             <div class="h-nav-btn h-next" onclick="Hero.next()">&#8250;</div>
 
             <div class="h-dots" id="hero-dots"></div>
-
         </div>
     </section>
 
@@ -257,16 +305,27 @@
         </div>
     </section>
 
+    <footer>
+        <p class="copyright">gnnz <span>&#8226;</span> 2000</p>
+    </footer>
+
     <div class="lightbox" id="viewer">
         <div class="lb-close" onclick="Viewer.close()">✕</div>
-        <div id="lb-stage" style="display: flex; justify-content: center; width: 100%;"></div>
+        
+        <div class="lb-container" id="lb-container">
+            </div>
+
+        <div class="lb-ui" id="lb-controls">
+            <button class="lb-btn" onclick="Viewer.zoom(-1)">-</button>
+            <button class="lb-btn" onclick="Viewer.zoom(1)">+</button>
+        </div>
     </div>
 
     <script>
-        /* === DADOS (Preencha com seus arquivos reais) === */
+        /* === DADOS === */
         const DB = {
             hero: [
-                { src: "Eu_e_Nuz-2025-Prazeres.jpg", title: "Nós em Síntese", meta: "PRAZERES • 2025" },
+                { src: "Faces_dos_Guararapes-2025-Jaboatao.png", title: "Faces de Jaboatão", meta: "PRAZERES • 2025" },
                 { src: "Familia-2025-Prazeres.jpg", title: "Raízes", meta: "PRAZERES • 2025" },
                 { src: "Eu_Ela_e_os_Bebes-2025-Prazeres.jpg", title: "O Legado", meta: "PRAZERES • 2025" }
             ],
@@ -280,38 +339,34 @@
             video: "Patins_e_Itapuama-2022-Cabo.mp4"
         };
 
-        /* === I. MAGIC (LOGO FX) === */
+        /* === I. MAGIC (LOGO - REALITY BEND) === */
         const Magic = {
             trigger(el) {
-                // Efeito sonoro visual (vibrar)
-                if(navigator.vibrate) navigator.vibrate([30,50,30,50,100]);
-                
-                // Adiciona a classe de falha no HTML inteiro
-                document.documentElement.classList.add('system-failure');
-                
-                // Remove após 600ms (choque breve)
+                if(navigator.vibrate) navigator.vibrate([20, 30, 20]);
+                document.documentElement.classList.add('reality-bend');
                 setTimeout(() => {
-                    document.documentElement.classList.remove('system-failure');
-                }, 600);
+                    document.documentElement.classList.remove('reality-bend');
+                }, 650);
             }
         };
 
-        /* === II. HERO ENGINE (Controlado) === */
+        /* === II. HERO ENGINE (Com Swipe) === */
         const Hero = {
             idx: 0,
+            touchStartX: 0,
             
             init() {
                 const frame = document.getElementById('hero-frame');
                 const dotsContainer = document.getElementById('hero-dots');
 
                 DB.hero.forEach((item, i) => {
-                    // Slides
                     const div = document.createElement('div');
                     div.className = `h-slide ${i===0 ? 'active' : ''}`;
+                    // Adicionado ID para identificar qual imagem abrir no viewer
+                    div.dataset.src = item.src; 
                     div.innerHTML = `<img src="${item.src}" onerror="this.style.display='none'">`;
                     frame.appendChild(div);
 
-                    // Dots
                     const dot = document.createElement('div');
                     dot.className = `dot ${i===0 ? 'active' : ''}`;
                     dot.onclick = () => this.goto(i);
@@ -319,23 +374,33 @@
                 });
                 
                 this.updateText(0);
+                this.initSwipe(frame);
+            },
+
+            // Lógica de Gesto (Swipe)
+            initSwipe(el) {
+                el.addEventListener('touchstart', e => {
+                    this.touchStartX = e.changedTouches[0].screenX;
+                }, {passive: true});
+
+                el.addEventListener('touchend', e => {
+                    const touchEndX = e.changedTouches[0].screenX;
+                    if (touchEndX < this.touchStartX - 50) this.next(); // Swipe Left
+                    if (touchEndX > this.touchStartX + 50) this.prev(); // Swipe Right
+                });
             },
 
             goto(n) {
                 const slides = document.querySelectorAll('.h-slide');
                 const dots = document.querySelectorAll('.dot');
                 const total = DB.hero.length;
-                
-                // Limites Cíclicos
                 this.idx = (n + total) % total;
 
-                // Update Classes
                 slides.forEach(s => s.classList.remove('active'));
                 dots.forEach(d => d.classList.remove('active'));
                 
                 slides[this.idx].classList.add('active');
                 dots[this.idx].classList.add('active');
-                
                 this.updateText(this.idx);
             },
 
@@ -353,10 +418,9 @@
             }
         };
 
-        /* === III. ACERVO ENGINE (Carrossel Real) === */
+        /* === III. ACERVO ENGINE === */
         const Acervo = {
             track: document.getElementById('acervo-track'),
-            
             init() {
                 DB.acervo.forEach(item => {
                     const card = document.createElement('div');
@@ -372,36 +436,105 @@
                     this.track.appendChild(card);
                 });
             },
-
             scroll(direction) {
-                const scrollAmount = 330; // Largura do card + gap
-                this.track.scrollBy({
-                    left: direction * scrollAmount,
-                    behavior: 'smooth'
-                });
+                this.track.scrollBy({ left: direction * 330, behavior: 'smooth' });
             }
         };
 
-        /* === IV. VIEWER (Modal Polimórfico) === */
+        /* === IV. VIEWER (Zoom, Pan & Rotate) === */
         const Viewer = {
             box: document.getElementById('viewer'),
-            stage: document.getElementById('lb-stage'),
-            
+            container: document.getElementById('lb-container'),
+            controls: document.getElementById('lb-controls'),
+            scale: 1,
+            isDragging: false,
+            startX: 0, startY: 0,
+            translateX: 0, translateY: 0,
+
+            // Abre a imagem ativa do Hero
+            openFromHero() {
+                const currentSrc = DB.hero[Hero.idx].src;
+                this.openImage(currentSrc);
+            },
+
             openImage(src) {
-                this.stage.innerHTML = `<img src="${src}" class="lb-content" style="object-fit:contain; max-height:85vh; box-shadow:0 0 40px #000;">`;
+                // Limpa estado anterior
+                this.scale = 1; this.translateX = 0; this.translateY = 0;
+                this.controls.style.display = 'flex';
+                
+                // Verifica se é mobile para aplicar rotação
+                const isMobile = window.innerWidth < 768;
+                if (isMobile) {
+                    this.box.classList.add('rotated');
+                } else {
+                    this.box.classList.remove('rotated');
+                }
+
+                this.container.innerHTML = `<img src="${src}" class="lb-img" id="active-img" draggable="false">`;
                 this.box.classList.add('active');
+
+                // Adiciona lógica de Pan (Arrastar)
+                const img = document.getElementById('active-img');
+                this.addPanLogic(img);
             },
 
             openVideo() {
-                this.stage.innerHTML = `
-                    <video src="${DB.video}" controls autoplay class="lb-content" style="width:80vw; max-width:1000px;"></video>
+                this.controls.style.display = 'none'; // Sem zoom em vídeo
+                this.box.classList.remove('rotated');
+                this.container.innerHTML = `
+                    <video src="${DB.video}" controls autoplay style="max-width:90%; max-height:80vh; box-shadow:0 0 50px rgba(255,255,255,0.1);"></video>
                 `;
                 this.box.classList.add('active');
             },
 
             close() {
                 this.box.classList.remove('active');
-                setTimeout(() => this.stage.innerHTML = '', 400); // Limpa para parar vídeo
+                setTimeout(() => {
+                    this.container.innerHTML = ''; 
+                    this.box.classList.remove('rotated');
+                }, 400);
+            },
+
+            zoom(dir) {
+                const img = document.getElementById('active-img');
+                if(!img) return;
+                
+                this.scale += dir * 0.5;
+                if (this.scale < 1) this.scale = 1;
+                if (this.scale > 4) this.scale = 4;
+                
+                this.updateTransform(img);
+            },
+
+            addPanLogic(img) {
+                // Mouse
+                img.addEventListener('mousedown', e => {
+                    if(this.scale <= 1) return; // Só arrasta se tiver zoom
+                    this.isDragging = true;
+                    this.startX = e.clientX - this.translateX;
+                    this.startY = e.clientY - this.translateY;
+                    img.style.cursor = 'grabbing';
+                });
+                window.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                    if(img) img.style.cursor = 'grab';
+                });
+                window.addEventListener('mousemove', e => {
+                    if (!this.isDragging) return;
+                    e.preventDefault();
+                    this.translateX = e.clientX - this.startX;
+                    this.translateY = e.clientY - this.startY;
+                    this.updateTransform(img);
+                });
+
+                // Touch (Básico)
+                /* Para mobile, o scroll nativo da div overflow + zoom css costuma ser melhor,
+                   mas aqui implementamos um básico para manter consistência */
+            },
+
+            updateTransform(img) {
+                // Aplica Zoom e Pan
+                img.style.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
             }
         };
 
@@ -410,7 +543,6 @@
             Hero.init();
             Acervo.init();
             
-            // Teclado
             document.addEventListener('keydown', (e) => {
                 if(e.key === 'Escape') Viewer.close();
                 if(e.key === 'ArrowRight') Hero.next();
